@@ -1,114 +1,58 @@
 'use client';
 
 import Link from 'next/link';
-import { Lock, Check, ChevronRight, Clock, Zap } from 'lucide-react';
+import { Lock, Check, ChevronRight } from 'lucide-react';
 import type { Quest } from '@/data/quests';
 
-interface QuestCardProps {
+interface Props {
   quest: Quest;
   status: 'locked' | 'available' | 'in-progress' | 'completed';
   currentStep?: number;
 }
 
-const difficultyConfig = {
-  easy: { label: '쉬움', color: 'text-success', bg: 'bg-success-dim' },
-  medium: { label: '보통', color: 'text-warning', bg: 'bg-warning-dim' },
-  hard: { label: '어려움', color: 'text-accent', bg: 'bg-accent-dim' },
-};
-
-export default function QuestCard({ quest, status, currentStep }: QuestCardProps) {
-  const isLocked = status === 'locked';
-  const isCompleted = status === 'completed';
-  const diff = difficultyConfig[quest.difficulty];
+export default function QuestCard({ quest, status, currentStep }: Props) {
+  const locked = status === 'locked';
+  const done = status === 'completed';
 
   const inner = (
-    <div className="flex items-center gap-3.5">
-      {/* Floor indicator */}
+    <div className="flex items-center gap-3">
       <div
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl font-mono text-xs font-bold ${
-          isCompleted
-            ? 'bg-success-dim text-success'
-            : isLocked
-            ? 'bg-surface-2 text-text-disabled'
-            : status === 'available'
-            ? 'bg-primary-dim text-primary'
-            : 'bg-purple-dim text-purple'
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-semibold ${
+          done ? 'bg-success-dim text-success'
+          : locked ? 'bg-bg-elevated text-text-quaternary'
+          : 'bg-accent-dim text-accent'
         }`}
       >
-        {isLocked ? (
-          <Lock size={16} />
-        ) : isCompleted ? (
-          <Check size={16} strokeWidth={3} />
-        ) : (
-          <span>{quest.floor}F</span>
-        )}
+        {locked ? <Lock size={14} /> : done ? <Check size={14} strokeWidth={2.5} /> : `${quest.floor}`}
       </div>
 
-      {/* Content */}
       <div className="min-w-0 flex-1">
-        <h3
-          className={`text-[15px] font-semibold leading-tight ${
-            isLocked ? 'text-text-disabled' : 'text-text-primary'
-          }`}
-        >
+        <p className={`text-sm font-semibold leading-tight ${locked ? 'text-text-quaternary' : ''}`}>
           {quest.title}
-        </h3>
-        <p className="mt-0.5 text-xs text-text-secondary line-clamp-1">
-          {quest.description}
         </p>
+        <p className="mt-0.5 text-xs text-text-tertiary line-clamp-1">{quest.description}</p>
 
-        {/* Meta */}
-        <div className="mt-1.5 flex items-center gap-2">
-          <span className={`${diff.bg} ${diff.color} rounded px-1.5 py-0.5 text-[10px] font-medium`}>
-            {diff.label}
-          </span>
-          <span className="flex items-center gap-0.5 text-[10px] text-text-disabled">
-            <Zap size={10} />
-            {quest.xp} XP
-          </span>
-          <span className="flex items-center gap-0.5 text-[10px] text-text-disabled">
-            <Clock size={10} />
-            {quest.estimatedMinutes}분
-          </span>
-        </div>
-
-        {/* In-progress bar */}
         {status === 'in-progress' && currentStep !== undefined && (
-          <div className="mt-2">
-            <div className="h-1 w-full overflow-hidden rounded-full bg-surface-2">
-              <div
-                className="h-full rounded-full bg-purple transition-all"
-                style={{ width: `${(currentStep / quest.steps.length) * 100}%` }}
-              />
-            </div>
+          <div className="mt-1.5 h-0.5 w-full overflow-hidden rounded-full bg-bg-elevated">
+            <div className="h-full rounded-full bg-accent" style={{ width: `${(currentStep / quest.steps.length) * 100}%` }} />
           </div>
         )}
       </div>
 
-      {/* Arrow */}
-      {!isLocked && (
-        <ChevronRight size={16} className="shrink-0 text-text-disabled" />
-      )}
+      <div className="flex shrink-0 items-center gap-2">
+        <span className="font-mono text-xs text-text-quaternary">+{quest.xp}</span>
+        {!locked && <ChevronRight size={14} className="text-text-quaternary" />}
+      </div>
     </div>
   );
 
-  const baseClass = `block rounded-2xl border p-3.5 transition-all ${
-    isLocked
-      ? 'cursor-not-allowed border-border bg-surface opacity-40'
-      : isCompleted
-      ? 'border-success/10 bg-surface hover:bg-surface-hover'
-      : status === 'available'
-      ? 'pulse-active border-primary/20 bg-surface hover:bg-surface-hover'
-      : 'border-purple/20 bg-surface hover:bg-surface-hover'
+  const cls = `block rounded-xl border p-3 transition-colors ${
+    locked ? 'cursor-default border-border opacity-35'
+    : done ? 'border-border hover:border-border-hover'
+    : status === 'available' ? 'border-accent/20 hover:border-accent/40'
+    : 'border-border hover:border-border-hover'
   }`;
 
-  if (isLocked) {
-    return <div className={baseClass}>{inner}</div>;
-  }
-
-  return (
-    <Link href={`/quest/${quest.id}`} className={baseClass}>
-      {inner}
-    </Link>
-  );
+  if (locked) return <div className={cls}>{inner}</div>;
+  return <Link href={`/quest/${quest.id}`} className={cls}>{inner}</Link>;
 }

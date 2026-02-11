@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "코인던전 | 크립토 실전 퀘스트",
   description: "매일 한 층씩 깨는 크립토 던전. 읽기만 하지 말고, 직접 해보자.",
-  keywords: ["크립토", "코인", "블록체인", "디파이", "퀘스트", "학습"],
 };
 
 export default function RootLayout({
@@ -30,12 +29,12 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${jetbrainsMono.variable} antialiased`}
-        style={{ fontFamily: "'Pretendard Variable', Pretendard, -apple-system, sans-serif" }}
+        className={`${geistMono.variable}`}
+        style={{ fontFamily: "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif" }}
       >
-        <div className="min-h-screen pb-20">
+        <main className="mx-auto min-h-screen max-w-[480px] px-4 pb-20 pt-12">
           {children}
-        </div>
+        </main>
         <BottomNav />
       </body>
     </html>

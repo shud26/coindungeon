@@ -1,105 +1,68 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Shield, Flame, Swords, Star, FileText, RotateCcw } from 'lucide-react';
 import LevelBadge from '@/components/LevelBadge';
 import ProgressBar from '@/components/ProgressBar';
+import StreakCounter from '@/components/StreakCounter';
 import { loadProgress, getLevel, LEVELS } from '@/lib/progress';
 import { quests, getQuestById } from '@/data/quests';
 import type { UserProgress } from '@/lib/progress';
 
 export default function ProfilePage() {
   const [progress, setProgress] = useState<UserProgress | null>(null);
+  useEffect(() => { setProgress(loadProgress()); }, []);
+  if (!progress) return null;
 
-  useEffect(() => {
-    setProgress(loadProgress());
-  }, []);
+  const level = getLevel(progress.xp);
+  const done = progress.completedQuests.length;
 
-  if (!progress) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    );
-  }
-
-  const levelInfo = getLevel(progress.xp);
-  const completedCount = progress.completedQuests.length;
-
-  // Category stats
-  const categoryStats: Record<string, { completed: number; total: number }> = {};
-  quests.forEach((q) => {
-    if (!categoryStats[q.category]) {
-      categoryStats[q.category] = { completed: 0, total: 0 };
-    }
-    categoryStats[q.category].total++;
-    if (progress.completedQuests.includes(q.id)) {
-      categoryStats[q.category].completed++;
-    }
+  const cats: Record<string, { done: number; total: number }> = {};
+  quests.forEach(q => {
+    if (!cats[q.category]) cats[q.category] = { done: 0, total: 0 };
+    cats[q.category].total++;
+    if (progress.completedQuests.includes(q.id)) cats[q.category].done++;
   });
 
   return (
-    <div className="mx-auto max-w-md px-5 pt-10 pb-8">
-      {/* Header */}
-      <h1 className="mb-8 text-xl font-bold">프로필</h1>
+    <>
+      <h1 className="text-xl font-bold tracking-tight">프로필</h1>
 
-      {/* Level Card */}
-      <div className="mb-6 rounded-2xl border border-border bg-surface p-6 text-center">
-        <div className="flex justify-center">
-          <LevelBadge level={levelInfo.level} size="lg" />
-        </div>
-        <h2 className="mt-4 text-lg font-bold gradient-text inline-block">{levelInfo.title}</h2>
-        <p className="mt-0.5 font-mono text-xs text-text-disabled">
-          Level {levelInfo.level}
-        </p>
-        <div className="mt-4">
-          <ProgressBar progress={levelInfo.progress} />
-          <div className="mt-1.5 flex justify-between text-[11px] text-text-disabled">
-            <span>{progress.xp} XP</span>
-            <span>{levelInfo.nextXp - levelInfo.currentXp} to next</span>
-          </div>
+      {/* Level */}
+      <div className="mt-6 rounded-xl border border-border p-5 text-center">
+        <div className="flex justify-center"><LevelBadge level={level.level} size="lg" /></div>
+        <p className="mt-3 text-sm font-semibold">{level.title}</p>
+        <p className="mt-0.5 font-mono text-xs text-text-quaternary">Level {level.level}</p>
+        <ProgressBar progress={level.progress} className="mt-3" />
+        <div className="mt-1 flex justify-between text-[11px] text-text-quaternary">
+          <span>{progress.xp} XP</span>
+          <span>{level.nextXp - level.currentXp} to next</span>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="mb-6 grid grid-cols-2 gap-2.5">
+      {/* Stats */}
+      <div className="mt-4 grid grid-cols-3 gap-2">
         {[
-          { Icon: Flame, label: '연속 일수', value: progress.streak, unit: '일', color: 'warning' },
-          { Icon: Swords, label: '클리어', value: completedCount, unit: `/${quests.length}`, color: 'success' },
-          { Icon: Star, label: '총 XP', value: progress.xp, unit: '', color: 'primary' },
-          { Icon: FileText, label: '퀴즈 완료', value: Object.keys(progress.quizScores).length, unit: '개', color: 'purple' },
-        ].map(({ Icon, label, value, unit, color }) => (
-          <div key={label} className="rounded-2xl border border-border bg-surface p-4">
-            <div className={`flex h-8 w-8 items-center justify-center rounded-lg bg-${color}-dim`}>
-              <Icon size={14} className={`text-${color}`} />
-            </div>
-            <div className="mt-3 font-mono text-2xl font-bold">
-              {value}<span className="text-xs font-normal text-text-disabled">{unit}</span>
-            </div>
-            <div className="mt-0.5 text-[11px] text-text-disabled">{label}</div>
+          { label: '스트릭', val: `${progress.streak}일` },
+          { label: '클리어', val: `${done}/${quests.length}` },
+          { label: '퀴즈', val: `${Object.keys(progress.quizScores).length}` },
+        ].map(s => (
+          <div key={s.label} className="rounded-xl border border-border p-3 text-center">
+            <p className="font-mono text-lg font-semibold">{s.val}</p>
+            <p className="mt-0.5 text-[11px] text-text-quaternary">{s.label}</p>
           </div>
         ))}
       </div>
 
-      {/* Category Progress */}
-      <div className="mb-6">
-        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-text-disabled">
-          Categories
-        </h3>
-        <div className="space-y-2">
-          {Object.entries(categoryStats).map(([category, stats]) => (
-            <div key={category} className="rounded-xl border border-border bg-surface p-3.5">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{category}</span>
-                <span className="font-mono text-[11px] text-text-disabled">
-                  {stats.completed}/{stats.total}
-                </span>
-              </div>
-              <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-surface-2">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${stats.total > 0 ? (stats.completed / stats.total) * 100 : 0}%` }}
-                />
+      {/* Categories */}
+      <div className="mt-6">
+        <p className="mb-2 text-xs font-medium text-text-quaternary" style={{ letterSpacing: '0.05em' }}>CATEGORIES</p>
+        <div className="space-y-1.5">
+          {Object.entries(cats).map(([cat, s]) => (
+            <div key={cat} className="flex items-center gap-3 rounded-lg border border-border p-2.5">
+              <span className="flex-1 text-sm">{cat}</span>
+              <span className="font-mono text-xs text-text-quaternary">{s.done}/{s.total}</span>
+              <div className="h-1 w-16 overflow-hidden rounded-full bg-bg-elevated">
+                <div className="h-full rounded-full bg-accent" style={{ width: `${s.total > 0 ? (s.done / s.total) * 100 : 0}%` }} />
               </div>
             </div>
           ))}
@@ -107,87 +70,50 @@ export default function ProfilePage() {
       </div>
 
       {/* Level Roadmap */}
-      <div className="mb-6">
-        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-text-disabled">
-          Level Roadmap
-        </h3>
-        <div className="space-y-1">
-          {LEVELS.slice(0, 6).map((lvl) => {
-            const isCurrent = lvl.level === levelInfo.level;
-            const achieved = progress.xp >= lvl.requiredXp;
+      <div className="mt-6">
+        <p className="mb-2 text-xs font-medium text-text-quaternary" style={{ letterSpacing: '0.05em' }}>LEVELS</p>
+        <div className="space-y-0.5">
+          {LEVELS.slice(0, 6).map(lv => {
+            const cur = lv.level === level.level;
+            const got = progress.xp >= lv.requiredXp;
             return (
-              <div
-                key={lvl.level}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 ${
-                  isCurrent ? 'border border-primary/20 bg-primary-dim' : 'bg-surface'
-                }`}
-              >
-                <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${
-                  achieved ? 'bg-success-dim' : 'bg-surface-2'
-                }`}>
-                  {achieved ? (
-                    <Shield size={12} className="text-success" />
-                  ) : (
-                    <span className="font-mono text-[10px] text-text-disabled">{lvl.level}</span>
-                  )}
-                </div>
-                <span className={`flex-1 text-sm ${
-                  isCurrent ? 'font-semibold text-primary' : achieved ? 'text-text-primary' : 'text-text-disabled'
-                }`}>
-                  {lvl.title}
+              <div key={lv.level} className={`flex items-center gap-3 rounded-lg px-3 py-2 ${cur ? 'bg-accent-dim' : ''}`}>
+                <span className={`font-mono text-xs ${got ? 'text-success' : 'text-text-quaternary'}`}>
+                  {got ? '✓' : lv.level}
                 </span>
-                <span className="font-mono text-[10px] text-text-disabled">
-                  {lvl.requiredXp} XP
+                <span className={`flex-1 text-sm ${cur ? 'font-semibold text-accent' : got ? '' : 'text-text-quaternary'}`}>
+                  {lv.title}
                 </span>
+                <span className="font-mono text-[10px] text-text-quaternary">{lv.requiredXp}</span>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Quiz Scores */}
+      {/* Quiz scores */}
       {Object.keys(progress.quizScores).length > 0 && (
-        <div className="mb-6">
-          <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-text-disabled">
-            Quiz Scores
-          </h3>
-          <div className="space-y-1.5">
-            {Object.entries(progress.quizScores).map(([qId, score]) => {
-              const q = getQuestById(parseInt(qId));
-              if (!q) return null;
-              return (
-                <div
-                  key={qId}
-                  className="flex items-center gap-3 rounded-xl bg-surface px-3.5 py-2.5"
-                >
-                  <span className="flex-1 text-sm">{q.title}</span>
-                  <span
-                    className={`font-mono text-sm font-bold ${
-                      score >= 80 ? 'text-success' : score >= 50 ? 'text-warning' : 'text-accent'
-                    }`}
-                  >
-                    {score}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+        <div className="mt-6">
+          <p className="mb-2 text-xs font-medium text-text-quaternary" style={{ letterSpacing: '0.05em' }}>QUIZ</p>
+          {Object.entries(progress.quizScores).map(([qId, score]) => {
+            const q = getQuestById(parseInt(qId));
+            if (!q) return null;
+            return (
+              <div key={qId} className="flex items-center gap-3 py-1.5 text-sm">
+                <span className="flex-1 text-text-secondary">{q.title}</span>
+                <span className={`font-mono text-xs font-semibold ${score >= 80 ? 'text-success' : score >= 50 ? 'text-warning' : 'text-danger'}`}>{score}</span>
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Reset */}
       <button
-        onClick={() => {
-          if (confirm('모든 진행도를 초기화할까요?')) {
-            localStorage.removeItem('coindungeon-progress');
-            window.location.reload();
-          }
-        }}
-        className="flex w-full items-center justify-center gap-1.5 rounded-xl py-3 text-xs text-text-disabled transition-colors hover:text-accent"
+        onClick={() => { if (confirm('모든 진행도를 초기화할까요?')) { localStorage.removeItem('coindungeon-progress'); window.location.reload(); } }}
+        className="mt-8 w-full text-center text-xs text-text-quaternary hover:text-danger"
       >
-        <RotateCcw size={12} />
         진행도 초기화
       </button>
-    </div>
+    </>
   );
 }

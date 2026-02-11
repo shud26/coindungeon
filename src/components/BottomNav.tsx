@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Map, User } from 'lucide-react';
 
-const navItems = [
+const items = [
   { href: '/', label: '홈', Icon: Home },
   { href: '/dungeon', label: '던전', Icon: Map },
   { href: '/profile', label: '프로필', Icon: User },
@@ -14,25 +14,23 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="glass fixed bottom-0 left-0 right-0 z-50 border-t border-border">
-      <div className="mx-auto flex max-w-md items-center justify-around py-1.5">
-        {navItems.map((item) => {
-          const isActive = item.href === '/'
-            ? pathname === '/'
-            : pathname.startsWith(item.href);
-
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-border"
+      style={{ background: 'rgba(9,9,11,0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
+    >
+      <div className="mx-auto flex max-w-[480px] items-center justify-around" style={{ height: 56, paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        {items.map(({ href, label, Icon }) => {
+          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
           return (
             <Link
-              key={item.href}
-              href={item.href}
-              className={`flex flex-col items-center gap-0.5 rounded-xl px-5 py-1.5 transition-all ${
-                isActive
-                  ? 'text-primary'
-                  : 'text-text-disabled hover:text-text-secondary'
+              key={href}
+              href={href}
+              className={`flex flex-col items-center gap-0.5 transition-colors ${
+                active ? 'text-accent' : 'text-text-quaternary hover:text-text-tertiary'
               }`}
             >
-              <item.Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
-              <span className="text-[10px] font-medium">{item.label}</span>
+              <Icon size={18} strokeWidth={active ? 2.2 : 1.5} />
+              <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.02em' }}>{label}</span>
             </Link>
           );
         })}

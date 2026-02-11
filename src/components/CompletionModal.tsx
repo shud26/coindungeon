@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Sparkles, ArrowRight, TrendingUp } from 'lucide-react';
 
-interface CompletionModalProps {
+interface Props {
   isOpen: boolean;
   questTitle: string;
   xpGained: number;
@@ -12,20 +11,13 @@ interface CompletionModalProps {
   onClose: () => void;
 }
 
-export default function CompletionModal({
-  isOpen,
-  questTitle,
-  xpGained,
-  newLevel,
-  levelTitle,
-  onClose,
-}: CompletionModalProps) {
+export default function CompletionModal({ isOpen, questTitle, xpGained, newLevel, levelTitle, onClose }: Props) {
   const [showXp, setShowXp] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      const timer = setTimeout(() => setShowXp(true), 400);
-      return () => clearTimeout(timer);
+      const t = setTimeout(() => setShowXp(true), 300);
+      return () => clearTimeout(t);
     }
     setShowXp(false);
   }, [isOpen]);
@@ -33,41 +25,28 @@ export default function CompletionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6 backdrop-blur-sm">
-      <div className="w-full max-w-sm animate-in rounded-3xl border border-border bg-surface p-8 text-center">
-        {/* Icon */}
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-primary-dim">
-          <Sparkles size={28} className="text-primary" />
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6" style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)' }}>
+      <div className="w-full max-w-sm animate-in rounded-2xl border border-border bg-bg-surface p-6 text-center">
+        <p className="text-xs font-medium uppercase tracking-widest text-text-tertiary">Quest Clear</p>
+        <h2 className="mt-2 text-lg font-semibold">{questTitle}</h2>
 
-        <h2 className="mt-5 text-xl font-bold">퀘스트 클리어</h2>
-        <p className="mt-1 text-sm text-text-secondary">{questTitle}</p>
-
-        {/* XP */}
         {showXp && (
-          <div className="mt-5">
-            <div className="xp-float inline-block rounded-full bg-success-dim px-4 py-2 font-mono text-lg font-bold text-success">
-              +{xpGained} XP
-            </div>
+          <div className="mt-4 inline-block rounded-full bg-success-dim px-4 py-1.5 font-mono text-sm font-semibold text-success">
+            +{xpGained} XP
           </div>
         )}
 
-        {/* Level Up */}
         {newLevel && levelTitle && (
-          <div className="mt-5 flex items-center justify-center gap-2 rounded-2xl border border-purple/20 bg-purple-dim p-3">
-            <TrendingUp size={16} className="text-purple" />
-            <span className="text-sm font-semibold text-purple">
-              Lv.{newLevel} {levelTitle}
-            </span>
+          <div className="mt-3 rounded-lg border border-accent/20 bg-accent-dim px-3 py-2 text-sm font-medium text-accent">
+            Level {newLevel} — {levelTitle}
           </div>
         )}
 
         <button
           onClick={onClose}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3.5 text-sm font-semibold text-background transition-opacity hover:opacity-90"
+          className="mt-5 w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
         >
           계속하기
-          <ArrowRight size={14} />
         </button>
       </div>
     </div>

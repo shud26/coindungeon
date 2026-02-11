@@ -2,24 +2,15 @@
 
 import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, BookOpen, Zap, CheckCircle2, Lock, ChevronRight, FileQuestion, ArrowRight } from 'lucide-react';
+import { ArrowLeft, BookOpen, Zap, CheckCircle2, Lock, ChevronRight } from 'lucide-react';
 import { getQuestById } from '@/data/quests';
-import {
-  loadProgress,
-  saveProgress,
-  completeQuest,
-  isQuestUnlocked,
-  getLevel,
-} from '@/lib/progress';
+import { loadProgress, saveProgress, completeQuest, isQuestUnlocked, getLevel } from '@/lib/progress';
 import QuizBlock from '@/components/QuizBlock';
 import CompletionModal from '@/components/CompletionModal';
 import type { UserProgress } from '@/lib/progress';
 
-const stepTypeConfig = {
-  read: { label: '읽기', Icon: BookOpen, color: 'text-primary', bg: 'bg-primary-dim' },
-  action: { label: '실행', Icon: Zap, color: 'text-warning', bg: 'bg-warning-dim' },
-  verify: { label: '확인', Icon: CheckCircle2, color: 'text-success', bg: 'bg-success-dim' },
-};
+const typeIcon = { read: BookOpen, action: Zap, verify: CheckCircle2 };
+const typeLabel = { read: '읽기', action: '실행', verify: '확인' };
 
 export default function QuestPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -28,335 +19,211 @@ export default function QuestPage({ params }: { params: Promise<{ id: string }> 
   const quest = getQuestById(questId);
 
   const [progress, setProgress] = useState<UserProgress | null>(null);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+  const [step, setStep] = useState(0);
+  const [done, setDone] = useState<Set<number>>(new Set());
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [modal, setModal] = useState(false);
   const [levelUp, setLevelUp] = useState<{ level: number; title: string } | null>(null);
 
   useEffect(() => {
     const p = loadProgress();
     setProgress(p);
     if (p.currentStep[questId]) {
-      setCurrentStep(p.currentStep[questId]);
-      const completed = new Set<number>();
-      for (let i = 0; i < p.currentStep[questId]; i++) {
-        completed.add(i);
-      }
-      setCompletedSteps(completed);
+      setStep(p.currentStep[questId]);
+      const s = new Set<number>();
+      for (let i = 0; i < p.currentStep[questId]; i++) s.add(i);
+      setDone(s);
     }
   }, [questId]);
 
-  if (!quest) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-5">
-        <p className="text-text-secondary">퀘스트를 찾을 수 없어요</p>
-        <button
-          onClick={() => router.push('/dungeon')}
-          className="mt-4 text-sm text-primary"
-        >
-          던전으로 돌아가기
-        </button>
-      </div>
-    );
-  }
+  if (!quest) return <p className="text-center text-text-tertiary">퀘스트를 찾을 수 없어요</p>;
 
   if (progress && !isQuestUnlocked(questId, progress.completedQuests)) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-5">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-dim">
-          <Lock size={24} className="text-accent" />
-        </div>
-        <h2 className="mt-4 text-lg font-bold">잠긴 퀘스트</h2>
-        <p className="mt-1 text-sm text-text-secondary">
-          이전 퀘스트를 먼저 클리어해야 해
-        </p>
-        <button
-          onClick={() => router.push('/dungeon')}
-          className="mt-6 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-background"
-        >
-          던전으로
-        </button>
+      <div className="flex flex-col items-center pt-20 text-center">
+        <Lock size={20} className="text-text-quaternary" />
+        <p className="mt-3 text-sm text-text-tertiary">이전 퀘스트를 먼저 클리어해야 해</p>
+        <button onClick={() => router.push('/dungeon')} className="mt-4 text-sm text-accent">던전으로</button>
       </div>
     );
   }
 
-  // Already completed - review mode
   if (progress && progress.completedQuests.includes(questId)) {
     return (
-      <div className="mx-auto max-w-md px-5 pt-8 pb-8">
-        <button
-          onClick={() => router.push('/dungeon')}
-          className="mb-6 flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary"
-        >
+      <>
+        <button onClick={() => router.push('/dungeon')} className="flex items-center gap-1 text-sm text-text-tertiary hover:text-text-primary">
           <ArrowLeft size={14} /> 던전
         </button>
-
-        <div className="mb-6 rounded-2xl border border-success/20 bg-surface p-5 text-center">
-          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-success-dim">
-            <CheckCircle2 size={20} className="text-success" />
-          </div>
-          <h2 className="mt-3 text-lg font-bold">{quest.title}</h2>
-          <p className="mt-0.5 text-xs text-text-secondary">클리어 완료</p>
+        <div className="mt-6 rounded-xl border border-border p-4 text-center">
+          <p className="text-xs text-text-quaternary">클리어 완료</p>
+          <p className="mt-1 text-sm font-semibold">{quest.title}</p>
         </div>
-
-        <div className="space-y-3">
-          {quest.steps.map((step, i) => (
-            <div key={i} className="rounded-xl border border-border bg-surface p-4">
-              <h4 className="text-sm font-semibold text-success">{step.title}</h4>
-              <div className="mt-2 whitespace-pre-line text-xs leading-relaxed text-text-secondary">
-                {step.content}
-              </div>
+        <div className="mt-4 space-y-2">
+          {quest.steps.map((s, i) => (
+            <div key={i} className="rounded-lg border border-border p-3">
+              <p className="text-xs font-medium text-text-tertiary">{s.title}</p>
+              <div className="mt-1 whitespace-pre-line text-xs leading-relaxed text-text-secondary">{s.content}</div>
             </div>
           ))}
         </div>
-
-        <div className="mt-6 flex gap-2.5">
-          <button
-            onClick={() => router.push('/dungeon')}
-            className="flex-1 rounded-xl border border-border py-2.5 text-sm text-text-secondary"
-          >
-            던전으로
-          </button>
+        <div className="mt-4 flex gap-2">
+          <button onClick={() => router.push('/dungeon')} className="flex-1 rounded-lg border border-border py-2 text-sm text-text-tertiary">던전</button>
           {questId < 10 && (
-            <button
-              onClick={() => router.push(`/quest/${questId + 1}`)}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary py-2.5 text-sm font-semibold text-background"
-            >
-              다음 <ArrowRight size={14} />
-            </button>
+            <button onClick={() => router.push(`/quest/${questId + 1}`)} className="flex-1 rounded-lg bg-accent py-2 text-sm font-semibold text-white">다음</button>
           )}
         </div>
-      </div>
+      </>
     );
   }
 
-  const step = quest.steps[currentStep];
-  const allStepsComplete = completedSteps.size === quest.steps.length;
-  const needsQuiz = quest.quiz && quest.quiz.length > 0;
-  const canComplete = allStepsComplete && (!needsQuiz || quizDone);
-  const typeConfig = stepTypeConfig[step.type];
+  const cur = quest.steps[step];
+  const allDone = done.size === quest.steps.length;
+  const hasQuiz = quest.quiz && quest.quiz.length > 0;
+  const canFinish = allDone && (!hasQuiz || quizDone);
+  const Icon = typeIcon[cur.type];
 
-  function handleStepComplete() {
+  function completeStep() {
     if (!quest) return;
-    const newCompleted = new Set(completedSteps);
-    newCompleted.add(currentStep);
-    setCompletedSteps(newCompleted);
-
+    const next = new Set(done);
+    next.add(step);
+    setDone(next);
     if (progress) {
-      const updated = {
-        ...progress,
-        currentStep: { ...progress.currentStep, [questId]: currentStep + 1 },
-      };
-      saveProgress(updated);
-      setProgress(updated);
+      const u = { ...progress, currentStep: { ...progress.currentStep, [questId]: step + 1 } };
+      saveProgress(u);
+      setProgress(u);
     }
-
-    if (currentStep < quest.steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
+    if (step < quest.steps.length - 1) setStep(step + 1);
   }
 
-  function handleQuestComplete() {
+  function finish() {
     if (!progress || !quest) return;
-
-    const oldLevel = getLevel(progress.xp).level;
-    const updated = completeQuest(progress, questId, quest.xp);
-    const newLevelInfo = getLevel(updated.xp);
-
-    const { [questId]: _, ...restSteps } = updated.currentStep;
-    updated.currentStep = restSteps;
-
-    saveProgress(updated);
-    setProgress(updated);
-
-    if (newLevelInfo.level > oldLevel) {
-      setLevelUp({ level: newLevelInfo.level, title: newLevelInfo.title });
-    }
-
-    setShowModal(true);
+    const oldLv = getLevel(progress.xp).level;
+    const u = completeQuest(progress, questId, quest.xp);
+    const { [questId]: _, ...rest } = u.currentStep;
+    u.currentStep = rest;
+    saveProgress(u);
+    setProgress(u);
+    const newLv = getLevel(u.xp);
+    if (newLv.level > oldLv) setLevelUp({ level: newLv.level, title: newLv.title });
+    setModal(true);
   }
 
   return (
-    <div className="mx-auto max-w-md px-5 pt-8 pb-8">
+    <>
       {/* Back */}
-      <button
-        onClick={() => router.push('/dungeon')}
-        className="mb-6 flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary"
-      >
+      <button onClick={() => router.push('/dungeon')} className="flex items-center gap-1 text-sm text-text-tertiary hover:text-text-primary">
         <ArrowLeft size={14} /> 던전
       </button>
 
-      {/* Quest Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2">
-          <span className="rounded-lg bg-primary-dim px-2 py-1 font-mono text-[11px] font-bold text-primary">
-            {quest.floor}F
-          </span>
-          <span className="rounded-lg bg-success-dim px-2 py-1 font-mono text-[11px] font-bold text-success">
-            +{quest.xp} XP
-          </span>
+      {/* Header */}
+      <div className="mt-4">
+        <div className="flex items-center gap-2 text-xs">
+          <span className="font-mono text-accent">{quest.floor}F</span>
+          <span className="text-text-quaternary">+{quest.xp} XP</span>
         </div>
-        <h1 className="mt-2 text-xl font-bold">{quest.title}</h1>
-        <p className="mt-0.5 text-sm text-text-secondary">{quest.description}</p>
+        <h1 className="mt-1 text-lg font-bold tracking-tight">{quest.title}</h1>
       </div>
 
-      {/* Step Progress Dots */}
-      <div className="mb-5 flex items-center gap-1.5">
+      {/* Progress dots */}
+      <div className="mt-4 flex gap-1">
         {quest.steps.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              completedSteps.has(i)
-                ? 'bg-success'
-                : i === currentStep
-                ? 'bg-primary'
-                : 'bg-surface-2'
-            }`}
-          />
+          <div key={i} className={`h-0.5 flex-1 rounded-full transition-colors ${
+            done.has(i) ? 'bg-success' : i === step ? 'bg-accent' : 'bg-bg-elevated'
+          }`} />
         ))}
       </div>
 
-      {/* Step Tabs */}
-      <div className="no-scrollbar mb-5 flex gap-1.5 overflow-x-auto">
+      {/* Step tabs */}
+      <div className="no-scrollbar mt-3 flex gap-1 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
         {quest.steps.map((s, i) => (
           <button
             key={i}
-            onClick={() => setCurrentStep(i)}
-            className={`flex shrink-0 items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-medium transition-colors ${
-              i === currentStep
-                ? 'bg-primary text-background'
-                : completedSteps.has(i)
-                ? 'bg-success-dim text-success'
-                : 'bg-surface-2 text-text-disabled'
+            onClick={() => setStep(i)}
+            className={`shrink-0 rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
+              i === step ? 'bg-accent text-white'
+              : done.has(i) ? 'bg-success-dim text-success'
+              : 'bg-bg-elevated text-text-quaternary'
             }`}
           >
-            {completedSteps.has(i) && <CheckCircle2 size={10} />}
             {s.title}
           </button>
         ))}
       </div>
 
-      {/* Current Step Content */}
-      <div className="mb-5 rounded-2xl border border-border bg-surface p-5 animate-in">
-        <div className="mb-3 flex items-center gap-2">
-          <div className={`flex h-6 w-6 items-center justify-center rounded-md ${typeConfig.bg}`}>
-            <typeConfig.Icon size={12} className={typeConfig.color} />
-          </div>
-          <span className={`text-[11px] font-medium ${typeConfig.color}`}>{typeConfig.label}</span>
-          <span className="ml-auto text-[11px] text-text-disabled">
-            {currentStep + 1}/{quest.steps.length}
-          </span>
+      {/* Content */}
+      <div className="mt-4 animate-in rounded-xl border border-border p-4">
+        <div className="mb-2 flex items-center gap-1.5 text-xs text-text-quaternary">
+          <Icon size={12} />
+          <span>{typeLabel[cur.type]}</span>
+          <span className="ml-auto font-mono">{step + 1}/{quest.steps.length}</span>
         </div>
 
-        <h3 className="mb-3 text-[15px] font-semibold">{step.title}</h3>
-
-        <div className="whitespace-pre-line text-sm leading-relaxed text-text-secondary">
-          {step.content.split('\n').map((line, i) => {
+        <h3 className="text-sm font-semibold">{cur.title}</h3>
+        <div className="mt-2 whitespace-pre-line text-sm leading-relaxed text-text-secondary">
+          {cur.content.split('\n').map((line, i) => {
             const parts = line.split(/(\*\*[^*]+\*\*)/g);
             return (
               <span key={i}>
-                {parts.map((part, j) => {
-                  if (part.startsWith('**') && part.endsWith('**')) {
-                    return (
-                      <strong key={j} className="font-semibold text-text-primary">
-                        {part.slice(2, -2)}
-                      </strong>
-                    );
-                  }
-                  return part;
-                })}
-                {i < step.content.split('\n').length - 1 && '\n'}
+                {parts.map((p, j) =>
+                  p.startsWith('**') && p.endsWith('**')
+                    ? <strong key={j} className="font-semibold text-text-primary">{p.slice(2, -2)}</strong>
+                    : p
+                )}
+                {'\n'}
               </span>
             );
           })}
         </div>
 
-        {/* Complete step button */}
-        {!completedSteps.has(currentStep) && (
+        {!done.has(step) ? (
           <button
-            onClick={handleStepComplete}
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary-dim py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+            onClick={completeStep}
+            className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg border border-accent/20 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent-dim"
           >
-            {step.verifyText || '다음 단계'}
-            <ChevronRight size={14} />
+            {cur.verifyText || '다음 단계'} <ChevronRight size={14} />
           </button>
-        )}
-
-        {completedSteps.has(currentStep) && (
-          <div className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-success-dim py-2.5 text-sm font-medium text-success">
-            <CheckCircle2 size={14} />
-            완료
-          </div>
+        ) : (
+          <div className="mt-4 rounded-lg bg-success-dim py-2 text-center text-xs font-medium text-success">완료</div>
         )}
       </div>
 
       {/* Quiz */}
-      {allStepsComplete && needsQuiz && !quizDone && (
-        <div className="mb-5">
+      {allDone && hasQuiz && !quizDone && (
+        <div className="mt-4">
           {!showQuiz ? (
-            <button
-              onClick={() => setShowQuiz(true)}
-              className="flex w-full items-center gap-4 rounded-2xl border border-purple/20 bg-surface p-5 text-left transition-all hover:bg-surface-hover"
-            >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-dim">
-                <FileQuestion size={20} className="text-purple" />
-              </div>
-              <div>
-                <h3 className="text-[15px] font-semibold text-purple">퀴즈 풀기</h3>
-                <p className="mt-0.5 text-xs text-text-secondary">배운 내용을 확인해보자</p>
-              </div>
-              <ChevronRight size={16} className="ml-auto text-text-disabled" />
+            <button onClick={() => setShowQuiz(true)} className="w-full rounded-xl border border-border p-4 text-left transition-colors hover:border-border-hover">
+              <p className="text-sm font-semibold">퀴즈</p>
+              <p className="mt-0.5 text-xs text-text-tertiary">배운 내용 확인</p>
             </button>
           ) : (
-            <QuizBlock
-              questions={quest.quiz!}
-              onComplete={(score) => {
-                setQuizDone(true);
-                if (progress) {
-                  const updated = {
-                    ...progress,
-                    quizScores: { ...progress.quizScores, [questId]: score },
-                  };
-                  saveProgress(updated);
-                  setProgress(updated);
-                }
-              }}
-            />
+            <QuizBlock questions={quest.quiz!} onComplete={score => {
+              setQuizDone(true);
+              if (progress) {
+                const u = { ...progress, quizScores: { ...progress.quizScores, [questId]: score } };
+                saveProgress(u);
+                setProgress(u);
+              }
+            }} />
           )}
         </div>
       )}
 
-      {/* Complete Button */}
-      {canComplete && (
-        <button
-          onClick={handleQuestComplete}
-          className="mb-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-success py-4 text-[15px] font-bold text-background transition-opacity hover:opacity-90"
-        >
-          퀘스트 완료
-          <span className="rounded-full bg-background/20 px-2.5 py-0.5 text-xs font-semibold">
-            +{quest.xp} XP
-          </span>
+      {/* Finish */}
+      {canFinish && (
+        <button onClick={finish} className="mt-4 w-full rounded-xl bg-accent py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+          퀘스트 완료 <span className="ml-1 opacity-70">+{quest.xp} XP</span>
         </button>
       )}
 
-      {/* Modal */}
       <CompletionModal
-        isOpen={showModal}
+        isOpen={modal}
         questTitle={quest.title}
         xpGained={quest.xp}
         newLevel={levelUp?.level}
         levelTitle={levelUp?.title}
-        onClose={() => {
-          setShowModal(false);
-          if (questId < 10) {
-            router.push(`/quest/${questId + 1}`);
-          } else {
-            router.push('/dungeon');
-          }
-        }}
+        onClose={() => { setModal(false); router.push(questId < 10 ? `/quest/${questId + 1}` : '/dungeon'); }}
       />
-    </div>
+    </>
   );
 }

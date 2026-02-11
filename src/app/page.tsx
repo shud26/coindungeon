@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Swords, Trophy, ChevronRight, Zap, Clock, ArrowRight, Check } from 'lucide-react';
+import { ChevronRight, Zap, Clock } from 'lucide-react';
 import LevelBadge from '@/components/LevelBadge';
 import ProgressBar from '@/components/ProgressBar';
 import StreakCounter from '@/components/StreakCounter';
@@ -20,162 +20,98 @@ export default function HomePage() {
     setProgress(updated);
   }, []);
 
-  if (!progress) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    );
-  }
+  if (!progress) return null;
 
-  const levelInfo = getLevel(progress.xp);
-  const nextQuestId = getNextQuestId(progress.completedQuests);
-  const nextQuest = getQuestById(nextQuestId);
-  const completedCount = progress.completedQuests.length;
-  const totalQuests = quests.length;
+  const level = getLevel(progress.xp);
+  const nextId = getNextQuestId(progress.completedQuests);
+  const nextQuest = getQuestById(nextId);
+  const done = progress.completedQuests.length;
 
   return (
-    <div className="mx-auto max-w-md px-5 pt-10 pb-8">
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-[28px] font-bold tracking-tight">
-          <span className="gradient-text">코인던전</span>
-        </h1>
-        <p className="mt-1 text-sm text-text-secondary">
-          매일 한 층씩 깨는 크립토 퀘스트
-        </p>
-      </div>
+    <>
+      {/* Title */}
+      <h1 className="text-2xl font-bold tracking-tight">코인던전</h1>
+      <p className="mt-1 text-sm text-text-tertiary">크립토 실전 퀘스트</p>
 
-      {/* Level Card */}
-      <div className="mb-5 rounded-2xl border border-border bg-surface p-5">
-        <div className="flex items-center gap-4">
-          <LevelBadge level={levelInfo.level} size="lg" />
+      {/* Level + Stats */}
+      <div className="mt-8 rounded-xl border border-border p-4">
+        <div className="flex items-center gap-3">
+          <LevelBadge level={level.level} size="lg" />
           <div className="flex-1">
             <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-bold">{levelInfo.title}</h2>
-              <span className="font-mono text-xs text-text-disabled">
-                {progress.xp} XP
-              </span>
+              <span className="text-sm font-semibold">{level.title}</span>
+              <span className="font-mono text-xs text-text-quaternary">{progress.xp} XP</span>
             </div>
-            <ProgressBar progress={levelInfo.progress} className="mt-3" />
-            <div className="mt-1.5 flex justify-between text-[11px] text-text-disabled">
-              <span>Lv.{levelInfo.level}</span>
-              <span>{levelInfo.nextXp - levelInfo.currentXp} XP to next</span>
+            <ProgressBar progress={level.progress} className="mt-2" />
+            <div className="mt-1 flex justify-between text-[11px] text-text-quaternary">
+              <span>Lv.{level.level}</span>
+              <span>{level.nextXp - level.currentXp} to next</span>
             </div>
+          </div>
+        </div>
+        <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+          <StreakCounter streak={progress.streak} />
+          <div className="flex items-center gap-4 font-mono text-xs text-text-tertiary">
+            <span>{done}/{quests.length} 클리어</span>
+            <span>{nextId}F</span>
           </div>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="mb-6 grid grid-cols-3 gap-2.5">
-        <StreakCounter streak={progress.streak} />
-        <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-dim">
-            <Swords size={16} className="text-primary" />
-          </div>
-          <div>
-            <div className="text-[10px] uppercase tracking-wider text-text-disabled">clear</div>
-            <div className="font-mono text-lg font-bold leading-tight">
-              {completedCount}<span className="text-xs font-normal text-text-disabled">/{totalQuests}</span>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-dim">
-            <Trophy size={16} className="text-purple" />
-          </div>
-          <div>
-            <div className="text-[10px] uppercase tracking-wider text-text-disabled">floor</div>
-            <div className="font-mono text-lg font-bold leading-tight">
-              {nextQuestId}<span className="text-xs font-normal text-text-disabled">F</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Next Quest CTA */}
+      {/* Next Quest */}
       {nextQuest && (
-        <div className="mb-6">
-          <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-text-disabled">
-            Next Quest
-          </h3>
+        <div className="mt-6">
+          <p className="mb-2 text-xs font-medium text-text-quaternary" style={{ letterSpacing: '0.05em' }}>
+            NEXT QUEST
+          </p>
           <Link
             href={`/quest/${nextQuest.id}`}
-            className="group block rounded-2xl border border-primary/15 bg-surface p-5 transition-all hover:border-primary/30 hover:bg-surface-hover"
+            className="group block rounded-xl border border-accent/15 p-4 transition-colors hover:border-accent/30"
           >
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-dim font-mono text-sm font-bold text-primary">
-                {nextQuest.floor}F
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-dim font-mono text-sm font-semibold text-accent">
+                {nextQuest.floor}
               </div>
               <div className="flex-1">
-                <h4 className="text-[15px] font-semibold">{nextQuest.title}</h4>
-                <p className="mt-0.5 text-xs text-text-secondary">
-                  {nextQuest.description}
-                </p>
-                <div className="mt-2 flex items-center gap-3 text-[11px] text-text-disabled">
-                  <span className="flex items-center gap-1">
-                    <Zap size={10} /> {nextQuest.xp} XP
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock size={10} /> ~{nextQuest.estimatedMinutes}분
-                  </span>
+                <p className="text-sm font-semibold">{nextQuest.title}</p>
+                <p className="mt-0.5 text-xs text-text-tertiary">{nextQuest.description}</p>
+                <div className="mt-2 flex items-center gap-3 text-[11px] text-text-quaternary">
+                  <span className="flex items-center gap-1"><Zap size={10} />{nextQuest.xp} XP</span>
+                  <span className="flex items-center gap-1"><Clock size={10} />~{nextQuest.estimatedMinutes}분</span>
                 </div>
               </div>
-            </div>
-            <div className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-background transition-opacity group-hover:opacity-90">
-              시작하기
-              <ArrowRight size={14} />
+              <ChevronRight size={16} className="mt-1 shrink-0 text-text-quaternary transition-transform group-hover:translate-x-0.5" />
             </div>
           </Link>
         </div>
       )}
 
-      {/* All Complete */}
-      {completedCount === totalQuests && (
-        <div className="mb-6 rounded-2xl border border-success/20 bg-surface p-6 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-success-dim">
-            <Trophy size={24} className="text-success" />
+      {/* Completed */}
+      {done > 0 && (
+        <div className="mt-6">
+          <p className="mb-2 text-xs font-medium text-text-quaternary" style={{ letterSpacing: '0.05em' }}>COMPLETED</p>
+          <div className="space-y-1">
+            {progress.completedQuests.slice(-3).reverse().map(id => {
+              const q = getQuestById(id);
+              if (!q) return null;
+              return (
+                <div key={id} className="flex items-center gap-3 rounded-lg p-2 text-sm">
+                  <span className="font-mono text-xs text-success">+{q.xp}</span>
+                  <span className="text-text-secondary">{q.title}</span>
+                </div>
+              );
+            })}
           </div>
-          <h3 className="mt-3 text-lg font-bold text-success">
-            All Clear
-          </h3>
-          <p className="mt-1 text-sm text-text-secondary">
-            10층까지 정복 완료. 새로운 퀘스트가 곧 추가돼.
-          </p>
         </div>
       )}
 
-      {/* Recent */}
-      {completedCount > 0 && (
-        <div>
-          <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-text-disabled">
-            Completed
-          </h3>
-          <div className="space-y-1.5">
-            {progress.completedQuests
-              .slice(-3)
-              .reverse()
-              .map((id) => {
-                const q = getQuestById(id);
-                if (!q) return null;
-                return (
-                  <div
-                    key={id}
-                    className="flex items-center gap-3 rounded-xl bg-surface px-4 py-3"
-                  >
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-success-dim">
-                      <Check size={12} className="text-success" strokeWidth={3} />
-                    </div>
-                    <span className="flex-1 text-sm">{q.title}</span>
-                    <span className="font-mono text-[11px] text-success">
-                      +{q.xp}
-                    </span>
-                  </div>
-                );
-              })}
-          </div>
+      {/* All clear */}
+      {done === quests.length && (
+        <div className="mt-6 rounded-xl border border-success/20 p-5 text-center">
+          <p className="text-sm font-semibold text-success">All Clear</p>
+          <p className="mt-1 text-xs text-text-tertiary">새로운 퀘스트가 곧 추가돼.</p>
         </div>
       )}
-    </div>
+    </>
   );
 }

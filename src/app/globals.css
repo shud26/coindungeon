@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0A0E14;
+  --surface: #151B26;
+  --surface-hover: #1E2633;
+  --border: rgba(255,255,255,0.1);
+  --primary: #00D9FF;
+  --success: #00FF85;
+  --accent: #FF0080;
+  --warning: #FFB800;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0AEC0;
+  --text-disabled: #4A5568;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-success: var(--success);
+  --color-accent: var(--accent);
+  --color-warning: var(--warning);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-disabled: var(--text-disabled);
+  --font-sans: var(--font-pretendard);
+  --font-mono: var(--font-jetbrains);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  font-family: var(--font-sans), -apple-system, sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-disabled);
+  border-radius: 3px;
+}
+
+/* Neon glow */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+}
+.glow-success {
+  box-shadow: 0 0 20px rgba(0, 255, 133, 0.3);
+}
+.glow-accent {
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
+}
+
+/* Progress bar animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 50%, var(--primary) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* XP gain animation */
+@keyframes float-up {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-60px); }
+}
+.xp-float {
+  animation: float-up 1.5s ease-out forwards;
+}
+
+/* Pulse for current quest */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(0, 217, 255, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(0, 217, 255, 0.6); }
+}
+.pulse-current {
+  animation: pulse-glow 2s infinite;
 }

@@ -1,28 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0A0E14;
-  --surface: #151B26;
-  --surface-hover: #1E2633;
-  --border: rgba(255,255,255,0.1);
-  --primary: #00D9FF;
-  --success: #00FF85;
-  --accent: #FF0080;
-  --warning: #FFB800;
-  --text-primary: #FFFFFF;
-  --text-secondary: #A0AEC0;
-  --text-disabled: #4A5568;
+  --background: #06080C;
+  --surface: #0D1117;
+  --surface-2: #161B22;
+  --surface-hover: #1C2333;
+  --border: rgba(255,255,255,0.06);
+  --border-light: rgba(255,255,255,0.1);
+  --primary: #58A6FF;
+  --primary-dim: rgba(88,166,255,0.15);
+  --success: #3FB950;
+  --success-dim: rgba(63,185,80,0.15);
+  --accent: #F778BA;
+  --accent-dim: rgba(247,120,186,0.15);
+  --warning: #D29922;
+  --warning-dim: rgba(210,153,34,0.15);
+  --purple: #BC8CFF;
+  --purple-dim: rgba(188,140,255,0.15);
+  --text-primary: #E6EDF3;
+  --text-secondary: #7D8590;
+  --text-disabled: #484F58;
+  --gradient-1: linear-gradient(135deg, #58A6FF 0%, #BC8CFF 100%);
+  --gradient-2: linear-gradient(135deg, #3FB950 0%, #58A6FF 100%);
+  --gradient-3: linear-gradient(135deg, #F778BA 0%, #FF7B72 100%);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-surface-hover: var(--surface-hover);
   --color-border: var(--border);
+  --color-border-light: var(--border-light);
   --color-primary: var(--primary);
+  --color-primary-dim: var(--primary-dim);
   --color-success: var(--success);
+  --color-success-dim: var(--success-dim);
   --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
   --color-warning: var(--warning);
+  --color-warning-dim: var(--warning-dim);
+  --color-purple: var(--purple);
+  --color-purple-dim: var(--purple-dim);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-disabled: var(--text-disabled);
@@ -34,56 +53,66 @@ body {
   background: var(--background);
   color: var(--text-primary);
   font-family: var(--font-sans), -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--text-disabled);
-  border-radius: 3px;
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-disabled); border-radius: 2px; }
+
+/* Glass card */
+.glass {
+  background: rgba(13, 17, 23, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
 }
 
-/* Neon glow */
-.glow-primary {
-  box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
-}
-.glow-success {
-  box-shadow: 0 0 20px rgba(0, 255, 133, 0.3);
-}
-.glow-accent {
-  box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
-}
-
-/* Progress bar animation */
+/* Shimmer progress bar */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
-.shimmer {
-  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 50%, var(--primary) 100%);
+.shimmer-bar {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--purple) 50%, var(--primary) 100%);
   background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+  animation: shimmer 3s ease infinite;
 }
 
-/* XP gain animation */
+/* XP float animation */
 @keyframes float-up {
-  0% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-60px); }
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  50% { opacity: 1; transform: translateY(-30px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.9); }
 }
-.xp-float {
-  animation: float-up 1.5s ease-out forwards;
+.xp-float { animation: float-up 1.5s ease-out forwards; }
+
+/* Pulse ring for active quest */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(88,166,255,0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(88,166,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(88,166,255,0); }
+}
+.pulse-active { animation: pulse-ring 2s infinite; }
+
+/* Fade in */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fade-in 0.4s ease-out forwards;
 }
 
-/* Pulse for current quest */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(0, 217, 255, 0.3); }
-  50% { box-shadow: 0 0 25px rgba(0, 217, 255, 0.6); }
+/* Gradient text */
+.gradient-text {
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-.pulse-current {
-  animation: pulse-glow 2s infinite;
-}
+
+/* Hide scrollbar for horizontal scroll */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

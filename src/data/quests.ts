@@ -18,7 +18,7 @@ export interface Quest {
   slug: string;
   title: string;
   description: string;
-  emoji: string;
+  icon: string; // lucide icon name
   difficulty: 'easy' | 'medium' | 'hard';
   xp: number;
   estimatedMinutes: number;
@@ -34,7 +34,7 @@ export const quests: Quest[] = [
     slug: 'what-is-crypto',
     title: '크립토가 뭐야?',
     description: '블록체인과 암호화폐의 기본 개념을 이해하자',
-    emoji: '🪙',
+    icon: 'Coins',
     difficulty: 'easy',
     xp: 50,
     estimatedMinutes: 5,
@@ -56,7 +56,7 @@ export const quests: Quest[] = [
         type: 'read',
       },
       {
-        title: '이해했는지 확인!',
+        title: '이해 확인',
         content: '위 내용을 읽었으면 아래 퀴즈를 풀어보자.',
         type: 'verify',
         verifyText: '기본 개념을 이해했어요',
@@ -83,7 +83,7 @@ export const quests: Quest[] = [
     slug: 'install-metamask',
     title: '메타마스크 설치하기',
     description: '나만의 크립토 지갑을 만들자',
-    emoji: '🦊',
+    icon: 'Wallet',
     difficulty: 'easy',
     xp: 100,
     estimatedMinutes: 10,
@@ -96,13 +96,13 @@ export const quests: Quest[] = [
       },
       {
         title: '설치하기',
-        content: '1. 크롬 브라우저를 열어\n2. **metamask.io** 에 접속해 (꼭 공식 사이트인지 확인!)\n3. "Download" 클릭 → Chrome 확장 프로그램 추가\n4. 설치 완료!\n\n⚠️ **주의**: 검색 결과의 가짜 메타마스크 사이트 조심! 반드시 metamask.io에서 다운로드해.',
+        content: '1. 크롬 브라우저를 열어\n2. **metamask.io** 에 접속해 (꼭 공식 사이트인지 확인!)\n3. "Download" 클릭 → Chrome 확장 프로그램 추가\n4. 설치 완료!\n\n주의: 검색 결과의 가짜 메타마스크 사이트 조심! 반드시 metamask.io에서 다운로드해.',
         type: 'action',
         verifyText: '메타마스크를 설치했어요',
       },
       {
         title: '새 지갑 만들기',
-        content: '1. 메타마스크 아이콘 클릭\n2. "Create a new wallet" 선택\n3. 비밀번호 설정 (8자 이상)\n4. **시드 구문(Secret Recovery Phrase)** 12개 단어가 나타남\n\n⚠️ **절대로** 시드 구문을 누구에게도 알려주지 마! 이건 다음 퀘스트에서 자세히 배울 거야.',
+        content: '1. 메타마스크 아이콘 클릭\n2. "Create a new wallet" 선택\n3. 비밀번호 설정 (8자 이상)\n4. **시드 구문(Secret Recovery Phrase)** 12개 단어가 나타남\n\n절대로 시드 구문을 누구에게도 알려주지 마. 이건 다음 퀘스트에서 자세히 배울 거야.',
         type: 'action',
         verifyText: '새 지갑을 만들었어요',
       },
@@ -128,7 +128,7 @@ export const quests: Quest[] = [
     slug: 'seed-phrase-safety',
     title: '시드 구문 안전하게 보관하기',
     description: '지갑의 "마스터키"를 안전하게 지키는 법',
-    emoji: '🔐',
+    icon: 'KeyRound',
     difficulty: 'easy',
     xp: 100,
     estimatedMinutes: 8,
@@ -141,12 +141,12 @@ export const quests: Quest[] = [
       },
       {
         title: '절대 하면 안 되는 것들',
-        content: '🚫 **절대 하지 마:**\n- 스크린샷 찍기\n- 메모 앱이나 노트에 저장\n- 카카오톡이나 메일로 보내기\n- 클라우드(Google Drive, iCloud)에 저장\n- 누군가 시드 구문을 물어보면 알려주기\n\n누군가 "시드 구문을 입력하세요"라고 하면 100% 사기야.',
+        content: '절대 하지 마:\n- 스크린샷 찍기\n- 메모 앱이나 노트에 저장\n- 카카오톡이나 메일로 보내기\n- 클라우드(Google Drive, iCloud)에 저장\n- 누군가 시드 구문을 물어보면 알려주기\n\n누군가 "시드 구문을 입력하세요"라고 하면 100% 사기야.',
         type: 'read',
       },
       {
         title: '안전하게 보관하는 법',
-        content: '✅ **이렇게 보관해:**\n\n1. **종이에 직접 쓰기** - 볼펜으로 깨끗하게\n2. **2장 이상 복사** - 다른 장소에 보관\n3. **방수/방화** - 지퍼백에 넣기\n4. **아무도 모르는 곳에 보관**\n\n고급: 스틸 플레이트에 각인하면 화재에도 안전해.',
+        content: '이렇게 보관해:\n\n1. **종이에 직접 쓰기** - 볼펜으로 깨끗하게\n2. **2장 이상 복사** - 다른 장소에 보관\n3. **방수/방화** - 지퍼백에 넣기\n4. **아무도 모르는 곳에 보관**\n\n고급: 스틸 플레이트에 각인하면 화재에도 안전해.',
         type: 'action',
         verifyText: '시드 구문을 안전한 곳에 적어뒀어요',
       },
@@ -172,7 +172,7 @@ export const quests: Quest[] = [
     slug: 'read-etherscan',
     title: 'Etherscan에서 트랜잭션 읽기',
     description: '블록체인 탐색기로 거래 내역을 읽어보자',
-    emoji: '🔍',
+    icon: 'Search',
     difficulty: 'easy',
     xp: 100,
     estimatedMinutes: 10,
@@ -208,7 +208,7 @@ export const quests: Quest[] = [
     slug: 'testnet-faucet',
     title: '테스트넷 ETH 받기',
     description: '가짜 ETH로 안전하게 연습하자 (Faucet)',
-    emoji: '🚰',
+    icon: 'Droplets',
     difficulty: 'medium',
     xp: 150,
     estimatedMinutes: 15,
@@ -253,7 +253,7 @@ export const quests: Quest[] = [
     slug: 'cex-vs-dex',
     title: '거래소 종류: CEX vs DEX',
     description: '중앙화 vs 탈중앙화 거래소의 차이',
-    emoji: '🏦',
+    icon: 'Building2',
     difficulty: 'easy',
     xp: 100,
     estimatedMinutes: 8,
@@ -276,7 +276,7 @@ export const quests: Quest[] = [
       },
       {
         title: '핵심 정리',
-        content: '| | CEX | DEX |\n|---|---|---|\n| 운영 | 회사 | 스마트 컨트랙트 |\n| KYC | 필수 | 불필요 |\n| 원화 | 가능 | 불가 |\n| 코인 보관 | 거래소 | 내 지갑 |\n| 고객센터 | 있음 | 없음 |',
+        content: 'CEX vs DEX 비교:\n\n- **운영**: 회사 vs 스마트 컨트랙트\n- **KYC**: 필수 vs 불필요\n- **원화**: 가능 vs 불가\n- **코인 보관**: 거래소 vs 내 지갑\n- **고객센터**: 있음 vs 없음',
         type: 'verify',
         verifyText: 'CEX와 DEX 차이를 이해했어요',
       },
@@ -296,7 +296,7 @@ export const quests: Quest[] = [
     slug: 'buy-first-coin',
     title: '업비트에서 첫 코인 사기',
     description: '실제 거래소에서 소액으로 첫 거래',
-    emoji: '💰',
+    icon: 'BadgeDollarSign',
     difficulty: 'medium',
     xp: 150,
     estimatedMinutes: 20,
@@ -304,7 +304,7 @@ export const quests: Quest[] = [
     steps: [
       {
         title: '준비물',
-        content: '필요한 것:\n- 업비트 앱 (설치 + 본인인증 완료)\n- 은행 계좌 연결\n- 최소 5,000원 이상\n\n⚠️ **중요**: 잃어도 괜찮은 금액만 넣을 것! 처음엔 5,000~10,000원이면 충분해.',
+        content: '필요한 것:\n- 업비트 앱 (설치 + 본인인증 완료)\n- 은행 계좌 연결\n- 최소 5,000원 이상\n\n중요: 잃어도 괜찮은 금액만 넣을 것! 처음엔 5,000~10,000원이면 충분해.',
         type: 'read',
       },
       {
@@ -333,7 +333,7 @@ export const quests: Quest[] = [
     slug: 'candlestick-basics',
     title: '차트 읽기: 캔들스틱 기초',
     description: '코인 차트의 초록/빨강 막대가 뭔지 알아보자',
-    emoji: '📊',
+    icon: 'CandlestickChart',
     difficulty: 'medium',
     xp: 150,
     estimatedMinutes: 12,
@@ -346,12 +346,12 @@ export const quests: Quest[] = [
       },
       {
         title: '초록 vs 빨강',
-        content: '**🟢 초록(양봉)**: 종가 > 시가 (가격이 올랐다)\n- 몸통 아래: 시가\n- 몸통 위: 종가\n\n**🔴 빨강(음봉)**: 종가 < 시가 (가격이 내렸다)\n- 몸통 위: 시가\n- 몸통 아래: 종가\n\n위아래 꼬리(심지)는 고가와 저가를 나타내.',
+        content: '양봉(초록): 종가 > 시가 (가격이 올랐다)\n- 몸통 아래: 시가\n- 몸통 위: 종가\n\n음봉(빨강): 종가 < 시가 (가격이 내렸다)\n- 몸통 위: 시가\n- 몸통 아래: 종가\n\n위아래 꼬리(심지)는 고가와 저가를 나타내.',
         type: 'read',
       },
       {
         title: '캔들 모양으로 읽는 시장',
-        content: '**긴 초록 몸통**: 강한 상승세\n**긴 빨강 몸통**: 강한 하락세\n**짧은 몸통 + 긴 꼬리**: 변동이 컸지만 결국 제자리\n**도지(Doji)**: 시가 ≈ 종가, 시장이 망설이는 중\n\n시간대도 중요해: 1분봉, 15분봉, 1시간봉, 1일봉 등 설정 가능.',
+        content: '**긴 초록 몸통**: 강한 상승세\n**긴 빨강 몸통**: 강한 하락세\n**짧은 몸통 + 긴 꼬리**: 변동이 컸지만 결국 제자리\n**도지(Doji)**: 시가 = 종가, 시장이 망설이는 중\n\n시간대도 중요해: 1분봉, 15분봉, 1시간봉, 1일봉 등 설정 가능.',
         type: 'read',
       },
       {
@@ -376,7 +376,7 @@ export const quests: Quest[] = [
     slug: 'gas-fees',
     title: '가스비란? 싸게 보내는 법',
     description: '블록체인 수수료의 원리와 절약법',
-    emoji: '⛽',
+    icon: 'Fuel',
     difficulty: 'medium',
     xp: 150,
     estimatedMinutes: 10,
@@ -389,7 +389,7 @@ export const quests: Quest[] = [
       },
       {
         title: '가스비가 비쌀 때/쌀 때',
-        content: '가스비는 고정이 아니라 **실시간으로 변해**.\n\n**비싼 경우:**\n- 인기 NFT 민팅 때\n- 시장이 급등/급락할 때\n- 많은 사람이 동시에 거래할 때\n\n**싼 경우:**\n- 새벽 시간 (한국 기준 새벽 3~6시)\n- 시장이 조용할 때\n- 주말',
+        content: '가스비는 고정이 아니라 **실시간으로 변해**.\n\n비싼 경우:\n- 인기 NFT 민팅 때\n- 시장이 급등/급락할 때\n- 많은 사람이 동시에 거래할 때\n\n싼 경우:\n- 새벽 시간 (한국 기준 새벽 3~6시)\n- 시장이 조용할 때\n- 주말',
         type: 'read',
       },
       {
@@ -411,7 +411,7 @@ export const quests: Quest[] = [
     slug: 'first-swap-uniswap',
     title: '첫 스왑: Uniswap 체험',
     description: 'DEX에서 직접 토큰을 교환해보자',
-    emoji: '🦄',
+    icon: 'ArrowLeftRight',
     difficulty: 'hard',
     xp: 200,
     estimatedMinutes: 20,
@@ -424,7 +424,7 @@ export const quests: Quest[] = [
       },
       {
         title: 'Uniswap 접속 + 지갑 연결',
-        content: '1. **app.uniswap.org** 접속 (공식 URL 확인!)\n2. 우측 상단 "Connect Wallet" 클릭\n3. MetaMask 선택\n4. 메타마스크에서 연결 승인\n\n⚠️ 연결 시 "이 사이트에 권한을 줄까요?" 팝업이 뜨면 내용을 확인하고 승인해.',
+        content: '1. **app.uniswap.org** 접속 (공식 URL 확인!)\n2. 우측 상단 "Connect Wallet" 클릭\n3. MetaMask 선택\n4. 메타마스크에서 연결 승인\n\n연결 시 "이 사이트에 권한을 줄까요?" 팝업이 뜨면 내용을 확인하고 승인해.',
         type: 'action',
         verifyText: 'Uniswap에 지갑을 연결했어요',
       },
@@ -436,7 +436,7 @@ export const quests: Quest[] = [
       },
       {
         title: '슬리피지란?',
-        content: '**슬리피지(Slippage)**는 주문 가격과 실제 체결 가격의 차이야.\n\nDEX에서는 유동성에 따라 가격이 변할 수 있어:\n- 기본 설정: 0.5%\n- 변동성 큰 토큰: 1~3%로 올려야 체결됨\n- 너무 높으면 불리한 가격에 체결될 수 있어\n\n설정 아이콘(⚙️)에서 슬리피지를 조절할 수 있어.',
+        content: '**슬리피지(Slippage)**는 주문 가격과 실제 체결 가격의 차이야.\n\nDEX에서는 유동성에 따라 가격이 변할 수 있어:\n- 기본 설정: 0.5%\n- 변동성 큰 토큰: 1~3%로 올려야 체결됨\n- 너무 높으면 불리한 가격에 체결될 수 있어\n\n설정에서 슬리피지를 조절할 수 있어.',
         type: 'verify',
         verifyText: 'DEX 스왑의 원리를 이해했어요',
       },

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CheckCircle2, XCircle, ArrowRight, Trophy } from 'lucide-react';
 import type { QuizQuestion } from '@/data/quests';
 
 interface QuizBlockProps {
@@ -33,51 +34,59 @@ export default function QuizBlock({ questions, onComplete }: QuizBlockProps) {
       setIsRevealed(false);
     } else {
       setIsFinished(true);
-      const finalScore = selectedAnswer === question.correctIndex
+      const finalCorrect = selectedAnswer === question.correctIndex
         ? correctCount + 1
         : correctCount;
-      // recalculate to count current question
-      const score = Math.round(
-        ((selectedAnswer === question.correctIndex ? correctCount + 1 : correctCount) /
-          questions.length) *
-          100
-      );
-      onComplete(score);
+      onComplete(Math.round((finalCorrect / questions.length) * 100));
     }
   }
 
   if (isFinished) {
     const score = Math.round((correctCount / questions.length) * 100);
     return (
-      <div className="rounded-xl border border-border bg-surface p-6 text-center">
-        <div className="text-4xl">{score >= 80 ? '🎉' : score >= 50 ? '👍' : '📚'}</div>
-        <p className="mt-2 text-lg font-bold">
-          {questions.length}문제 중 {correctCount}개 정답!
+      <div className="rounded-2xl border border-border bg-surface p-6 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-dim">
+          <Trophy size={24} className="text-primary" />
+        </div>
+        <p className="mt-3 text-lg font-bold">
+          {questions.length}문제 중 {correctCount}개 정답
         </p>
-        <p className="text-text-secondary">점수: {score}점</p>
+        <p className="mt-1 text-sm text-text-secondary">{score}점</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <span className="text-sm text-text-secondary">
-          퀴즈 {currentIndex + 1}/{questions.length}
+    <div className="rounded-2xl border border-border bg-surface p-5">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex gap-1.5">
+          {questions.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 w-6 rounded-full ${
+                i < currentIndex ? 'bg-primary' : i === currentIndex ? 'bg-primary/50' : 'bg-surface-2'
+              }`}
+            />
+          ))}
+        </div>
+        <span className="text-xs text-text-disabled">
+          {currentIndex + 1} / {questions.length}
         </span>
-        <span className="text-xs text-primary">{correctCount}개 정답</span>
       </div>
 
-      <h4 className="mb-4 text-lg font-bold">{question.question}</h4>
+      <h4 className="mb-4 text-[15px] font-semibold leading-snug">{question.question}</h4>
 
       <div className="space-y-2">
         {question.options.map((option, i) => {
-          let borderColor = 'border-border hover:border-primary/50';
+          let style = 'border-border hover:border-border-light bg-surface-2';
           if (isRevealed) {
             if (i === question.correctIndex) {
-              borderColor = 'border-success bg-success/10';
+              style = 'border-success/40 bg-success-dim';
             } else if (i === selectedAnswer) {
-              borderColor = 'border-accent bg-accent/10';
+              style = 'border-accent/40 bg-accent-dim';
+            } else {
+              style = 'border-border bg-surface-2 opacity-40';
             }
           }
 
@@ -86,30 +95,34 @@ export default function QuizBlock({ questions, onComplete }: QuizBlockProps) {
               key={i}
               onClick={() => handleSelect(i)}
               disabled={isRevealed}
-              className={`w-full rounded-lg border p-3 text-left transition-colors ${borderColor} ${
-                isRevealed ? 'cursor-default' : 'cursor-pointer'
-              }`}
+              className={`flex w-full items-center gap-3 rounded-xl border p-3.5 text-left text-sm transition-all ${style}`}
             >
-              <span className="mr-2 font-mono text-sm text-text-disabled">
-                {String.fromCharCode(65 + i)}.
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-background font-mono text-xs text-text-disabled">
+                {String.fromCharCode(65 + i)}
               </span>
-              {option}
+              <span className="flex-1">{option}</span>
+              {isRevealed && i === question.correctIndex && (
+                <CheckCircle2 size={16} className="shrink-0 text-success" />
+              )}
+              {isRevealed && i === selectedAnswer && i !== question.correctIndex && (
+                <XCircle size={16} className="shrink-0 text-accent" />
+              )}
             </button>
           );
         })}
       </div>
 
       {isRevealed && (
-        <div className="mt-4">
-          <p className="mb-3 rounded-lg bg-background p-3 text-sm text-text-secondary">
-            {selectedAnswer === question.correctIndex ? '✅ ' : '❌ '}
+        <div className="mt-4 animate-in">
+          <p className="mb-3 rounded-xl bg-background p-3 text-sm leading-relaxed text-text-secondary">
             {question.explanation}
           </p>
           <button
             onClick={handleNext}
-            className="w-full rounded-lg bg-primary py-2.5 font-bold text-background transition-opacity hover:opacity-90"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-semibold text-background transition-opacity hover:opacity-90"
           >
             {currentIndex < questions.length - 1 ? '다음 문제' : '결과 보기'}
+            <ArrowRight size={14} />
           </button>
         </div>
       )}

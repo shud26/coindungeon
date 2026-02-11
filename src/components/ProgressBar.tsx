@@ -1,25 +1,21 @@
 'use client';
 
 interface ProgressBarProps {
-  progress: number; // 0-100
+  progress: number;
   className?: string;
-  showLabel?: boolean;
+  size?: 'sm' | 'md';
 }
 
-export default function ProgressBar({ progress, className = '', showLabel = false }: ProgressBarProps) {
+export default function ProgressBar({ progress, className = '', size = 'md' }: ProgressBarProps) {
+  const h = size === 'sm' ? 'h-1' : 'h-1.5';
   return (
     <div className={`relative ${className}`}>
-      <div className="h-3 w-full overflow-hidden rounded-full bg-surface">
+      <div className={`${h} w-full overflow-hidden rounded-full bg-surface-2`}>
         <div
-          className="shimmer h-full rounded-full transition-all duration-700 ease-out"
+          className={`shimmer-bar ${h} rounded-full transition-all duration-700 ease-out`}
           style={{ width: `${Math.min(progress, 100)}%` }}
         />
       </div>
-      {showLabel && (
-        <span className="mt-1 block text-right text-xs text-text-secondary">
-          {Math.round(progress)}%
-        </span>
-      )}
     </div>
   );
 }

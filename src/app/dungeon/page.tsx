@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { MapPin } from 'lucide-react';
 import QuestCard from '@/components/QuestCard';
+import ProgressBar from '@/components/ProgressBar';
 import { quests } from '@/data/quests';
 import { loadProgress, isQuestUnlocked } from '@/lib/progress';
 import type { UserProgress } from '@/lib/progress';
@@ -16,24 +18,37 @@ export default function DungeonPage() {
   if (!progress) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-text-secondary">로딩 중...</div>
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     );
   }
 
+  const completedCount = progress.completedQuests.length;
+  const progressPct = (completedCount / quests.length) * 100;
+
   return (
-    <div className="mx-auto max-w-md px-4 pt-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">
-          <span className="text-primary">🗺️</span> 던전 지도
-        </h1>
-        <p className="mt-1 text-sm text-text-secondary">
-          {progress.completedQuests.length}/{quests.length}층 클리어
-        </p>
+    <div className="mx-auto max-w-md px-5 pt-10 pb-8">
+      {/* Header */}
+      <div className="mb-2 flex items-center gap-2.5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-dim">
+          <MapPin size={16} className="text-primary" />
+        </div>
+        <h1 className="text-xl font-bold">던전 지도</h1>
       </div>
 
-      {/* Dungeon Path */}
-      <div className="space-y-3">
+      {/* Overall progress */}
+      <div className="mb-6 mt-4 rounded-2xl border border-border bg-surface p-4">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-text-secondary">전체 진행도</span>
+          <span className="font-mono text-xs text-text-disabled">
+            {completedCount} / {quests.length}
+          </span>
+        </div>
+        <ProgressBar progress={progressPct} className="mt-2.5" />
+      </div>
+
+      {/* Quest List */}
+      <div className="space-y-2.5">
         {quests.map((quest) => {
           const isCompleted = progress.completedQuests.includes(quest.id);
           const unlocked = isQuestUnlocked(quest.id, progress.completedQuests);
@@ -63,10 +78,10 @@ export default function DungeonPage() {
       </div>
 
       {/* Coming Soon */}
-      <div className="mt-6 rounded-xl border border-dashed border-border bg-surface/50 p-6 text-center">
-        <p className="text-text-disabled">11~50층 업데이트 예정...</p>
+      <div className="mt-6 rounded-2xl border border-dashed border-border bg-surface/30 p-8 text-center">
+        <p className="text-sm text-text-disabled">11~50층 업데이트 예정</p>
         <p className="mt-1 text-xs text-text-disabled">
-          디파이, NFT, DAO, 에어드랍 퀘스트가 추가돼요
+          DeFi, NFT, DAO, 에어드랍 퀘스트
         </p>
       </div>
     </div>

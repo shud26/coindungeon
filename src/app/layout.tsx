@@ -35,6 +35,10 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: 'GOOGLE_VERIFICATION_CODE',
+    // other: { 'naver-site-verification': 'NAVER_VERIFICATION_CODE' },
+  },
   alternates: {
     canonical: BASE_URL,
   },
@@ -82,6 +86,18 @@ export default function RootLayout({
         <main className="mx-auto min-h-screen max-w-[480px] px-4 pb-20 pt-12">
           {children}
         </main>
+        <footer className="mx-auto max-w-[480px] px-4 pb-24 pt-6">
+          <div className="border-t border-border pt-4">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-text-quaternary">
+              <a href="/about" className="transition-colors hover:text-text-tertiary">소개</a>
+              <a href="/contact" className="transition-colors hover:text-text-tertiary">문의</a>
+              <a href="/privacy" className="transition-colors hover:text-text-tertiary">개인정보처리방침</a>
+            </div>
+            <p className="mt-2 text-center text-[10px] text-text-quaternary">
+              &copy; 2026 코인던전. 교육 목적 서비스이며, 투자 조언이 아닙니다.
+            </p>
+          </div>
+        </footer>
         <BottomNav />
       </body>
     </html>

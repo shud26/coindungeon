@@ -1,5 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { quests } from '@/data/quests';
+import { glossaryTerms } from '@/data/glossary';
+import { guides } from '@/data/guides';
 
 const BASE_URL = 'https://coindungeon.vercel.app';
 
@@ -16,6 +18,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/learn`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/glossary`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/guide`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
     },
     {
       url: `${BASE_URL}/profile`,
@@ -50,5 +70,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...questPages];
+  const glossaryPages: MetadataRoute.Sitemap = glossaryTerms.map((term) => ({
+    url: `${BASE_URL}/glossary/${term.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  const guidePages: MetadataRoute.Sitemap = guides.map((guide) => ({
+    url: `${BASE_URL}/guide/${guide.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...questPages, ...glossaryPages, ...guidePages];
 }

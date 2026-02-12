@@ -89,6 +89,8 @@ export default function RootLayout({
         <footer className="mx-auto max-w-[480px] px-4 pb-24 pt-6">
           <div className="border-t border-border pt-4">
             <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-text-quaternary">
+              <a href="/glossary" className="transition-colors hover:text-text-tertiary">용어사전</a>
+              <a href="/guide" className="transition-colors hover:text-text-tertiary">가이드</a>
               <a href="/about" className="transition-colors hover:text-text-tertiary">소개</a>
               <a href="/contact" className="transition-colors hover:text-text-tertiary">문의</a>
               <a href="/privacy" className="transition-colors hover:text-text-tertiary">개인정보처리방침</a>

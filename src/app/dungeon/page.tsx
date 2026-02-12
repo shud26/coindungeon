@@ -62,8 +62,8 @@ export default function DungeonPage() {
 
       {/* Coming soon */}
       <div className="relative z-10 mt-6 glass-card p-6 text-center">
-        <p className="text-xs text-text-quaternary">21~50층 업데이트 예정</p>
-        <p className="mt-1 text-[11px] text-text-quaternary">DAO · 거버넌스 · 고급 DeFi · 온체인 분석</p>
+        <p className="text-xs text-text-quaternary">31~50층 업데이트 예정</p>
+        <p className="mt-1 text-[11px] text-text-quaternary">고급 DeFi · 에어드랍 파밍 · 크로스체인 · Web3 커리어</p>
       </div>
     </div>
   );

@@ -58,6 +58,23 @@ export default function PhaserGame({
   /* Room transition ref (so Phaser scene can trigger React state) */
   const pendingRoomRef = useRef<{ roomId: string; spawnCol: number; spawnRow: number } | null>(null);
 
+  /* ── Prevent arrow keys from scrolling page ── */
+  useEffect(() => {
+    const prevent = (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('keydown', prevent, { passive: false });
+    return () => window.removeEventListener('keydown', prevent);
+  }, []);
+
+  /* ── Re-focus canvas on click ──────────────── */
+  const focusCanvas = useCallback(() => {
+    const canvas = containerRef.current?.querySelector('canvas');
+    if (canvas) (canvas as HTMLCanvasElement).focus();
+  }, []);
+
   /* ── Phaser bootstrap ─────────────────────── */
   useEffect(() => {
     if (!containerRef.current) return;
@@ -135,10 +152,13 @@ export default function PhaserGame({
         create() {
           const theme = currentRoom.theme;
 
+          /* ── Generate pixel-art textures ── */
+          this.generateTileTextures(theme);
+
           /* ── Floor background ──────────── */
           this.add.rectangle(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT, theme.floor);
 
-          /* ── Tiles (brick walls + varied floors) */
+          /* ── Tiles (walls + floors) ────── */
           walls = this.physics.add.staticGroup();
           const map = currentRoom.map;
 
@@ -148,28 +168,18 @@ export default function PhaserGame({
               const y = r * TILE + TILE / 2;
 
               if (map[r][c] === 1) {
-                /* ▸ Brick-pattern wall */
-                const gfx = this.add.graphics();
-                gfx.fillStyle(theme.wall, 1);
-                gfx.fillRect(c * TILE, r * TILE, TILE, TILE);
-                /* brick lines */
-                gfx.lineStyle(1, theme.wallHighlight, 0.3);
-                gfx.strokeRect(c * TILE + 1, r * TILE + 1, TILE - 2, TILE / 2 - 1);
-                gfx.strokeRect(c * TILE + TILE / 2, r * TILE + TILE / 2, TILE / 2 - 1, TILE / 2 - 1);
-                gfx.strokeRect(c * TILE + 1, r * TILE + TILE / 2, TILE / 2 - 1, TILE / 2 - 1);
-                /* top edge highlight */
-                gfx.lineStyle(1, theme.wallHighlight, 0.15);
-                gfx.lineBetween(c * TILE, r * TILE, c * TILE + TILE, r * TILE);
+                /* Wall: use front-face if floor is below, else top */
+                const hasFloorBelow = r < ROWS - 1 && map[r + 1]?.[c] === 0;
+                const texKey = hasFloorBelow ? 'wall-face' : 'wall-top';
+                this.add.image(x, y, texKey);
 
                 const wallRect = this.add.zone(x, y, TILE, TILE);
                 walls.add(wallRect);
                 (wallRect.body as Phaser.Physics.Arcade.StaticBody).setSize(TILE, TILE);
               } else {
-                /* ▸ Floor tile with subtle variation */
-                const floorColor = ((c + r) % 3 === 0) ? theme.floorAlt : theme.floor;
-                const tile = this.add.rectangle(x, y, TILE - 1, TILE - 1, floorColor);
-                /* subtle grid line */
-                tile.setStrokeStyle(0.5, theme.wallHighlight, 0.06);
+                /* Floor: alternate between 2 textures */
+                const texKey = ((c + r) % 3 === 0) ? 'floor-alt' : 'floor-main';
+                this.add.image(x, y, texKey);
               }
             }
           }
@@ -270,11 +280,11 @@ export default function PhaserGame({
           }
 
           /* ── Coins ────────────────────── */
-          coinGroup = this.physics.add.group();
+          coinGroup = this.physics.add.staticGroup();
           for (const coin of currentRoom.coins) {
             const cx = coin.col * TILE + TILE / 2;
             const cy = coin.row * TILE + TILE / 2;
-            const coinSprite = this.add.circle(cx, cy, 5, 0xfbbf24);
+            const coinSprite = this.add.circle(cx, cy, 6, 0xfbbf24);
             this.physics.add.existing(coinSprite, true);
             (coinSprite as unknown as { coinData: typeof coin }).coinData = coin;
             coinGroup.add(coinSprite);
@@ -292,18 +302,36 @@ export default function PhaserGame({
 
           /* ── NPCs ─────────────────────── */
           npcs = [];
-          for (const npcData of currentRoom.npcs) {
+          for (let ni = 0; ni < currentRoom.npcs.length; ni++) {
+            const npcData = currentRoom.npcs[ni];
             const nx = npcData.col * TILE + TILE / 2;
             const ny = npcData.row * TILE + TILE / 2;
 
-            const npcBody = this.add.rectangle(0, 0, 24, 24, npcData.color);
+            /* Pixel-art NPC body */
+            const npcGfx = this.add.graphics();
+            npcGfx.fillStyle(npcData.color, 1);
+            /* Body */
+            npcGfx.fillRect(-8, -4, 16, 16);
+            /* Head */
+            npcGfx.fillRect(-6, -12, 12, 10);
+            /* Eyes */
+            npcGfx.fillStyle(0xffffff, 1);
+            npcGfx.fillRect(-4, -9, 3, 3);
+            npcGfx.fillRect(1, -9, 3, 3);
+            npcGfx.fillStyle(0x000000, 1);
+            npcGfx.fillRect(-3, -8, 2, 2);
+            npcGfx.fillRect(2, -8, 2, 2);
+            /* Shadow */
+            npcGfx.fillStyle(0x000000, 0.15);
+            npcGfx.fillEllipse(0, 14, 18, 6);
+
             const npcLabel = this.add.text(0, -18, npcData.label, {
               fontSize: '8px',
               color: '#' + npcData.color.toString(16).padStart(6, '0'),
               fontFamily: 'monospace',
             }).setOrigin(0.5);
 
-            const npcContainer = this.add.container(nx, ny, [npcBody, npcLabel]);
+            const npcContainer = this.add.container(nx, ny, [npcGfx, npcLabel]);
             this.physics.add.existing(npcContainer, true);
             (npcContainer.body as Phaser.Physics.Arcade.StaticBody).setSize(24, 24);
 
@@ -509,6 +537,101 @@ export default function PhaserGame({
           this.cameras.main.fadeIn(400, 0, 0, 0);
         }
 
+        generateTileTextures(t: typeof currentRoom.theme) {
+          const S = TILE; // 32px
+
+          /* Helper: darken/lighten a color */
+          const shift = (color: number, amount: number) => {
+            const r = Math.min(255, Math.max(0, ((color >> 16) & 0xff) + amount));
+            const g = Math.min(255, Math.max(0, ((color >> 8) & 0xff) + amount));
+            const b = Math.min(255, Math.max(0, (color & 0xff) + amount));
+            return (r << 16) | (g << 8) | b;
+          };
+
+          /* ── Wall front-face (brick pattern) ── */
+          const wf = this.add.graphics();
+          wf.fillStyle(t.wall, 1);
+          wf.fillRect(0, 0, S, S);
+          /* Brick rows */
+          const brickH = 7;
+          const mortar = shift(t.wall, -15);
+          for (let row = 0; row < 5; row++) {
+            const by = row * brickH;
+            const offset = (row % 2) * (S / 2);
+            wf.lineStyle(1, mortar, 0.6);
+            wf.lineBetween(0, by, S, by); /* horizontal mortar */
+            /* Vertical mortar lines */
+            for (let bx = offset; bx < S; bx += S / 2) {
+              wf.lineBetween(bx, by, bx, by + brickH);
+            }
+            /* Subtle highlight on top of each brick */
+            wf.lineStyle(1, t.wallHighlight, 0.15);
+            wf.lineBetween(0, by + 1, S, by + 1);
+          }
+          /* Top edge glow */
+          wf.lineStyle(1, t.wallHighlight, 0.25);
+          wf.lineBetween(0, 0, S, 0);
+          /* Bottom shadow */
+          wf.lineStyle(1, shift(t.wall, -25), 0.4);
+          wf.lineBetween(0, S - 1, S, S - 1);
+          /* Random brick cracks for detail */
+          wf.lineStyle(1, shift(t.wall, -10), 0.2);
+          wf.lineBetween(8, 10, 12, 14);
+          wf.lineBetween(22, 3, 25, 6);
+          wf.generateTexture('wall-face', S, S);
+          wf.destroy();
+
+          /* ── Wall top (darker, less detail) ── */
+          const wt = this.add.graphics();
+          const topColor = shift(t.wall, -12);
+          wt.fillStyle(topColor, 1);
+          wt.fillRect(0, 0, S, S);
+          /* Subtle stone pattern */
+          wt.lineStyle(1, shift(topColor, -10), 0.3);
+          wt.lineBetween(0, S / 2, S, S / 2);
+          wt.lineBetween(S / 3, 0, S / 3, S);
+          wt.lineBetween(2 * S / 3, 0, 2 * S / 3, S);
+          /* Corner dots for texture */
+          wt.fillStyle(shift(topColor, 8), 0.15);
+          wt.fillRect(4, 4, 2, 2);
+          wt.fillRect(20, 18, 2, 2);
+          wt.fillRect(12, 26, 2, 2);
+          wt.generateTexture('wall-top', S, S);
+          wt.destroy();
+
+          /* ── Floor main (stone slabs) ── */
+          const fm = this.add.graphics();
+          fm.fillStyle(t.floor, 1);
+          fm.fillRect(0, 0, S, S);
+          /* Stone slab edges */
+          fm.lineStyle(1, shift(t.floor, -8), 0.15);
+          fm.strokeRect(1, 1, S - 2, S - 2);
+          /* Subtle cross pattern */
+          fm.lineStyle(1, shift(t.floor, -6), 0.08);
+          fm.lineBetween(S / 2, 2, S / 2, S - 2);
+          fm.lineBetween(2, S / 2, S - 2, S / 2);
+          /* Small detail dots */
+          fm.fillStyle(shift(t.floor, 6), 0.1);
+          fm.fillRect(6, 8, 1, 1);
+          fm.fillRect(22, 14, 1, 1);
+          fm.fillRect(14, 24, 1, 1);
+          fm.generateTexture('floor-main', S, S);
+          fm.destroy();
+
+          /* ── Floor alternate (slight variation) ── */
+          const fa = this.add.graphics();
+          fa.fillStyle(t.floorAlt, 1);
+          fa.fillRect(0, 0, S, S);
+          fa.lineStyle(1, shift(t.floorAlt, -6), 0.12);
+          fa.strokeRect(1, 1, S - 2, S - 2);
+          /* Different crack pattern */
+          fa.lineStyle(1, shift(t.floorAlt, -8), 0.1);
+          fa.lineBetween(4, 4, 10, 10);
+          fa.lineBetween(20, 8, 26, 14);
+          fa.generateTexture('floor-alt', S, S);
+          fa.destroy();
+        }
+
         drawMiniMap(accent: number) {
           const baseX = WIDTH - 52;
           const baseY = 12;
@@ -661,11 +784,24 @@ export default function PhaserGame({
           mode: Phaser.Scale.FIT,
           autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
         },
+        input: {
+          keyboard: { target: window },
+        },
         pixelArt: true,
         audio: { disableWebAudio: false },
       });
 
       gameRef.current = game;
+
+      /* Auto-focus canvas so keyboard works immediately */
+      requestAnimationFrame(() => {
+        const canvas = containerRef.current?.querySelector('canvas');
+        if (canvas) {
+          canvas.tabIndex = 0;
+          canvas.style.outline = 'none';
+          canvas.focus();
+        }
+      });
     };
 
     init();
@@ -736,6 +872,7 @@ export default function PhaserGame({
       {/* Canvas */}
       <div
         ref={containerRef}
+        onClick={focusCanvas}
         className="w-full overflow-hidden rounded-xl border border-border"
         style={{ aspectRatio: `${COLS}/${ROWS}` }}
       />

@@ -51,6 +51,8 @@ export interface RoomData {
   doors: RoomDoor[];
   torches: [number, number][]; // [col, row]
   playerSpawn: { col: number; row: number };
+  /** Quest IDs assigned to this room. Must complete at least one to unlock doors. */
+  questIds: number[];
 }
 
 /* ── Map Layouts ──────────────────────────────── */
@@ -151,6 +153,7 @@ export const ROOMS: Record<string, RoomData> = {
     ],
     torches: [[2, 1], [12, 1], [2, 8], [12, 8]],
     playerSpawn: { col: 7, row: 7 },
+    questIds: [1, 2, 3, 4, 5], // 기초/지갑
   },
 
   'defi-hall': {
@@ -182,6 +185,7 @@ export const ROOMS: Record<string, RoomData> = {
     ],
     torches: [[2, 1], [12, 1], [2, 8], [12, 8]],
     playerSpawn: { col: 7, row: 7 },
+    questIds: [6, 7, 8, 9, 10], // 디파이
   },
 
   'trading-pit': {
@@ -214,6 +218,7 @@ export const ROOMS: Record<string, RoomData> = {
     ],
     torches: [[1, 1], [13, 1], [1, 8], [13, 8]],
     playerSpawn: { col: 7, row: 5 },
+    questIds: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // 트레이딩/거래소
   },
 
   'nft-cave': {
@@ -245,6 +250,7 @@ export const ROOMS: Record<string, RoomData> = {
     ],
     torches: [[1, 1], [13, 1], [1, 8], [13, 8]],
     playerSpawn: { col: 7, row: 5 },
+    questIds: [21, 22, 23, 24, 25], // NFT/에어드랍
   },
 
   'whale-vault': {
@@ -276,6 +282,7 @@ export const ROOMS: Record<string, RoomData> = {
     ],
     torches: [[2, 1], [12, 1], [2, 8], [12, 8]],
     playerSpawn: { col: 7, row: 5 },
+    questIds: [26, 27, 28, 29, 30], // 온체인/보안
   },
 };
 

@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ArrowLeft, Gamepad2 } from 'lucide-react';
 import { useGameProgress } from '@/lib/game/useGameProgress';
+import { getRoom, ROOM_ORDER } from '@/lib/game/rooms';
 import CharacterSelect from '@/components/game/CharacterSelect';
 import QuestOverlay from '@/components/game/QuestOverlay';
 import type { Quest, QuizQuestion } from '@/data/quests';
@@ -26,10 +27,17 @@ const PhaserGame = dynamic(() => import('@/components/game/PhaserGame'), {
 type Phase = 'select' | 'playing';
 
 export default function GamePage() {
-  const { progress, getQuizQuestion, handleCorrectAnswer } = useGameProgress();
+  const {
+    progress,
+    getQuizForRoom,
+    isRoomCleared,
+    getRoomProgress,
+    handleCorrectAnswer,
+  } = useGameProgress();
 
   const [phase, setPhase] = useState<Phase>('select');
   const [characterKey, setCharacterKey] = useState('');
+  const [currentRoomId, setCurrentRoomId] = useState('lobby');
 
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [activeQuiz, setActiveQuiz] = useState<{
@@ -38,7 +46,8 @@ export default function GamePage() {
   } | null>(null);
   const [toast, setToast] = useState('');
 
-  const quizData = progress ? getQuizQuestion() : null;
+  const currentRoom = getRoom(currentRoomId);
+  const roomProgress = progress ? getRoomProgress(currentRoom.questIds) : null;
 
   /* ── Character select → start game ───────── */
   const handleCharacterStart = useCallback((key: string) => {
@@ -46,18 +55,48 @@ export default function GamePage() {
     setPhase('playing');
   }, []);
 
-  /* ── NPC interaction → snapshot current quiz ─ */
-  const handleNpcInteract = useCallback(() => {
-    if (overlayOpen) return;
-    setActiveQuiz(quizData);
-    setOverlayOpen(true);
-  }, [overlayOpen, quizData]);
+  /* ── NPC interaction → room-specific quiz ── */
+  const handleNpcInteract = useCallback(
+    (roomId: string) => {
+      if (overlayOpen) return;
+      const room = getRoom(roomId);
+      const quizData = getQuizForRoom(room.questIds);
+      setActiveQuiz(quizData);
+      setOverlayOpen(true);
+    },
+    [overlayOpen, getQuizForRoom],
+  );
+
+  /* ── Room change from PhaserGame ─────────── */
+  const handleRoomChange = useCallback((roomId: string) => {
+    setCurrentRoomId(roomId);
+  }, []);
+
+  /* ── Check if a specific room's door is unlocked */
+  const checkDoorUnlocked = useCallback(
+    (targetRoomId: string): boolean => {
+      /* Current room must be cleared to go forward.
+         Going backward (to already-visited rooms) is always allowed. */
+      const room = getRoom(currentRoomId);
+
+      /* Find room indices to determine direction */
+      const currentIdx = ROOM_ORDER.indexOf(currentRoomId);
+      const targetIdx = ROOM_ORDER.indexOf(targetRoomId);
+
+      /* Going backward is always OK */
+      if (targetIdx < currentIdx) return true;
+
+      /* Going forward requires at least 1 quest cleared in current room */
+      return isRoomCleared(room.questIds);
+    },
+    [currentRoomId, isRoomCleared],
+  );
 
   /* ── Correct answer → XP + toast ──────────── */
   const handleCorrect = useCallback(
     (questId: number) => {
       handleCorrectAnswer(questId);
-      setToast('클리어! XP +10');
+      setToast('클리어! XP +10 🎉');
       setTimeout(() => setToast(''), 3000);
     },
     [handleCorrectAnswer],
@@ -107,29 +146,46 @@ export default function GamePage() {
             <PhaserGame
               characterKey={characterKey}
               onNpcInteract={handleNpcInteract}
+              onRoomChange={handleRoomChange}
+              checkDoorUnlocked={checkDoorUnlocked}
               overlayOpen={overlayOpen}
             />
 
-            {/* Help text */}
-            <div className="glass-card mt-3 p-3">
-              <p
-                className="text-xs leading-relaxed"
-                style={{ color: 'var(--text-tertiary)' }}
-              >
-                NPC(초록)에게 다가가{' '}
-                <kbd
-                  className="mx-0.5 rounded px-1 py-0.5"
-                  style={{
-                    fontSize: 10,
-                    border: '1px solid var(--border)',
-                    background: 'var(--bg-elevated)',
-                  }}
+            {/* Room progress */}
+            {roomProgress && (
+              <div className="glass-card mt-3 p-3">
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+                    {currentRoom.theme.name}
+                  </span>
+                  <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                    {roomProgress.completed}/{roomProgress.total} 퀘스트
+                  </span>
+                </div>
+                <div
+                  className="h-1.5 w-full overflow-hidden rounded-full"
+                  style={{ background: 'var(--bg-elevated)' }}
                 >
-                  E
-                </kbd>{' '}
-                를 누르면 대화할 수 있어. 퀴즈를 맞추면 XP를 획득!
-              </p>
-            </div>
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{
+                      width: `${(roomProgress.completed / roomProgress.total) * 100}%`,
+                      background: `#${currentRoom.theme.accent.toString(16).padStart(6, '0')}`,
+                    }}
+                  />
+                </div>
+                <p
+                  className="mt-2 text-xs leading-relaxed"
+                  style={{ color: 'var(--text-tertiary)' }}
+                >
+                  {roomProgress.completed === 0
+                    ? 'NPC에게 다가가 [E]로 대화 → 퀴즈를 맞추면 문이 열려!'
+                    : roomProgress.completed < roomProgress.total
+                      ? '다음 방으로 이동 가능! 문 앞에서 [E]를 눌러봐'
+                      : '이 방의 모든 퀘스트 클리어! 🎉'}
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>

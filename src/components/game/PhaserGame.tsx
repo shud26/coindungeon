@@ -19,16 +19,25 @@ const PLAYER_SCALE = 0.75;
 /* ── Component ───────────────────────────────── */
 interface Props {
   characterKey: string;
-  onNpcInteract: () => void;
+  onNpcInteract: (roomId: string) => void;
+  onRoomChange: (roomId: string) => void;
+  checkDoorUnlocked: (targetRoomId: string) => boolean;
   overlayOpen: boolean;
 }
 
-export default function PhaserGame({ characterKey, onNpcInteract, overlayOpen }: Props) {
+export default function PhaserGame({
+  characterKey,
+  onNpcInteract,
+  onRoomChange,
+  checkDoorUnlocked,
+  overlayOpen,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const gameRef = useRef<any>(null);
   const callbackRef = useRef(onNpcInteract);
   const overlayRef = useRef(overlayOpen);
+  const checkDoorRef = useRef(checkDoorUnlocked);
   const nearNpcRef = useRef(false);
 
   const [currentRoomId, setCurrentRoomId] = useState('lobby');
@@ -37,6 +46,7 @@ export default function PhaserGame({ characterKey, onNpcInteract, overlayOpen }:
 
   callbackRef.current = onNpcInteract;
   overlayRef.current = overlayOpen;
+  checkDoorRef.current = checkDoorUnlocked;
 
   const inputRef = useRef({
     up: false,
@@ -601,23 +611,33 @@ export default function PhaserGame({ characterKey, onNpcInteract, overlayOpen }:
             promptText.setColor('#22c55e');
             if (Phaser.Input.Keyboard.JustDown(eKey)) {
               try { this.sound.play('sfx-talk', { volume: 0.3 }); } catch { /* */ }
-              callbackRef.current();
+              callbackRef.current(currentRoom.id);
             }
           } else if (nearDoor) {
-            promptText.setText('[E] ' + nearDoor.door.label);
-            promptText.setColor('#' + currentRoom.theme.accent.toString(16).padStart(6, '0'));
-            if (Phaser.Input.Keyboard.JustDown(eKey)) {
-              /* Room transition */
-              try { this.sound.play('sfx-door', { volume: 0.4 }); } catch { /* */ }
-              this.cameras.main.fadeOut(350, 0, 0, 0);
-              this.cameras.main.once('camerafadeoutcomplete', () => {
-                pendingRoomRef.current = {
-                  roomId: nearDoor!.door.targetRoom,
-                  spawnCol: nearDoor!.door.spawnCol,
-                  spawnRow: nearDoor!.door.spawnRow,
-                };
-                setCurrentRoomId(nearDoor!.door.targetRoom);
-              });
+            const unlocked = checkDoorRef.current(nearDoor.door.targetRoom);
+            if (unlocked) {
+              promptText.setText('[E] ' + nearDoor.door.label);
+              promptText.setColor('#' + currentRoom.theme.accent.toString(16).padStart(6, '0'));
+              if (Phaser.Input.Keyboard.JustDown(eKey)) {
+                try { this.sound.play('sfx-door', { volume: 0.4 }); } catch { /* */ }
+                this.cameras.main.fadeOut(350, 0, 0, 0);
+                this.cameras.main.once('camerafadeoutcomplete', () => {
+                  pendingRoomRef.current = {
+                    roomId: nearDoor!.door.targetRoom,
+                    spawnCol: nearDoor!.door.spawnCol,
+                    spawnRow: nearDoor!.door.spawnRow,
+                  };
+                  onRoomChange(nearDoor!.door.targetRoom);
+                  setCurrentRoomId(nearDoor!.door.targetRoom);
+                });
+              }
+            } else {
+              promptText.setText('🔒 퀴즈를 먼저 클리어하세요!');
+              promptText.setColor('#ef4444');
+              if (Phaser.Input.Keyboard.JustDown(eKey)) {
+                try { this.sound.play('sfx-wrong', { volume: 0.3 }); } catch { /* */ }
+                this.cameras.main.shake(200, 0.005);
+              }
             }
           } else {
             promptText.setText('방향키 / WASD');
@@ -669,9 +689,9 @@ export default function PhaserGame({ characterKey, onNpcInteract, overlayOpen }:
 
   const handleInteract = useCallback(() => {
     if (nearNpcRef.current && !overlayRef.current) {
-      callbackRef.current();
+      callbackRef.current(currentRoomId);
     }
-  }, []);
+  }, [currentRoomId]);
 
   const DPadBtn = ({
     dir,

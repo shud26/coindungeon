@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Map, BookOpen, User } from 'lucide-react';
+import { Home, Map, Gamepad2, BookOpen, User } from 'lucide-react';
 
 const items = [
   { href: '/', label: '홈', Icon: Home },
   { href: '/dungeon', label: '던전', Icon: Map },
+  { href: '/game', label: '탐험', Icon: Gamepad2 },
   { href: '/learn', label: '학습', Icon: BookOpen },
   { href: '/profile', label: '프로필', Icon: User },
 ];

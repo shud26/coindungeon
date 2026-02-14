@@ -153,7 +153,7 @@ export default function GamePage() {
 
             {/* Room progress */}
             {roomProgress && (
-              <div className="glass-card mt-3 p-3">
+              <div className="card mt-3 p-3">
                 <div className="mb-1 flex items-center justify-between">
                   <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
                     {currentRoom.theme.name}

@@ -6,7 +6,7 @@ export default function LevelBadge({ level, size = 'md' }: { level: number; size
   const r = { sm: 8, md: 10, lg: 14 }[size];
   return (
     <div
-      className="badge-glow flex items-center justify-center border border-accent/30 bg-accent-dim font-mono font-bold text-accent"
+      className="flex items-center justify-center border border-accent/20 bg-accent-dim font-bold text-accent"
       style={{ width: s, height: s, fontSize: fs, borderRadius: r }}
     >
       {level}

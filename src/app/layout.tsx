@@ -37,7 +37,6 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'GOOGLE_VERIFICATION_CODE',
-    // other: { 'naver-site-verification': 'NAVER_VERIFICATION_CODE' },
   },
   alternates: {
     canonical: BASE_URL,
@@ -83,20 +82,20 @@ export default function RootLayout({
         className={`${geistMono.variable}`}
         style={{ fontFamily: "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif" }}
       >
-        <main className="mx-auto min-h-screen max-w-[480px] px-4 pb-20 pt-12">
+        <main className="mx-auto min-h-screen max-w-[520px] px-5 pb-24 pt-12">
           {children}
         </main>
-        <footer className="mx-auto max-w-[480px] px-4 pb-24 pt-6">
+        <footer className="mx-auto max-w-[520px] px-5 pb-28 pt-4">
           <div className="border-t border-border pt-4">
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-text-quaternary">
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-[12px] text-text-quaternary">
               <a href="/glossary" className="transition-colors hover:text-text-tertiary">용어사전</a>
               <a href="/guide" className="transition-colors hover:text-text-tertiary">가이드</a>
               <a href="/about" className="transition-colors hover:text-text-tertiary">소개</a>
               <a href="/contact" className="transition-colors hover:text-text-tertiary">문의</a>
-              <a href="/privacy" className="transition-colors hover:text-text-tertiary">개인정보처리방침</a>
+              <a href="/privacy" className="transition-colors hover:text-text-tertiary">개인정보</a>
             </div>
-            <p className="mt-2 text-center text-[10px] text-text-quaternary">
-              &copy; 2026 코인던전. 교육 목적 서비스이며, 투자 조언이 아닙니다.
+            <p className="mt-3 text-center text-[11px] text-text-quaternary">
+              &copy; 2026 코인던전 &middot; 교육 목적이며 투자 조언이 아닙니다
             </p>
           </div>
         </footer>

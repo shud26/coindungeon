@@ -22,15 +22,14 @@ export default function GlossaryPage() {
   });
 
   return (
-    <div className="ambient-glow stagger">
-      <div className="relative z-10">
-        <p className="text-xs uppercase tracking-widest text-text-quaternary">Glossary</p>
-        <h1 className="mt-2 text-3xl font-bold">용어사전</h1>
-        <p className="mt-1 text-sm text-text-tertiary">크립토 핵심 용어 {glossaryTerms.length}개</p>
+    <div>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">용어사전</h1>
+        <p className="mt-2 text-sm text-text-tertiary">크립토 핵심 용어 {glossaryTerms.length}개</p>
       </div>
 
       {/* 검색 */}
-      <div className="relative z-10 mt-6 glass-card flex items-center gap-2 px-4 py-2.5">
+      <div className="mt-6 card flex items-center gap-2.5 px-4 py-3">
         <Search size={16} className="shrink-0 text-text-quaternary" />
         <input
           type="text"
@@ -42,12 +41,12 @@ export default function GlossaryPage() {
       </div>
 
       {/* 카테고리 필터 */}
-      <div className="relative z-10 mt-3 flex gap-2 overflow-x-auto no-scrollbar">
+      <div className="mt-4 flex gap-2 overflow-x-auto no-scrollbar">
         {(['전체', ...CATEGORIES] as const).map((c) => (
           <button
             key={c}
             onClick={() => setCategory(c)}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
               category === c
                 ? 'bg-accent text-white'
                 : 'bg-bg-elevated text-text-tertiary hover:text-text-secondary'
@@ -59,11 +58,11 @@ export default function GlossaryPage() {
       </div>
 
       {/* 결과 */}
-      <div className="relative z-10 mt-4 flex flex-col gap-3">
+      <div className="mt-5 flex flex-col gap-3">
         {filtered.length > 0 ? (
           filtered.map((term) => <GlossaryCard key={term.slug} term={term} />)
         ) : (
-          <p className="py-8 text-center text-sm text-text-quaternary">검색 결과가 없어요</p>
+          <p className="py-10 text-center text-sm text-text-quaternary">검색 결과가 없어요</p>
         )}
       </div>
     </div>

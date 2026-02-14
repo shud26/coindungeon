@@ -183,7 +183,7 @@ function Backdrop({ children }: { children: React.ReactNode }) {
 
 function Panel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="glass-card mx-4 mb-24 w-full max-w-[460px] p-5">
+    <div className="card mx-4 mb-24 w-full max-w-[460px] p-5">
       {children}
     </div>
   );

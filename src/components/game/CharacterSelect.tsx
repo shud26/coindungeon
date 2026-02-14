@@ -53,7 +53,7 @@ export default function CharacterSelect({ onStart }: Props) {
             <button
               key={char.key}
               onClick={() => setSelected(char.key)}
-              className="glass-card relative flex flex-col items-center gap-2 p-4 transition-all"
+              className="card relative flex flex-col items-center gap-2 p-4 transition-all"
               style={{
                 outline: active ? `2px solid var(--accent)` : '2px solid transparent',
                 outlineOffset: -1,
@@ -79,7 +79,7 @@ export default function CharacterSelect({ onStart }: Props) {
                   {char.nameKo}
                 </p>
                 <p
-                  className="text-[10px]"
+                  className="text-xs"
                   style={{ color: 'var(--text-tertiary)' }}
                 >
                   {char.name}

@@ -27,6 +27,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+const categoryColors: Record<string, string> = {
+  기초: 'bg-accent-dim text-accent',
+  트레이딩: 'bg-warning-dim text-warning',
+  디파이: 'bg-success-dim text-success',
+  온체인: 'bg-[rgba(139,92,246,0.10)] text-[#A78BFA]',
+  보안: 'bg-danger-dim text-danger',
+  NFT: 'bg-[rgba(236,72,153,0.10)] text-[#F472B6]',
+};
+
 export default async function GlossaryTermPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const term = getTermBySlug(slug);
@@ -35,17 +44,8 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
   const relatedTerms = term.relatedTermSlugs.map((s) => getTermBySlug(s)).filter(Boolean);
   const relatedQuests = term.relatedQuestIds.map((id) => quests.find((q) => q.id === id)).filter(Boolean);
 
-  const categoryColors: Record<string, string> = {
-    기초: 'bg-accent-dim text-accent',
-    트레이딩: 'bg-warning-dim text-warning',
-    디파이: 'bg-success-dim text-success',
-    온체인: 'bg-[rgba(139,92,246,0.12)] text-[#A78BFA]',
-    보안: 'bg-danger-dim text-danger',
-    NFT: 'bg-[rgba(236,72,153,0.12)] text-[#F472B6]',
-  };
-
   return (
-    <div className="ambient-glow stagger">
+    <div>
       {/* JSON-LD */}
       <script
         type="application/ld+json"
@@ -66,45 +66,45 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
       />
 
       {/* 뒤로가기 */}
-      <div className="relative z-10">
-        <Link href="/glossary" className="inline-flex items-center gap-1 text-xs text-text-quaternary transition-colors hover:text-text-tertiary">
-          <ArrowLeft size={14} /> 용어사전
+      <div>
+        <Link href="/glossary" className="inline-flex items-center gap-1.5 text-sm text-text-quaternary transition-colors hover:text-text-tertiary">
+          <ArrowLeft size={15} /> 용어사전
         </Link>
       </div>
 
       {/* 헤더 */}
-      <div className="relative z-10 mt-4">
-        <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${categoryColors[term.category] ?? 'bg-accent-dim text-accent'}`}>
+      <div className="mt-5">
+        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryColors[term.category] ?? 'bg-accent-dim text-accent'}`}>
           {term.category}
         </span>
-        <p className="mt-2 text-xs text-text-quaternary">{term.titleEn}</p>
-        <h1 className="mt-1 text-3xl font-bold">{term.titleKo}</h1>
+        <p className="mt-2.5 text-sm text-text-quaternary">{term.titleEn}</p>
+        <h1 className="mt-1.5 text-2xl font-bold">{term.titleKo}</h1>
       </div>
 
       {/* 요약 */}
-      <div className="relative z-10 mt-5 gradient-border p-4">
-        <p className="text-sm leading-relaxed text-text-secondary">{term.shortDef}</p>
+      <div className="mt-6 card-accent p-5">
+        <p className="text-[15px] leading-relaxed text-text-secondary">{term.shortDef}</p>
       </div>
 
       {/* 상세 설명 */}
-      <div className="relative z-10 mt-4 glass-card p-5">
-        <div className="prose-custom space-y-3">
+      <div className="mt-4 card p-5">
+        <div className="space-y-3">
           {term.explanation.split('\n\n').map((para, i) => (
-            <p key={i} className="text-sm leading-relaxed text-text-secondary" dangerouslySetInnerHTML={{ __html: para.replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-primary font-semibold">$1</strong>').replace(/\n/g, '<br/>') }} />
+            <p key={i} className="text-[15px] leading-relaxed text-text-secondary" dangerouslySetInnerHTML={{ __html: para.replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-primary font-semibold">$1</strong>').replace(/\n/g, '<br/>') }} />
           ))}
         </div>
       </div>
 
       {/* 연관 용어 */}
       {relatedTerms.length > 0 && (
-        <div className="relative z-10 mt-6">
+        <div className="mt-8">
           <div className="flex items-center gap-2">
-            <BookOpen size={14} className="text-accent" />
+            <BookOpen size={15} className="text-accent" />
             <h2 className="text-sm font-semibold">연관 용어</h2>
           </div>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             {relatedTerms.map((rt) => (
-              <Link key={rt!.slug} href={`/glossary/${rt!.slug}`} className="rounded-full bg-bg-elevated px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-bg-subtle hover:text-text-primary">
+              <Link key={rt!.slug} href={`/glossary/${rt!.slug}`} className="rounded-full bg-bg-elevated px-3.5 py-1.5 text-sm text-text-secondary transition-colors hover:bg-bg-subtle hover:text-text-primary">
                 {rt!.titleKo}
               </Link>
             ))}
@@ -114,15 +114,15 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
 
       {/* 연관 퀘스트 */}
       {relatedQuests.length > 0 && (
-        <div className="relative z-10 mt-5">
+        <div className="mt-6">
           <div className="flex items-center gap-2">
-            <Swords size={14} className="text-success" />
+            <Swords size={15} className="text-success" />
             <h2 className="text-sm font-semibold">연관 퀘스트</h2>
           </div>
-          <div className="mt-2 flex flex-col gap-2">
+          <div className="mt-3 flex flex-col gap-2">
             {relatedQuests.map((q) => (
-              <Link key={q!.id} href={`/quest/${q!.id}`} className="glass-card flex items-center gap-3 p-3 transition-all hover:scale-[1.01]">
-                <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent-dim text-xs font-bold text-accent">{q!.floor}F</span>
+              <Link key={q!.id} href={`/quest/${q!.id}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.99]">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-dim text-sm font-bold text-accent">{q!.floor}F</span>
                 <span className="text-sm">{q!.title}</span>
               </Link>
             ))}

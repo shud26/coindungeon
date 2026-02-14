@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, BookOpen, Zap, CheckCircle2, Lock, ChevronRight } from 'lucide-react';
 import { getQuestById } from '@/data/quests';
 import { loadProgress, saveProgress, completeQuest, isQuestUnlocked, getLevel } from '@/lib/progress';
@@ -40,38 +41,38 @@ export default function QuestClient({ questId }: { questId: number }) {
   if (progress && !isQuestUnlocked(questId, progress.completedQuests)) {
     return (
       <div className="flex flex-col items-center pt-20 text-center">
-        <Lock size={20} className="text-text-quaternary" />
+        <Lock size={22} className="text-text-quaternary" />
         <p className="mt-3 text-sm text-text-tertiary">이전 퀘스트를 먼저 클리어해야 해</p>
-        <button onClick={() => router.push('/dungeon')} className="mt-4 text-sm text-accent">던전으로</button>
+        <button onClick={() => router.push('/dungeon')} className="mt-4 text-sm font-medium text-accent">던전으로</button>
       </div>
     );
   }
 
   if (progress && progress.completedQuests.includes(questId)) {
     return (
-      <>
-        <button onClick={() => router.push('/dungeon')} className="flex items-center gap-1 text-sm text-text-tertiary hover:text-text-primary">
-          <ArrowLeft size={14} /> 던전
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <button onClick={() => router.push('/dungeon')} className="flex items-center gap-1.5 text-sm text-text-tertiary hover:text-text-primary">
+          <ArrowLeft size={15} /> 던전
         </button>
-        <div className="mt-6 rounded-xl border border-border p-4 text-center">
+        <div className="mt-6 card p-5 text-center">
           <p className="text-xs text-text-quaternary">클리어 완료</p>
-          <p className="mt-1 text-sm font-semibold">{quest.title}</p>
+          <p className="mt-1.5 text-base font-semibold">{quest.title}</p>
         </div>
-        <div className="mt-4 space-y-2">
+        <div className="mt-5 space-y-2.5">
           {quest.steps.map((s, i) => (
-            <div key={i} className="rounded-lg border border-border p-3">
-              <p className="text-xs font-medium text-text-tertiary">{s.title}</p>
-              <div className="mt-1 whitespace-pre-line text-xs leading-relaxed text-text-secondary">{s.content}</div>
+            <div key={i} className="card p-4">
+              <p className="text-sm font-medium text-text-tertiary">{s.title}</p>
+              <div className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-text-secondary">{s.content}</div>
             </div>
           ))}
         </div>
-        <div className="mt-4 flex gap-2">
-          <button onClick={() => router.push('/dungeon')} className="flex-1 rounded-lg border border-border py-2 text-sm text-text-tertiary">던전</button>
-          {questId < 10 && (
-            <button onClick={() => router.push(`/quest/${questId + 1}`)} className="flex-1 rounded-lg bg-accent py-2 text-sm font-semibold text-white">다음</button>
+        <div className="mt-5 flex gap-2.5">
+          <button onClick={() => router.push('/dungeon')} className="flex-1 rounded-xl border border-border py-3 text-sm text-text-tertiary">던전</button>
+          {questId < 30 && (
+            <button onClick={() => router.push(`/quest/${questId + 1}`)} className="flex-1 rounded-xl bg-accent py-3 text-sm font-semibold text-white">다음</button>
           )}
         </div>
-      </>
+      </motion.div>
     );
   }
 
@@ -110,35 +111,35 @@ export default function QuestClient({ questId }: { questId: number }) {
   return (
     <>
       {/* Back */}
-      <button onClick={() => router.push('/dungeon')} className="flex items-center gap-1 text-sm text-text-tertiary hover:text-text-primary">
-        <ArrowLeft size={14} /> 던전
+      <button onClick={() => router.push('/dungeon')} className="flex items-center gap-1.5 text-sm text-text-tertiary hover:text-text-primary">
+        <ArrowLeft size={15} /> 던전
       </button>
 
       {/* Header */}
-      <div className="mt-4">
-        <div className="flex items-center gap-2 text-xs">
-          <span className="font-mono text-accent">{quest.floor}F</span>
+      <div className="mt-5">
+        <div className="flex items-center gap-2.5 text-sm">
+          <span className="font-semibold text-accent">{quest.floor}F</span>
           <span className="text-text-quaternary">+{quest.xp} XP</span>
         </div>
-        <h1 className="mt-1 text-lg font-bold tracking-tight">{quest.title}</h1>
+        <h1 className="mt-1.5 text-xl font-bold tracking-tight">{quest.title}</h1>
       </div>
 
       {/* Progress dots */}
-      <div className="mt-4 flex gap-1">
+      <div className="mt-5 flex gap-1.5">
         {quest.steps.map((_, i) => (
-          <div key={i} className={`h-0.5 flex-1 rounded-full transition-colors ${
+          <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${
             done.has(i) ? 'bg-success' : i === step ? 'bg-accent' : 'bg-bg-elevated'
           }`} />
         ))}
       </div>
 
       {/* Step tabs */}
-      <div className="no-scrollbar mt-3 flex gap-1 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+      <div className="no-scrollbar mt-4 flex gap-1.5 overflow-x-auto">
         {quest.steps.map((s, i) => (
           <button
             key={i}
             onClick={() => setStep(i)}
-            className={`shrink-0 rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
+            className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
               i === step ? 'bg-accent text-white'
               : done.has(i) ? 'bg-success-dim text-success'
               : 'bg-bg-elevated text-text-quaternary'
@@ -150,49 +151,58 @@ export default function QuestClient({ questId }: { questId: number }) {
       </div>
 
       {/* Content */}
-      <div className="mt-4 animate-in rounded-xl border border-border p-4">
-        <div className="mb-2 flex items-center gap-1.5 text-xs text-text-quaternary">
-          <Icon size={12} />
-          <span>{typeLabel[cur.type]}</span>
-          <span className="ml-auto font-mono">{step + 1}/{quest.steps.length}</span>
-        </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 8 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -8 }}
+          transition={{ duration: 0.2 }}
+          className="mt-5 card p-5"
+        >
+          <div className="mb-3 flex items-center gap-2 text-xs text-text-quaternary">
+            <Icon size={13} />
+            <span>{typeLabel[cur.type]}</span>
+            <span className="ml-auto">{step + 1}/{quest.steps.length}</span>
+          </div>
 
-        <h3 className="text-sm font-semibold">{cur.title}</h3>
-        <div className="mt-2 whitespace-pre-line text-sm leading-relaxed text-text-secondary">
-          {cur.content.split('\n').map((line, i) => {
-            const parts = line.split(/(\*\*[^*]+\*\*)/g);
-            return (
-              <span key={i}>
-                {parts.map((p, j) =>
-                  p.startsWith('**') && p.endsWith('**')
-                    ? <strong key={j} className="font-semibold text-text-primary">{p.slice(2, -2)}</strong>
-                    : p
-                )}
-                {'\n'}
-              </span>
-            );
-          })}
-        </div>
+          <h3 className="text-base font-semibold">{cur.title}</h3>
+          <div className="mt-3 whitespace-pre-line text-[15px] leading-relaxed text-text-secondary">
+            {cur.content.split('\n').map((line, i) => {
+              const parts = line.split(/(\*\*[^*]+\*\*)/g);
+              return (
+                <span key={i}>
+                  {parts.map((p, j) =>
+                    p.startsWith('**') && p.endsWith('**')
+                      ? <strong key={j} className="font-semibold text-text-primary">{p.slice(2, -2)}</strong>
+                      : p
+                  )}
+                  {'\n'}
+                </span>
+              );
+            })}
+          </div>
 
-        {!done.has(step) ? (
-          <button
-            onClick={completeStep}
-            className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg border border-accent/20 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent-dim"
-          >
-            {cur.verifyText || '다음 단계'} <ChevronRight size={14} />
-          </button>
-        ) : (
-          <div className="mt-4 rounded-lg bg-success-dim py-2 text-center text-xs font-medium text-success">완료</div>
-        )}
-      </div>
+          {!done.has(step) ? (
+            <button
+              onClick={completeStep}
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-accent/20 py-3 text-sm font-medium text-accent transition-colors hover:bg-accent-dim"
+            >
+              {cur.verifyText || '다음 단계'} <ChevronRight size={15} />
+            </button>
+          ) : (
+            <div className="mt-5 rounded-xl bg-success-dim py-3 text-center text-sm font-medium text-success">완료</div>
+          )}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Quiz */}
       {allDone && hasQuiz && !quizDone && (
-        <div className="mt-4">
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-5">
           {!showQuiz ? (
-            <button onClick={() => setShowQuiz(true)} className="w-full rounded-xl border border-border p-4 text-left transition-colors hover:border-border-hover">
-              <p className="text-sm font-semibold">퀴즈</p>
-              <p className="mt-0.5 text-xs text-text-tertiary">배운 내용 확인</p>
+            <button onClick={() => setShowQuiz(true)} className="w-full card p-5 text-left transition-colors hover:border-border-hover">
+              <p className="text-base font-semibold">퀴즈</p>
+              <p className="mt-1 text-sm text-text-tertiary">배운 내용 확인</p>
             </button>
           ) : (
             <QuizBlock questions={quest.quiz!} onComplete={score => {
@@ -204,14 +214,16 @@ export default function QuestClient({ questId }: { questId: number }) {
               }
             }} />
           )}
-        </div>
+        </motion.div>
       )}
 
       {/* Finish */}
       {canFinish && (
-        <button onClick={finish} className="mt-4 w-full rounded-xl bg-accent py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90">
-          퀘스트 완료 <span className="ml-1 opacity-70">+{quest.xp} XP</span>
-        </button>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+          <button onClick={finish} className="mt-5 w-full rounded-xl bg-accent py-3.5 text-sm font-semibold text-white">
+            퀘스트 완료 <span className="ml-1 opacity-70">+{quest.xp} XP</span>
+          </button>
+        </motion.div>
       )}
 
       <CompletionModal
@@ -220,7 +232,7 @@ export default function QuestClient({ questId }: { questId: number }) {
         xpGained={quest.xp}
         newLevel={levelUp?.level}
         levelTitle={levelUp?.title}
-        onClose={() => { setModal(false); router.push(questId < 10 ? `/quest/${questId + 1}` : '/dungeon'); }}
+        onClose={() => { setModal(false); router.push(questId < 30 ? `/quest/${questId + 1}` : '/dungeon'); }}
       />
     </>
   );

@@ -14,7 +14,6 @@ const HEIGHT = ROWS * TILE;
 const SPEED = 120;
 const NPC_RANGE = 48;
 const DOOR_RANGE = 20;
-const PLAYER_SCALE = 0.75;
 
 /* ── Component ───────────────────────────────── */
 interface Props {
@@ -103,8 +102,6 @@ export default function PhaserGame({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let promptText: any;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let roomTitle: any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let coinGroup: any;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let doorZones: any[] = [];
@@ -115,7 +112,6 @@ export default function PhaserGame({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let visionMask: any;
 
-      let useFallback = false;
       let lastFootstep = 0;
       let spawnCol = currentRoom.playerSpawn.col;
       let spawnRow = currentRoom.playerSpawn.row;
@@ -128,19 +124,59 @@ export default function PhaserGame({
         pendingRoomRef.current = null;
       }
 
+      /* ── Helper: draw pixel art from 2D array ── */
+      function drawPixelArt(
+        scene: Phaser.Scene,
+        pixels: (number | null)[][],
+        cellSize: number,
+      ): Phaser.GameObjects.Graphics {
+        const gfx = scene.add.graphics();
+        const rows = pixels.length;
+        const cols = pixels[0]?.length ?? 0;
+        const offsetX = -(cols * cellSize) / 2;
+        const offsetY = -(rows * cellSize) / 2;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const color = pixels[r][c];
+            if (color !== null) {
+              gfx.fillStyle(color, 1);
+              gfx.fillRect(offsetX + c * cellSize, offsetY + r * cellSize, cellSize, cellSize);
+            }
+          }
+        }
+        return gfx;
+      }
+
+      /* ── Helper: generate texture from pixel art ── */
+      function generatePixelTexture(
+        scene: Phaser.Scene,
+        key: string,
+        pixels: (number | null)[][],
+        cellSize: number,
+      ) {
+        const gfx = scene.add.graphics();
+        gfx.setVisible(false);
+        const rows = pixels.length;
+        const cols = pixels[0]?.length ?? 0;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const color = pixels[r][c];
+            if (color !== null) {
+              gfx.fillStyle(color, 1);
+              gfx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+            }
+          }
+        }
+        gfx.generateTexture(key, cols * cellSize, rows * cellSize);
+        gfx.destroy();
+      }
+
       class DungeonScene extends Phaser.Scene {
         constructor() {
           super({ key: 'Dungeon' });
         }
 
         preload() {
-          this.load.spritesheet(charMeta.key, charMeta.spritePath, {
-            frameWidth: charMeta.frameWidth,
-            frameHeight: charMeta.frameHeight,
-          });
-          this.load.on('loaderror', () => {
-            useFallback = true;
-          });
           /* Load sounds */
           this.load.audio('sfx-footstep', '/assets/sfx/footstep.wav');
           this.load.audio('sfx-talk', '/assets/sfx/talk.wav');
@@ -155,6 +191,9 @@ export default function PhaserGame({
           /* ── Generate pixel-art textures ── */
           this.generateTileTextures(theme);
 
+          /* ── Generate player texture from pixel art ── */
+          generatePixelTexture(this, 'player-sprite', charMeta.pixels, 2);
+
           /* ── Floor background ──────────── */
           this.add.rectangle(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT, theme.floor);
 
@@ -168,7 +207,6 @@ export default function PhaserGame({
               const y = r * TILE + TILE / 2;
 
               if (map[r][c] === 1) {
-                /* Wall: use front-face if floor is below, else top */
                 const hasFloorBelow = r < ROWS - 1 && map[r + 1]?.[c] === 0;
                 const texKey = hasFloorBelow ? 'wall-face' : 'wall-top';
                 this.add.image(x, y, texKey);
@@ -177,7 +215,6 @@ export default function PhaserGame({
                 walls.add(wallRect);
                 (wallRect.body as Phaser.Physics.Arcade.StaticBody).setSize(TILE, TILE);
               } else {
-                /* Floor: alternate between 2 textures */
                 const texKey = ((c + r) % 3 === 0) ? 'floor-alt' : 'floor-main';
                 this.add.image(x, y, texKey);
               }
@@ -185,7 +222,6 @@ export default function PhaserGame({
           }
 
           /* ── Torches with particles ────── */
-          /* Create fire pixel texture */
           const fireGfx = this.add.graphics();
           fireGfx.setVisible(false);
           fireGfx.fillStyle(0xffffff, 1);
@@ -197,41 +233,32 @@ export default function PhaserGame({
             const tx = tc * TILE + TILE / 2;
             const ty = tr * TILE + TILE / 2;
 
-            /* Outer glow */
-            const outerGlow = this.add.circle(tx, ty, 40, theme.torchColor, 0.04);
+            /* Torch holder */
+            this.add.rectangle(tx, ty + 2, 4, 8, 0x6b4423);
+            this.add.rectangle(tx, ty - 2, 6, 3, 0x8b5e34);
+
+            /* Warm glow */
+            const glow = this.add.circle(tx, ty - 4, 28, theme.torchColor, 0.06);
             this.tweens.add({
-              targets: outerGlow,
-              alpha: { from: 0.02, to: 0.07 },
+              targets: glow,
+              alpha: { from: 0.04, to: 0.09 },
               scaleX: { from: 0.9, to: 1.1 },
               scaleY: { from: 0.9, to: 1.1 },
-              duration: 1500,
+              duration: 1200 + Math.random() * 600,
               yoyo: true,
               repeat: -1,
             });
-
-            /* Inner glow */
-            const innerGlow = this.add.circle(tx, ty, 18, theme.torchColor, 0.15);
-            this.tweens.add({
-              targets: innerGlow,
-              alpha: { from: 0.1, to: 0.22 },
-              duration: 700 + Math.random() * 400,
-              yoyo: true,
-              repeat: -1,
-            });
-
-            /* Torch base */
-            this.add.rectangle(tx, ty, 4, 6, theme.torchColor);
 
             /* Fire particles */
-            this.add.particles(tx, ty - 4, 'fire-px', {
-              speed: { min: 5, max: 20 },
+            this.add.particles(tx, ty - 6, 'fire-px', {
+              speed: { min: 5, max: 25 },
               angle: { min: 250, max: 290 },
               scale: { start: 1, end: 0 },
-              alpha: { start: 0.8, end: 0 },
-              lifespan: 500,
-              frequency: 120,
+              alpha: { start: 0.9, end: 0 },
+              lifespan: 450,
+              frequency: 100,
               quantity: 1,
-              tint: [theme.torchColor, 0xffffff],
+              tint: [theme.torchColor, 0xffd700, 0xff6b35],
               blendMode: 'ADD',
             });
           }
@@ -242,36 +269,44 @@ export default function PhaserGame({
             const dx = door.col * TILE + TILE / 2;
             const dy = door.row * TILE + TILE / 2;
 
-            /* Door visual */
-            const doorGlow = this.add.rectangle(dx, dy, TILE, TILE, theme.accent, 0.3);
+            /* Door frame */
+            this.add.rectangle(dx, dy, TILE - 2, TILE - 2, theme.accent, 0.08);
+            this.add.rectangle(dx, dy, TILE - 6, TILE - 6, theme.accent, 0.15);
+
+            /* Door glow pulse */
+            const doorGlow = this.add.rectangle(dx, dy, TILE, TILE, theme.accent, 0.2);
             this.tweens.add({
               targets: doorGlow,
-              alpha: { from: 0.15, to: 0.4 },
-              duration: 1000,
+              alpha: { from: 0.1, to: 0.35 },
+              duration: 1200,
               yoyo: true,
               repeat: -1,
+              ease: 'Sine.easeInOut',
             });
+
             /* Door label */
+            const accentHex = '#' + theme.accent.toString(16).padStart(6, '0');
             this.add.text(dx, dy - 20, door.label, {
-              fontSize: '7px',
-              color: '#' + theme.accent.toString(16).padStart(6, '0'),
-              fontFamily: 'monospace',
-            }).setOrigin(0.5).setAlpha(0.8);
+              fontSize: '8px',
+              color: accentHex,
+              fontFamily: 'system-ui, sans-serif',
+              fontStyle: 'bold',
+            }).setOrigin(0.5).setAlpha(0.85);
 
             /* Portal particles */
             this.add.particles(dx, dy, 'fire-px', {
-              speed: { min: 10, max: 30 },
+              speed: { min: 8, max: 25 },
               angle: { min: 0, max: 360 },
-              scale: { start: 0.8, end: 0 },
-              alpha: { start: 0.6, end: 0 },
-              lifespan: 800,
-              frequency: 200,
+              scale: { start: 0.7, end: 0 },
+              alpha: { start: 0.5, end: 0 },
+              lifespan: 700,
+              frequency: 250,
               quantity: 1,
               tint: [theme.accent],
               blendMode: 'ADD',
               emitZone: {
                 type: 'edge',
-                source: new Phaser.Geom.Circle(0, 0, 12),
+                source: new Phaser.Geom.Circle(0, 0, 10),
                 quantity: 8,
               },
             });
@@ -284,19 +319,26 @@ export default function PhaserGame({
           for (const coin of currentRoom.coins) {
             const cx = coin.col * TILE + TILE / 2;
             const cy = coin.row * TILE + TILE / 2;
-            const coinSprite = this.add.circle(cx, cy, 6, 0xfbbf24);
+
+            /* Coin shadow */
+            this.add.ellipse(cx, cy + 4, 10, 4, 0x000000, 0.15);
+
+            /* Coin body */
+            const coinSprite = this.add.circle(cx, cy, 5, 0xfbbf24);
+            /* Inner highlight */
+            this.add.circle(cx - 1, cy - 1, 2, 0xfde68a, 0.6);
+
             this.physics.add.existing(coinSprite, true);
             (coinSprite as unknown as { coinData: typeof coin }).coinData = coin;
             coinGroup.add(coinSprite);
-            /* Sparkle */
+
             this.tweens.add({
               targets: coinSprite,
-              alpha: { from: 0.5, to: 1 },
-              scaleX: { from: 0.8, to: 1.2 },
-              scaleY: { from: 0.8, to: 1.2 },
-              duration: 600 + Math.random() * 400,
+              y: cy - 2,
+              duration: 800 + Math.random() * 400,
               yoyo: true,
               repeat: -1,
+              ease: 'Sine.easeInOut',
             });
           }
 
@@ -307,55 +349,76 @@ export default function PhaserGame({
             const nx = npcData.col * TILE + TILE / 2;
             const ny = npcData.row * TILE + TILE / 2;
 
-            /* Pixel-art NPC body */
+            /* NPC pixel art body */
             const npcGfx = this.add.graphics();
-            npcGfx.fillStyle(npcData.color, 1);
-            /* Body */
-            npcGfx.fillRect(-8, -4, 16, 16);
-            /* Head */
-            npcGfx.fillRect(-6, -12, 12, 10);
-            /* Eyes */
-            npcGfx.fillStyle(0xffffff, 1);
-            npcGfx.fillRect(-4, -9, 3, 3);
-            npcGfx.fillRect(1, -9, 3, 3);
-            npcGfx.fillStyle(0x000000, 1);
-            npcGfx.fillRect(-3, -8, 2, 2);
-            npcGfx.fillRect(2, -8, 2, 2);
-            /* Shadow */
-            npcGfx.fillStyle(0x000000, 0.15);
-            npcGfx.fillEllipse(0, 14, 18, 6);
+            const nc = npcData.color;
+            const ncDark = this.darkenColor(nc, 30);
 
-            const npcLabel = this.add.text(0, -18, npcData.label, {
+            /* Shadow */
+            npcGfx.fillStyle(0x000000, 0.2);
+            npcGfx.fillEllipse(0, 12, 18, 6);
+
+            /* Body */
+            npcGfx.fillStyle(nc, 1);
+            npcGfx.fillRect(-7, -2, 14, 14);
+            npcGfx.fillStyle(ncDark, 1);
+            npcGfx.fillRect(-7, 8, 14, 4);
+
+            /* Head */
+            npcGfx.fillStyle(0xf5c6a0, 1); // skin
+            npcGfx.fillRect(-5, -10, 10, 9);
+
+            /* Hair/hat */
+            npcGfx.fillStyle(nc, 1);
+            npcGfx.fillRect(-6, -13, 12, 5);
+            npcGfx.fillStyle(ncDark, 1);
+            npcGfx.fillRect(-6, -13, 12, 2);
+
+            /* Eyes */
+            npcGfx.fillStyle(0x1a1a2e, 1);
+            npcGfx.fillRect(-3, -7, 2, 2);
+            npcGfx.fillRect(2, -7, 2, 2);
+
+            /* Mouth */
+            npcGfx.fillStyle(0xd4a574, 1);
+            npcGfx.fillRect(-1, -4, 3, 1);
+
+            /* NPC label */
+            const npcLabel = this.add.text(0, -19, npcData.label, {
               fontSize: '8px',
               color: '#' + npcData.color.toString(16).padStart(6, '0'),
-              fontFamily: 'monospace',
+              fontFamily: 'system-ui, sans-serif',
+              fontStyle: 'bold',
             }).setOrigin(0.5);
 
-            const npcContainer = this.add.container(nx, ny, [npcGfx, npcLabel]);
+            /* Interaction indicator */
+            const indicator = this.add.text(0, -26, '!', {
+              fontSize: '10px',
+              color: '#fbbf24',
+              fontFamily: 'system-ui, sans-serif',
+              fontStyle: 'bold',
+            }).setOrigin(0.5);
+            this.tweens.add({
+              targets: indicator,
+              y: -29,
+              alpha: { from: 1, to: 0.5 },
+              duration: 600,
+              yoyo: true,
+              repeat: -1,
+            });
+
+            const npcContainer = this.add.container(nx, ny, [npcGfx, npcLabel, indicator]);
             this.physics.add.existing(npcContainer, true);
-            (npcContainer.body as Phaser.Physics.Arcade.StaticBody).setSize(24, 24);
+            (npcContainer.body as Phaser.Physics.Arcade.StaticBody).setSize(20, 24);
 
             /* Bob animation */
             this.tweens.add({
               targets: npcContainer,
-              y: ny - 3,
-              duration: 1000,
+              y: ny - 2,
+              duration: 1200,
               yoyo: true,
               repeat: -1,
               ease: 'Sine.easeInOut',
-            });
-
-            /* NPC sparkle particles */
-            this.add.particles(nx, ny, 'fire-px', {
-              speed: { min: 3, max: 15 },
-              angle: { min: 0, max: 360 },
-              scale: { start: 0.8, end: 0 },
-              alpha: { start: 0.5, end: 0 },
-              lifespan: 800,
-              frequency: 400,
-              quantity: 1,
-              tint: [npcData.color],
-              blendMode: 'ADD',
             });
 
             npcs.push(npcContainer);
@@ -365,51 +428,20 @@ export default function PhaserGame({
           const px = spawnCol * TILE + TILE / 2;
           const py = spawnRow * TILE + TILE / 2;
 
-          if (useFallback) {
-            player = this.add.rectangle(px, py, 20, 20, charMeta.color);
-            this.physics.add.existing(player);
-            const body = player.body as Phaser.Physics.Arcade.Body;
-            body.setSize(20, 20);
-            body.setCollideWorldBounds(true);
-          } else {
-            player = this.physics.add.sprite(px, py, charMeta.key, 0);
-            player.setScale(PLAYER_SCALE);
-            const body = player.body as Phaser.Physics.Arcade.Body;
-            body.setSize(20 / PLAYER_SCALE, 20 / PLAYER_SCALE);
-            body.setOffset(
-              (charMeta.frameWidth - 20 / PLAYER_SCALE) / 2,
-              (charMeta.frameHeight - 20 / PLAYER_SCALE) / 2,
-            );
-            body.setCollideWorldBounds(true);
+          /* Draw player as pixel art container */
+          const playerGfx = drawPixelArt(this, charMeta.pixels, 2);
 
-            const key = charMeta.key;
-            if (!this.anims.exists('walk-down')) {
-              this.anims.create({
-                key: 'walk-down',
-                frames: this.anims.generateFrameNumbers(key, { start: 0, end: 2 }),
-                frameRate: 8,
-                repeat: -1,
-              });
-              this.anims.create({
-                key: 'walk-left',
-                frames: this.anims.generateFrameNumbers(key, { start: 3, end: 5 }),
-                frameRate: 8,
-                repeat: -1,
-              });
-              this.anims.create({
-                key: 'walk-right',
-                frames: this.anims.generateFrameNumbers(key, { start: 6, end: 8 }),
-                frameRate: 8,
-                repeat: -1,
-              });
-              this.anims.create({
-                key: 'walk-up',
-                frames: this.anims.generateFrameNumbers(key, { start: 9, end: 11 }),
-                frameRate: 8,
-                repeat: -1,
-              });
-            }
-          }
+          /* Player shadow */
+          const playerShadow = this.add.ellipse(0, 14, 16, 5, 0x000000, 0.2);
+
+          const playerContainer = this.add.container(px, py, [playerShadow, playerGfx]);
+          this.physics.add.existing(playerContainer);
+          player = playerContainer;
+
+          const body = player.body as Phaser.Physics.Arcade.Body;
+          body.setSize(16, 18);
+          body.setOffset(-8, -6);
+          body.setCollideWorldBounds(true);
 
           /* Player depth above floor/coins */
           player.setDepth(5);
@@ -447,7 +479,7 @@ export default function PhaserGame({
                 emitting: false,
               },
             );
-            burst.explode(8);
+            burst.explode(10);
             this.time.delayedCall(500, () => burst.destroy());
           });
 
@@ -463,7 +495,7 @@ export default function PhaserGame({
             speed: { min: 5, max: 20 },
             angle: { min: 200, max: 340 },
             scale: { start: 0.8, end: 0 },
-            alpha: { start: 0.3, end: 0 },
+            alpha: { start: 0.25, end: 0 },
             lifespan: 350,
             gravityY: -10,
             tint: theme.wallHighlight,
@@ -474,10 +506,9 @@ export default function PhaserGame({
           /* ── Fog of War ─────────────── */
           const visionGfx = this.add.graphics();
           visionGfx.setVisible(false);
-          /* Sharp radial gradient: bright center, dark edges */
           for (let i = 100; i > 0; i--) {
             const t = i / 100;
-            const alpha = t * t; /* quadratic falloff = sharper edge */
+            const alpha = t * t;
             visionGfx.fillStyle(0xffffff, alpha);
             visionGfx.fillCircle(100, 100, i);
           }
@@ -485,12 +516,11 @@ export default function PhaserGame({
           visionGfx.destroy();
 
           fogRT = this.add.renderTexture(0, 0, WIDTH, HEIGHT);
-          fogRT.fill(0x000000, 0.88);
+          fogRT.fill(0x000000, 0.85);
           fogRT.setDepth(50);
 
-          /* Create mask image without adding to display list */
           visionMask = new Phaser.GameObjects.Image(this, px, py, 'vision-circle');
-          visionMask.setScale(1.6);
+          visionMask.setScale(1.8);
 
           fogRT.mask = new Phaser.Display.Masks.BitmapMask(this, visionMask);
           fogRT.mask.invertAlpha = true;
@@ -506,29 +536,41 @@ export default function PhaserGame({
           eKey = this.input.keyboard!.addKey('E');
 
           /* ── Prompt text ────────────── */
-          promptText = this.add.text(WIDTH / 2, HEIGHT - 10, '', {
+          promptText = this.add.text(WIDTH / 2, HEIGHT - 12, '', {
             fontSize: '10px',
             color: '#71717a',
-            fontFamily: 'monospace',
+            fontFamily: 'system-ui, sans-serif',
           }).setOrigin(0.5).setDepth(60);
 
           /* ── Room title (fade in) ───── */
-          roomTitle = this.add.text(WIDTH / 2, 20, currentRoom.theme.name, {
-            fontSize: '12px',
-            fontFamily: 'monospace',
-            color: '#' + theme.accent.toString(16).padStart(6, '0'),
+          const accentHex = '#' + theme.accent.toString(16).padStart(6, '0');
+          const roomTitle = this.add.text(WIDTH / 2, 22, currentRoom.theme.name, {
+            fontSize: '13px',
+            fontFamily: 'system-ui, sans-serif',
+            fontStyle: 'bold',
+            color: accentHex,
           }).setOrigin(0.5).setDepth(60).setAlpha(0);
 
+          /* Background pill for room title */
+          const titleBg = this.add.rectangle(
+            WIDTH / 2, 22,
+            roomTitle.width + 16, 20,
+            0x000000, 0
+          ).setDepth(59);
+
           this.tweens.add({
-            targets: roomTitle,
+            targets: [roomTitle, titleBg],
             alpha: { from: 0, to: 0.9 },
-            duration: 500,
+            duration: 400,
             yoyo: true,
-            hold: 1500,
-            onComplete: () => roomTitle?.setAlpha(0),
+            hold: 2000,
+            onComplete: () => {
+              roomTitle?.setAlpha(0);
+              titleBg?.setAlpha(0);
+            },
           });
 
-          /* Mini-map indicator */
+          /* Mini-map */
           this.drawMiniMap(theme.accent);
 
           this.physics.world.setBounds(0, 0, WIDTH, HEIGHT);
@@ -537,10 +579,16 @@ export default function PhaserGame({
           this.cameras.main.fadeIn(400, 0, 0, 0);
         }
 
-        generateTileTextures(t: typeof currentRoom.theme) {
-          const S = TILE; // 32px
+        darkenColor(color: number, amount: number): number {
+          const r = Math.max(0, ((color >> 16) & 0xff) - amount);
+          const g = Math.max(0, ((color >> 8) & 0xff) - amount);
+          const b = Math.max(0, (color & 0xff) - amount);
+          return (r << 16) | (g << 8) | b;
+        }
 
-          /* Helper: darken/lighten a color */
+        generateTileTextures(t: typeof currentRoom.theme) {
+          const S = TILE;
+
           const shift = (color: number, amount: number) => {
             const r = Math.min(255, Math.max(0, ((color >> 16) & 0xff) + amount));
             const g = Math.min(255, Math.max(0, ((color >> 8) & 0xff) + amount));
@@ -552,80 +600,70 @@ export default function PhaserGame({
           const wf = this.add.graphics();
           wf.fillStyle(t.wall, 1);
           wf.fillRect(0, 0, S, S);
-          /* Brick rows */
           const brickH = 7;
           const mortar = shift(t.wall, -15);
           for (let row = 0; row < 5; row++) {
             const by = row * brickH;
             const offset = (row % 2) * (S / 2);
-            wf.lineStyle(1, mortar, 0.6);
-            wf.lineBetween(0, by, S, by); /* horizontal mortar */
-            /* Vertical mortar lines */
+            wf.lineStyle(1, mortar, 0.5);
+            wf.lineBetween(0, by, S, by);
             for (let bx = offset; bx < S; bx += S / 2) {
               wf.lineBetween(bx, by, bx, by + brickH);
             }
-            /* Subtle highlight on top of each brick */
-            wf.lineStyle(1, t.wallHighlight, 0.15);
+            wf.lineStyle(1, t.wallHighlight, 0.12);
             wf.lineBetween(0, by + 1, S, by + 1);
           }
-          /* Top edge glow */
-          wf.lineStyle(1, t.wallHighlight, 0.25);
+          /* Top/bottom edge */
+          wf.lineStyle(1, t.wallHighlight, 0.2);
           wf.lineBetween(0, 0, S, 0);
-          /* Bottom shadow */
-          wf.lineStyle(1, shift(t.wall, -25), 0.4);
+          wf.lineStyle(1, shift(t.wall, -20), 0.3);
           wf.lineBetween(0, S - 1, S, S - 1);
-          /* Random brick cracks for detail */
-          wf.lineStyle(1, shift(t.wall, -10), 0.2);
+          /* Random detail */
+          wf.lineStyle(1, shift(t.wall, -10), 0.15);
           wf.lineBetween(8, 10, 12, 14);
           wf.lineBetween(22, 3, 25, 6);
           wf.generateTexture('wall-face', S, S);
           wf.destroy();
 
-          /* ── Wall top (darker, less detail) ── */
+          /* ── Wall top ── */
           const wt = this.add.graphics();
           const topColor = shift(t.wall, -12);
           wt.fillStyle(topColor, 1);
           wt.fillRect(0, 0, S, S);
-          /* Subtle stone pattern */
-          wt.lineStyle(1, shift(topColor, -10), 0.3);
+          wt.lineStyle(1, shift(topColor, -10), 0.25);
           wt.lineBetween(0, S / 2, S, S / 2);
           wt.lineBetween(S / 3, 0, S / 3, S);
           wt.lineBetween(2 * S / 3, 0, 2 * S / 3, S);
-          /* Corner dots for texture */
-          wt.fillStyle(shift(topColor, 8), 0.15);
+          wt.fillStyle(shift(topColor, 8), 0.12);
           wt.fillRect(4, 4, 2, 2);
           wt.fillRect(20, 18, 2, 2);
           wt.fillRect(12, 26, 2, 2);
           wt.generateTexture('wall-top', S, S);
           wt.destroy();
 
-          /* ── Floor main (stone slabs) ── */
+          /* ── Floor main ── */
           const fm = this.add.graphics();
           fm.fillStyle(t.floor, 1);
           fm.fillRect(0, 0, S, S);
-          /* Stone slab edges */
-          fm.lineStyle(1, shift(t.floor, -8), 0.15);
+          fm.lineStyle(1, shift(t.floor, -8), 0.12);
           fm.strokeRect(1, 1, S - 2, S - 2);
-          /* Subtle cross pattern */
-          fm.lineStyle(1, shift(t.floor, -6), 0.08);
+          fm.lineStyle(1, shift(t.floor, -5), 0.06);
           fm.lineBetween(S / 2, 2, S / 2, S - 2);
           fm.lineBetween(2, S / 2, S - 2, S / 2);
-          /* Small detail dots */
-          fm.fillStyle(shift(t.floor, 6), 0.1);
+          fm.fillStyle(shift(t.floor, 6), 0.08);
           fm.fillRect(6, 8, 1, 1);
           fm.fillRect(22, 14, 1, 1);
           fm.fillRect(14, 24, 1, 1);
           fm.generateTexture('floor-main', S, S);
           fm.destroy();
 
-          /* ── Floor alternate (slight variation) ── */
+          /* ── Floor alternate ── */
           const fa = this.add.graphics();
           fa.fillStyle(t.floorAlt, 1);
           fa.fillRect(0, 0, S, S);
-          fa.lineStyle(1, shift(t.floorAlt, -6), 0.12);
+          fa.lineStyle(1, shift(t.floorAlt, -6), 0.1);
           fa.strokeRect(1, 1, S - 2, S - 2);
-          /* Different crack pattern */
-          fa.lineStyle(1, shift(t.floorAlt, -8), 0.1);
+          fa.lineStyle(1, shift(t.floorAlt, -8), 0.08);
           fa.lineBetween(4, 4, 10, 10);
           fa.lineBetween(20, 8, 26, 14);
           fa.generateTexture('floor-alt', S, S);
@@ -633,21 +671,30 @@ export default function PhaserGame({
         }
 
         drawMiniMap(accent: number) {
-          const baseX = WIDTH - 52;
-          const baseY = 12;
-          const boxW = 8;
-          const boxH = 6;
+          const baseX = WIDTH - 58;
+          const baseY = 14;
+          const boxW = 9;
+          const boxH = 7;
           const gap = 2;
 
           const currentIdx = ROOM_ORDER.indexOf(currentRoom.id);
+
+          /* Background pill */
+          const totalW = ROOM_ORDER.length * (boxW + gap) - gap + 8;
+          this.add.rectangle(baseX + totalW / 2 - 4, baseY, totalW, boxH + 8, 0x000000, 0.4)
+            .setDepth(60);
 
           for (let i = 0; i < ROOM_ORDER.length; i++) {
             const rx = baseX + i * (boxW + gap);
             const ry = baseY;
             const isCurrent = i === currentIdx;
-            const color = isCurrent ? accent : 0x3f3f46;
-            const alpha = isCurrent ? 0.9 : 0.3;
-            this.add.rectangle(rx, ry, boxW, boxH, color, alpha).setDepth(60);
+            const isPast = i < currentIdx;
+            const color = isCurrent ? accent : isPast ? accent : 0x3f3f46;
+            const alpha = isCurrent ? 1 : isPast ? 0.5 : 0.2;
+            const rect = this.add.rectangle(rx, ry, boxW, boxH, color, alpha).setDepth(61);
+            if (isCurrent) {
+              rect.setStrokeStyle(1, 0xffffff, 0.4);
+            }
           }
         }
 
@@ -658,7 +705,6 @@ export default function PhaserGame({
           /* Pause when overlay open */
           if (overlayRef.current) {
             body.setVelocity(0, 0);
-            if (!useFallback) player.anims?.stop();
             return;
           }
 
@@ -678,26 +724,17 @@ export default function PhaserGame({
 
           const isMoving = vx !== 0 || vy !== 0;
 
-          /* Walk animation */
-          if (!useFallback) {
-            if (vx < 0) player.anims.play('walk-left', true);
-            else if (vx > 0) player.anims.play('walk-right', true);
-            else if (vy < 0) player.anims.play('walk-up', true);
-            else if (vy > 0) player.anims.play('walk-down', true);
-            else player.anims.stop();
-          }
-
           /* Dust particles when moving */
           if (isMoving && dustEmitter) {
             dustEmitter.emitParticleAt(player.x, player.y + 10, 1);
           }
 
-          /* Footstep sound (throttled) */
+          /* Footstep sound */
           if (isMoving) {
             const now = _time;
             if (now - lastFootstep > 280) {
               lastFootstep = now;
-              try { this.sound.play('sfx-footstep', { volume: 0.15 }); } catch { /* */ }
+              try { this.sound.play('sfx-footstep', { volume: 0.12 }); } catch { /* */ }
             }
           }
 
@@ -755,16 +792,14 @@ export default function PhaserGame({
                 });
               }
             } else {
-              promptText.setText('🔒 퀴즈를 먼저 클리어하세요!');
+              promptText.setText('퀴즈를 먼저 클리어하세요');
               promptText.setColor('#ef4444');
               if (Phaser.Input.Keyboard.JustDown(eKey)) {
-                try { this.sound.play('sfx-wrong', { volume: 0.3 }); } catch { /* */ }
                 this.cameras.main.shake(200, 0.005);
               }
             }
           } else {
-            promptText.setText('방향키 / WASD');
-            promptText.setColor('#71717a');
+            promptText.setText('');
           }
         }
       }
@@ -774,7 +809,7 @@ export default function PhaserGame({
         width: WIDTH,
         height: HEIGHT,
         parent: containerRef.current!,
-        backgroundColor: '#09090b',
+        backgroundColor: '#0C0C0E',
         physics: {
           default: 'arcade',
           arcade: { gravity: { x: 0, y: 0 }, debug: false },
@@ -793,7 +828,7 @@ export default function PhaserGame({
 
       gameRef.current = game;
 
-      /* Auto-focus canvas so keyboard works immediately */
+      /* Auto-focus canvas */
       requestAnimationFrame(() => {
         const canvas = containerRef.current?.querySelector('canvas');
         if (canvas) {
@@ -837,9 +872,9 @@ export default function PhaserGame({
     label: string;
   }) => (
     <button
-      className="flex h-11 w-11 items-center justify-center rounded-lg text-base select-none active:brightness-125"
+      className="flex h-12 w-12 items-center justify-center rounded-xl text-base select-none active:brightness-125"
       style={{
-        background: 'var(--bg-surface)',
+        background: 'var(--bg-elevated)',
         border: '1px solid var(--border)',
         color: 'var(--text-secondary)',
       }}
@@ -855,15 +890,13 @@ export default function PhaserGame({
   return (
     <div>
       {/* HUD */}
-      <div className="mb-2 flex items-center justify-between px-1">
-        <div className="flex items-center gap-2">
-          <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-            {getRoom(currentRoomId).theme.name}
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
-          <span style={{ color: '#fbbf24', fontSize: '12px' }}>●</span>
-          <span className="text-xs font-mono" style={{ color: '#fbbf24' }}>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+          {getRoom(currentRoomId).theme.name}
+        </span>
+        <div className="flex items-center gap-1.5">
+          <span style={{ color: '#fbbf24', fontSize: '11px' }}>&#9679;</span>
+          <span className="text-xs font-medium" style={{ color: '#fbbf24' }}>
             {coinCount}
           </span>
         </div>
@@ -880,11 +913,11 @@ export default function PhaserGame({
       {/* Coin fact toast */}
       {coinFact && (
         <div
-          className="mt-2 rounded-lg px-3 py-1.5 text-center text-xs font-medium"
+          className="mt-2 rounded-lg px-3 py-2 text-center text-xs font-medium"
           style={{
-            background: 'rgba(251, 191, 36, 0.15)',
+            background: 'rgba(251, 191, 36, 0.1)',
             color: '#fbbf24',
-            border: '1px solid rgba(251, 191, 36, 0.3)',
+            border: '1px solid rgba(251, 191, 36, 0.2)',
           }}
         >
           {coinFact}
@@ -892,19 +925,19 @@ export default function PhaserGame({
       )}
 
       {/* Virtual D-pad (mobile) */}
-      <div className="mt-3 flex items-center justify-between px-4">
-        <div className="grid grid-cols-3 gap-1">
+      <div className="mt-3 flex items-center justify-between px-2">
+        <div className="grid grid-cols-3 gap-1.5">
           <div />
-          <DPadBtn dir="up" label="▲" />
+          <DPadBtn dir="up" label="&#9650;" />
           <div />
-          <DPadBtn dir="left" label="◀" />
-          <DPadBtn dir="down" label="▼" />
-          <DPadBtn dir="right" label="▶" />
+          <DPadBtn dir="left" label="&#9664;" />
+          <DPadBtn dir="down" label="&#9660;" />
+          <DPadBtn dir="right" label="&#9654;" />
         </div>
         <button
           className="flex h-14 w-14 items-center justify-center rounded-xl text-sm font-bold select-none active:brightness-125"
           style={{
-            background: 'var(--bg-surface)',
+            background: 'var(--bg-elevated)',
             border: '2px solid var(--accent)',
             color: 'var(--accent)',
           }}

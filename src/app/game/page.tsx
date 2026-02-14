@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ArrowLeft, Gamepad2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGameProgress } from '@/lib/game/useGameProgress';
 import { getRoom, ROOM_ORDER } from '@/lib/game/rooms';
 import CharacterSelect from '@/components/game/CharacterSelect';
@@ -75,18 +76,10 @@ export default function GamePage() {
   /* ── Check if a specific room's door is unlocked */
   const checkDoorUnlocked = useCallback(
     (targetRoomId: string): boolean => {
-      /* Current room must be cleared to go forward.
-         Going backward (to already-visited rooms) is always allowed. */
       const room = getRoom(currentRoomId);
-
-      /* Find room indices to determine direction */
       const currentIdx = ROOM_ORDER.indexOf(currentRoomId);
       const targetIdx = ROOM_ORDER.indexOf(targetRoomId);
-
-      /* Going backward is always OK */
       if (targetIdx < currentIdx) return true;
-
-      /* Going forward requires at least 1 quest cleared in current room */
       return isRoomCleared(room.questIds);
     },
     [currentRoomId, isRoomCleared],
@@ -96,7 +89,7 @@ export default function GamePage() {
   const handleCorrect = useCallback(
     (questId: number) => {
       handleCorrectAnswer(questId);
-      setToast('클리어! XP +10 🎉');
+      setToast('클리어! XP +10');
       setTimeout(() => setToast(''), 3000);
     },
     [handleCorrectAnswer],
@@ -113,7 +106,7 @@ export default function GamePage() {
       className="min-h-screen"
       style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}
     >
-      <div className="mx-auto max-w-[480px] px-4 pt-3 pb-24">
+      <div className="mx-auto max-w-[520px] px-5 pt-3 pb-24">
         {/* Header */}
         <div className="mb-3 flex items-center gap-3">
           <Link
@@ -129,8 +122,8 @@ export default function GamePage() {
           </div>
           {progress && (
             <span
-              className="ml-auto text-xs"
-              style={{ color: 'var(--text-tertiary)' }}
+              className="ml-auto text-xs font-medium"
+              style={{ color: 'var(--accent)' }}
             >
               XP {progress.xp}
             </span>
@@ -138,11 +131,27 @@ export default function GamePage() {
         </div>
 
         {/* ── Phase: Character Select ──────── */}
-        {phase === 'select' && <CharacterSelect onStart={handleCharacterStart} />}
+        <AnimatePresence mode="wait">
+          {phase === 'select' && (
+            <motion.div
+              key="select"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CharacterSelect onStart={handleCharacterStart} />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ── Phase: Playing ───────────────── */}
         {phase === 'playing' && (
-          <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
             <PhaserGame
               characterKey={characterKey}
               onNpcInteract={handleNpcInteract}
@@ -153,23 +162,25 @@ export default function GamePage() {
 
             {/* Room progress */}
             {roomProgress && (
-              <div className="card mt-3 p-3">
-                <div className="mb-1 flex items-center justify-between">
+              <div className="card mt-3 p-4">
+                <div className="mb-2 flex items-center justify-between">
                   <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
                     {currentRoom.theme.name}
                   </span>
                   <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                    {roomProgress.completed}/{roomProgress.total} 퀘스트
+                    {roomProgress.completed}/{roomProgress.total}
                   </span>
                 </div>
                 <div
                   className="h-1.5 w-full overflow-hidden rounded-full"
                   style={{ background: 'var(--bg-elevated)' }}
                 >
-                  <div
-                    className="h-full rounded-full transition-all"
+                  <motion.div
+                    className="h-full rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(roomProgress.completed / roomProgress.total) * 100}%` }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
                     style={{
-                      width: `${(roomProgress.completed / roomProgress.total) * 100}%`,
                       background: `#${currentRoom.theme.accent.toString(16).padStart(6, '0')}`,
                     }}
                   />
@@ -179,14 +190,14 @@ export default function GamePage() {
                   style={{ color: 'var(--text-tertiary)' }}
                 >
                   {roomProgress.completed === 0
-                    ? 'NPC에게 다가가 [E]로 대화 → 퀴즈를 맞추면 문이 열려!'
+                    ? 'NPC에게 다가가 [E]로 대화하세요'
                     : roomProgress.completed < roomProgress.total
-                      ? '다음 방으로 이동 가능! 문 앞에서 [E]를 눌러봐'
-                      : '이 방의 모든 퀘스트 클리어! 🎉'}
+                      ? '문 앞에서 [E]를 눌러 다음 방으로!'
+                      : '이 방의 모든 퀘스트 클리어!'}
                 </p>
               </div>
             )}
-          </>
+          </motion.div>
         )}
       </div>
 
@@ -201,14 +212,19 @@ export default function GamePage() {
       />
 
       {/* Toast */}
-      {toast && (
-        <div
-          className="fixed left-1/2 top-8 z-[60] -translate-x-1/2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg"
-          style={{ background: 'var(--success)', color: '#fff' }}
-        >
-          {toast}
-        </div>
-      )}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed left-1/2 top-8 z-[60] -translate-x-1/2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg"
+            style={{ background: 'var(--success)', color: '#fff' }}
+          >
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -35,9 +35,9 @@ const difficultyLabel: Record<string, string> = {
 };
 
 const difficultyColor: Record<string, string> = {
-  beginner: 'bg-success-dim text-success',
-  intermediate: 'bg-warning-dim text-warning',
-  advanced: 'bg-danger-dim text-danger',
+  beginner: 'text-success',
+  intermediate: 'text-warning',
+  advanced: 'text-danger',
 };
 
 export default async function GuideDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -80,15 +80,15 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
       {/* 헤더 */}
       <div className="mt-5">
         <div className="flex items-center gap-2.5">
-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${difficultyColor[guide.difficulty]}`}>
+          <span className={`text-[13px] font-medium ${difficultyColor[guide.difficulty]}`}>
             {difficultyLabel[guide.difficulty]}
           </span>
-          <span className="flex items-center gap-1 text-xs text-text-quaternary">
+          <span className="flex items-center gap-1 text-[12px] text-text-quaternary">
             <Clock size={12} /> {guide.estimatedMinutes}분
           </span>
         </div>
-        <h1 className="mt-3 text-2xl font-bold leading-tight">{guide.title}</h1>
-        <p className="mt-2 text-sm text-text-tertiary">{guide.description}</p>
+        <h1 className="mt-3 text-[24px] font-bold leading-tight">{guide.title}</h1>
+        <p className="mt-2 text-[14px] text-text-tertiary">{guide.description}</p>
       </div>
 
       {/* 섹션 */}
@@ -131,7 +131,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           </div>
           <div className="mt-3 flex flex-col gap-2">
             {relatedQuests.map((q) => (
-              <Link key={q!.id} href={`/quest/${q!.id}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.99]">
+              <Link key={q!.id} href={`/quest/${q!.id}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.995]">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-dim text-sm font-bold text-accent">{q!.floor}F</span>
                 <span className="text-sm">{q!.title}</span>
               </Link>

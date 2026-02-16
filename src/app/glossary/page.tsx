@@ -24,8 +24,8 @@ export default function GlossaryPage() {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">용어사전</h1>
-        <p className="mt-2 text-sm text-text-tertiary">크립토 핵심 용어 {glossaryTerms.length}개</p>
+        <h1 className="text-[28px] font-bold tracking-tight">용어사전</h1>
+        <p className="mt-1.5 text-[15px] text-text-secondary">크립토 핵심 용어 {glossaryTerms.length}개</p>
       </div>
 
       {/* 검색 */}
@@ -36,7 +36,7 @@ export default function GlossaryPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="용어 검색..."
-          className="w-full bg-transparent text-sm outline-none placeholder:text-text-quaternary"
+          className="w-full bg-transparent text-[14px] outline-none placeholder:text-text-quaternary"
         />
       </div>
 
@@ -46,7 +46,7 @@ export default function GlossaryPage() {
           <button
             key={c}
             onClick={() => setCategory(c)}
-            className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-colors ${
               category === c
                 ? 'bg-accent text-white'
                 : 'bg-bg-elevated text-text-tertiary hover:text-text-secondary'

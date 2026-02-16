@@ -11,31 +11,31 @@ const difficultyLabel: Record<string, string> = {
 };
 
 const difficultyColor: Record<string, string> = {
-  beginner: 'bg-success-dim text-success',
-  intermediate: 'bg-warning-dim text-warning',
-  advanced: 'bg-danger-dim text-danger',
+  beginner: 'text-success',
+  intermediate: 'text-warning',
+  advanced: 'text-danger',
 };
 
 export default function GuideCard({ guide }: { guide: Guide }) {
   const Icon = iconMap[guide.icon] ?? Rocket;
 
   return (
-    <Link href={`/guide/${guide.slug}`} className="block card p-5 transition-all active:scale-[0.99]">
+    <Link href={`/guide/${guide.slug}`} className="block card p-5 transition-all active:scale-[0.995]">
       <div className="flex items-center gap-3.5">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-dim">
-          <Icon size={20} className="text-accent" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-dim">
+          <Icon size={18} className="text-accent" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-bold">{guide.title}</p>
-          <div className="mt-1.5 flex items-center gap-2.5">
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${difficultyColor[guide.difficulty]}`}>
+          <p className="text-[15px] font-semibold">{guide.title}</p>
+          <div className="mt-1.5 flex items-center gap-2.5 text-[12px]">
+            <span className={`font-medium ${difficultyColor[guide.difficulty]}`}>
               {difficultyLabel[guide.difficulty]}
             </span>
-            <span className="text-xs text-text-quaternary">{guide.estimatedMinutes}분</span>
+            <span className="text-text-quaternary">{guide.estimatedMinutes}분</span>
           </div>
         </div>
       </div>
-      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-text-tertiary">{guide.description}</p>
+      <p className="mt-3 line-clamp-2 text-[14px] leading-relaxed text-text-tertiary">{guide.description}</p>
     </Link>
   );
 }

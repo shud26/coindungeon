@@ -1,12 +1,12 @@
 'use client';
 
 export default function LevelBadge({ level, size = 'md' }: { level: number; size?: 'sm' | 'md' | 'lg' }) {
-  const s = { sm: 28, md: 40, lg: 56 }[size];
-  const fs = { sm: 11, md: 14, lg: 20 }[size];
+  const s = { sm: 28, md: 36, lg: 48 }[size];
+  const fs = { sm: 11, md: 13, lg: 18 }[size];
   const r = { sm: 8, md: 10, lg: 14 }[size];
   return (
     <div
-      className="flex items-center justify-center border border-accent/20 bg-accent-dim font-bold text-accent"
+      className="flex items-center justify-center bg-accent-dim font-semibold text-accent"
       style={{ width: s, height: s, fontSize: fs, borderRadius: r }}
     >
       {level}

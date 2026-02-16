@@ -28,12 +28,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const categoryColors: Record<string, string> = {
-  기초: 'bg-accent-dim text-accent',
-  트레이딩: 'bg-warning-dim text-warning',
-  디파이: 'bg-success-dim text-success',
-  온체인: 'bg-[rgba(139,92,246,0.10)] text-[#A78BFA]',
-  보안: 'bg-danger-dim text-danger',
-  NFT: 'bg-[rgba(236,72,153,0.10)] text-[#F472B6]',
+  기초: 'text-accent',
+  트레이딩: 'text-warning',
+  디파이: 'text-success',
+  온체인: 'text-[#A78BFA]',
+  보안: 'text-danger',
+  NFT: 'text-[#F472B6]',
 };
 
 export default async function GlossaryTermPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -74,11 +74,11 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
 
       {/* 헤더 */}
       <div className="mt-5">
-        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryColors[term.category] ?? 'bg-accent-dim text-accent'}`}>
+        <span className={`text-[13px] font-medium ${categoryColors[term.category] ?? 'text-accent'}`}>
           {term.category}
         </span>
-        <p className="mt-2.5 text-sm text-text-quaternary">{term.titleEn}</p>
-        <h1 className="mt-1.5 text-2xl font-bold">{term.titleKo}</h1>
+        <p className="mt-2 text-[13px] text-text-quaternary">{term.titleEn}</p>
+        <h1 className="mt-1 text-[24px] font-bold">{term.titleKo}</h1>
       </div>
 
       {/* 요약 */}
@@ -121,7 +121,7 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
           </div>
           <div className="mt-3 flex flex-col gap-2">
             {relatedQuests.map((q) => (
-              <Link key={q!.id} href={`/quest/${q!.id}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.99]">
+              <Link key={q!.id} href={`/quest/${q!.id}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.995]">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-dim text-sm font-bold text-accent">{q!.floor}F</span>
                 <span className="text-sm">{q!.title}</span>
               </Link>

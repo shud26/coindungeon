@@ -20,7 +20,7 @@ export default function AboutPage() {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">코인던전 소개</h1>
+        <h1 className="text-[28px] font-bold tracking-tight">코인던전 소개</h1>
       </div>
 
       {/* Mission */}
@@ -38,7 +38,7 @@ export default function AboutPage() {
 
       {/* Features */}
       <div className="mt-8">
-        <p className="mb-3 text-xs font-medium uppercase tracking-widest text-text-quaternary">Features</p>
+        <p className="mb-3 section-label">Features</p>
         <div className="space-y-2.5">
           {features.map(f => (
             <div key={f.title} className="card p-4">
@@ -51,7 +51,7 @@ export default function AboutPage() {
 
       {/* How it works */}
       <div className="mt-8">
-        <p className="mb-3 text-xs font-medium uppercase tracking-widest text-text-quaternary">How It Works</p>
+        <p className="mb-3 section-label">How It Works</p>
         <div className="card p-5">
           <ol className="space-y-3.5 text-sm text-text-secondary">
             {[
@@ -71,7 +71,7 @@ export default function AboutPage() {
 
       {/* Who is this for */}
       <div className="mt-8">
-        <p className="mb-3 text-xs font-medium uppercase tracking-widest text-text-quaternary">Who Is This For</p>
+        <p className="mb-3 section-label">Who Is This For</p>
         <div className="card p-5 text-sm text-text-secondary">
           <ul className="space-y-2">
             <li>&#x2022; 코인이 뭔지 하나도 모르는 완전 초보</li>
@@ -91,7 +91,7 @@ export default function AboutPage() {
       </Link>
 
       {/* Tech */}
-      <div className="mt-8 text-center text-xs text-text-quaternary">
+      <div className="mt-8 text-center text-[12px] text-text-quaternary">
         <p>Next.js + TypeScript + Tailwind CSS</p>
         <p className="mt-1">100% 무료 &middot; 로그인 불필요 &middot; 오프라인 저장</p>
       </div>

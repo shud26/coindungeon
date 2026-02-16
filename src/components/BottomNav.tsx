@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Map, BookOpen, User } from 'lucide-react';
+import { Home, Map, Gamepad2, BookOpen, User } from 'lucide-react';
 
 const items = [
   { href: '/', label: '홈', Icon: Home },
   { href: '/dungeon', label: '퀘스트', Icon: Map },
+  { href: '/game', label: '던전', Icon: Gamepad2 },
   { href: '/learn', label: '학습', Icon: BookOpen },
   { href: '/profile', label: '프로필', Icon: User },
 ];
@@ -34,7 +35,7 @@ export default function BottomNav() {
               className={`relative flex flex-col items-center gap-0.5 transition-colors ${
                 active ? 'text-text-primary' : 'text-text-quaternary'
               }`}
-              style={{ minWidth: 64 }}
+              style={{ minWidth: 52 }}
             >
               <Icon size={19} strokeWidth={active ? 1.8 : 1.4} />
               <span style={{ fontSize: 10, fontWeight: active ? 500 : 400, letterSpacing: '0.02em' }}>{label}</span>

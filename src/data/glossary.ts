@@ -1655,6 +1655,61 @@ DeFi에 돈을 넣기 전, DefiLlama나 프로젝트 웹사이트에서 감사 �
     relatedTermSlugs: ['nft', 'mint', 'volume'],
     relatedQuestIds: [9],
   },
+
+  // ===== 트레이딩 추가 =====
+  {
+    slug: 'stop-loss',
+    titleKo: '손절매',
+    titleEn: 'Stop Loss',
+    shortDef: '손실을 제한하기 위해 미리 정한 가격에 자동으로 파는 주문.',
+    explanation: `손절매(Stop Loss)는 가격이 일정 수준 이하로 떨어지면 자동으로 매도하는 주문이야. 더 큰 손실을 막기 위한 안전장치지.
+
+**왜 필요할까?**
+크립토는 변동성이 커서 "좀 더 기다려볼까" 하다가 -50%까지 물리는 경우가 흔해. 손절매를 미리 걸어두면 감정에 흔들리지 않고 기계적으로 손실을 제한할 수 있어.
+
+**설정 방법:**
+- 진입가 대비 -5~10% 정도가 일반적
+- 지지선 바로 아래에 거는 전략도 많이 써
+- 너무 타이트하면 잠깐의 변동에도 털려나감
+
+**종류:**
+- **고정 손절**: 특정 가격에 매도 (예: BTC $95,000에 손절)
+- **트레일링 스탑**: 가격이 올라가면 손절 라인도 따라 올라감. 수익을 지키면서 상승을 쫓을 수 있어
+
+**트레이딩 격언:** "손절은 비용이 아니라 보험이다." 작은 손실 여러 번은 괜찮지만, 큰 손실 한 번은 치명적이야.`,
+    category: '트레이딩',
+    relatedTermSlugs: ['leverage', 'liquidation', 'long-short', 'order-book'],
+    relatedQuestIds: [7, 8, 20],
+  },
+  {
+    slug: 'market-order',
+    titleKo: '시장가/지정가 주문',
+    titleEn: 'Market / Limit Order',
+    shortDef: '즉시 체결하는 시장가와 원하는 가격을 지정하는 지정가 주문.',
+    explanation: `거래소에서 코인을 사고팔 때 주문 방식이 크게 두 가지야.
+
+**시장가 주문(Market Order):**
+현재 호가에 즉시 체결되는 주문. 빠르지만 슬리피지가 발생할 수 있어.
+- 장점: 바로 체결됨
+- 단점: 원하는 가격보다 비싸게/싸게 체결될 수 있음
+- 적합: 급할 때, 유동성 많은 코인
+
+**지정가 주문(Limit Order):**
+내가 원하는 가격을 직접 정하는 주문. 그 가격이 올 때까지 기다려.
+- 장점: 원하는 가격에 정확히 체결
+- 단점: 가격이 안 오면 체결 안 됨
+- 적합: 여유 있을 때, 목표 가격이 명확할 때
+
+**수수료 차이:**
+- 시장가 = Taker (호가를 가져감) → 수수료 높음
+- 지정가 = Maker (호가를 만듦) → 수수료 낮거나 리베이트
+
+**실전 팁:**
+초보자는 지정가 주문을 습관화하는 게 좋아. 시장가로 급하게 사면 슬리피지 + 높은 수수료로 손해볼 수 있거든. 특히 유동성 낮은 알트코인은 반드시 지정가로!`,
+    category: '트레이딩',
+    relatedTermSlugs: ['slippage', 'order-book', 'stop-loss', 'volume'],
+    relatedQuestIds: [7, 8],
+  },
 ];
 
 export function getTermBySlug(slug: string): GlossaryTerm | undefined {

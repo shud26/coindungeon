@@ -27,7 +27,7 @@ export default function ProfilePage() {
   return (
     <motion.div initial="initial" animate="animate" variants={staggerContainer}>
       <motion.div variants={staggerItem}>
-        <h1 className="text-[28px] font-bold tracking-tight">프로필</h1>
+        <h1 className="text-[28px] font-extrabold tracking-tight">프로필</h1>
       </motion.div>
 
       {/* Level Card */}
@@ -35,41 +35,41 @@ export default function ProfilePage() {
         <div className="flex justify-center">
           <LevelBadge level={level.level} size="lg" />
         </div>
-        <p className="mt-3 text-lg font-bold">{level.title}</p>
+        <p className="mt-4 text-[20px] font-extrabold">{level.title}</p>
         <p className="mt-1 text-[13px] text-text-quaternary">Level {level.level}</p>
         <ProgressBar progress={level.progress} className="mt-5" />
         <div className="mt-2 flex justify-between text-[12px] text-text-quaternary">
-          <span>{progress.xp} XP</span>
-          <span>{level.nextXp - level.currentXp} to next</span>
+          <span className="font-semibold text-indigo-500">{progress.xp} XP</span>
+          <span>다음 레벨까지 {level.nextXp - progress.xp} XP</span>
         </div>
       </motion.div>
 
       {/* Stats */}
-      <motion.div variants={staggerItem} className="mt-4 grid grid-cols-2 gap-2">
-        {[
-          { label: '전략', val: `${done}/${strategies.length}` },
-          { label: '도구', val: `${progress.toolsUsed.length}` },
-        ].map(s => (
-          <div key={s.label} className="card p-4 text-center">
-            <p className="text-[18px] font-bold">{s.val}</p>
-            <p className="mt-1 text-[12px] text-text-quaternary">{s.label}</p>
-          </div>
-        ))}
+      <motion.div variants={staggerItem} className="mt-4 grid grid-cols-2 gap-3">
+        <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 p-5 text-center">
+          <p className="text-[22px] font-extrabold text-indigo-600">{done}<span className="text-indigo-300">/{strategies.length}</span></p>
+          <p className="mt-1 text-[12px] font-medium text-indigo-400">전략 완료</p>
+        </div>
+        <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center">
+          <p className="text-[22px] font-extrabold text-emerald-600">{progress.toolsUsed.length}</p>
+          <p className="mt-1 text-[12px] font-medium text-emerald-400">도구 사용</p>
+        </div>
       </motion.div>
 
       {/* Categories */}
       <motion.div variants={staggerItem} className="mt-10">
-        <p className="section-label mb-3">카테고리</p>
+        <p className="section-label mb-4">카테고리별 진행도</p>
         <div className="space-y-2">
           {STRATEGY_CATEGORIES.map((cat) => {
             const s = cats[cat];
             if (!s) return null;
+            const pct = s.total > 0 ? (s.done / s.total) * 100 : 0;
             return (
               <div key={cat} className="card flex items-center gap-3 p-4">
-                <span className="flex-1 text-[14px] font-medium">{cat}</span>
-                <span className="text-[12px] text-text-quaternary">{s.done}/{s.total}</span>
-                <div className="h-[3px] w-16 overflow-hidden rounded-full bg-bg-elevated">
-                  <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${s.total > 0 ? (s.done / s.total) * 100 : 0}%` }} />
+                <span className="flex-1 text-[14px] font-semibold">{cat}</span>
+                <span className="text-[12px] font-medium text-text-quaternary">{s.done}/{s.total}</span>
+                <div className="h-2 w-20 overflow-hidden rounded-full bg-gray-100">
+                  <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #6366F1, #8B5CF6)' }} />
                 </div>
               </div>
             );
@@ -79,19 +79,27 @@ export default function ProfilePage() {
 
       {/* Level Roadmap */}
       <motion.div variants={staggerItem} className="mt-10">
-        <p className="section-label mb-3">레벨</p>
-        <div className="space-y-0.5">
+        <p className="section-label mb-4">레벨 로드맵</p>
+        <div className="space-y-1">
           {LEVELS.slice(0, 6).map(lv => {
             const cur = lv.level === level.level;
             const got = progress.xp >= lv.requiredXp;
             return (
-              <div key={lv.level} className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors ${cur ? 'bg-bg-surface' : ''}`}>
-                <span className={`flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-semibold ${
-                  got ? 'bg-success-dim text-success' : 'bg-bg-elevated text-text-quaternary'
-                }`}>
+              <div key={lv.level} className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition-colors ${cur ? 'bg-indigo-50' : ''}`}>
+                <span
+                  className="flex h-8 w-8 items-center justify-center rounded-xl text-[12px] font-bold text-white"
+                  style={{
+                    background: got
+                      ? 'linear-gradient(135deg, #10B981, #059669)'
+                      : cur
+                      ? 'linear-gradient(135deg, #6366F1, #8B5CF6)'
+                      : '#E5E7EB',
+                    color: got || cur ? '#fff' : '#9CA3AF',
+                  }}
+                >
                   {got ? '✓' : lv.level}
                 </span>
-                <span className={`flex-1 text-[14px] ${cur ? 'font-semibold text-accent' : got ? '' : 'text-text-quaternary'}`}>
+                <span className={`flex-1 text-[14px] ${cur ? 'font-bold text-indigo-600' : got ? 'font-medium' : 'text-text-quaternary'}`}>
                   {lv.title}
                 </span>
                 <span className="text-[12px] text-text-quaternary">{lv.requiredXp} XP</span>
@@ -103,7 +111,7 @@ export default function ProfilePage() {
 
       <button
         onClick={() => { if (confirm('모든 진행도를 초기화할까요?')) { localStorage.removeItem('coindungeon-v2-progress'); window.location.reload(); } }}
-        className="mt-12 w-full text-center text-[13px] text-text-quaternary transition-colors hover:text-danger"
+        className="mt-12 w-full text-center text-[13px] text-text-quaternary transition-colors hover:text-red-500"
       >
         진행도 초기화
       </button>

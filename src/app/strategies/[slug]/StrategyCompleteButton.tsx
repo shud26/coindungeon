@@ -25,7 +25,7 @@ export default function StrategyCompleteButton({ slug, xp }: { slug: string; xp:
 
   if (completed) {
     return (
-      <div className="flex items-center justify-center gap-2 rounded-xl bg-success-dim py-3.5 text-[14px] font-semibold text-success">
+      <div className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-50 py-4 text-[14px] font-bold text-emerald-600">
         <Check size={16} /> 학습 완료
       </div>
     );
@@ -34,7 +34,8 @@ export default function StrategyCompleteButton({ slug, xp }: { slug: string; xp:
   return (
     <button
       onClick={handleComplete}
-      className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent-hover"
+      className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[14px] font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+      style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)' }}
     >
       <Zap size={14} /> 학습 완료 (+{xp} XP)
     </button>

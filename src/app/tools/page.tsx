@@ -1,30 +1,34 @@
 import Link from 'next/link';
-import { Calculator, Scale } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { calculatorTools } from '@/data/tools';
 
-const iconMap: Record<string, typeof Calculator> = { Calculator, Scale };
+const emojiMap: Record<string, string> = {
+  'funding-calculator': '💰',
+  'position-size-calculator': '📐',
+};
 
 export default function ToolsPage() {
   return (
     <div>
       <div>
-        <h1 className="text-[28px] font-bold tracking-tight">도구</h1>
-        <p className="mt-1.5 text-[15px] text-text-secondary">트레이딩에 필요한 계산기</p>
+        <h1 className="text-[28px] font-extrabold tracking-tight">도구</h1>
+        <p className="mt-2 text-[15px] text-text-secondary">트레이딩에 필요한 계산기</p>
       </div>
 
-      <div className="mt-8 flex flex-col gap-4">
+      <div className="mt-8 flex flex-col gap-3">
         {calculatorTools.map((tool) => {
-          const Icon = iconMap[tool.icon] ?? Calculator;
+          const emoji = emojiMap[tool.slug] ?? '🔧';
           return (
-            <Link key={tool.slug} href={`/tools/${tool.slug}`} className="card p-5 transition-all active:scale-[0.995]">
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-dim">
-                  <Icon size={18} className="text-accent" />
+            <Link key={tool.slug} href={`/tools/${tool.slug}`} className="card p-5 group">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 text-[22px]">
+                  {emoji}
                 </div>
-                <div>
-                  <p className="text-[15px] font-semibold">{tool.title}</p>
+                <div className="flex-1">
+                  <p className="text-[16px] font-bold">{tool.title}</p>
                   <p className="mt-1 text-[13px] text-text-tertiary">{tool.description}</p>
                 </div>
+                <ChevronRight size={18} className="shrink-0 text-text-quaternary opacity-40 group-hover:opacity-70 transition-opacity" />
               </div>
             </Link>
           );

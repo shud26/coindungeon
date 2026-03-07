@@ -1,24 +1,20 @@
-import { TrendingUp, DollarSign, Clock, BarChart3 } from 'lucide-react';
 import DifficultyStars from './DifficultyStars';
 import type { Strategy } from '@/data/strategies';
 
 export default function RecipeHeader({ strategy }: { strategy: Strategy }) {
   const items = [
-    { icon: BarChart3, label: '난이도', value: <DifficultyStars difficulty={strategy.difficulty} /> },
-    { icon: TrendingUp, label: '예상 수익', value: strategy.expectedReturn },
-    { icon: DollarSign, label: '필요 자본', value: strategy.requiredCapital },
-    { icon: Clock, label: '소요 시간', value: strategy.timeRequired },
+    { label: '난이도', value: <DifficultyStars difficulty={strategy.difficulty} />, bg: 'bg-amber-50' },
+    { label: '예상 수익', value: strategy.expectedReturn, bg: 'bg-emerald-50' },
+    { label: '필요 자본', value: strategy.requiredCapital, bg: 'bg-indigo-50' },
+    { label: '소요 시간', value: strategy.timeRequired, bg: 'bg-purple-50' },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-2">
-      {items.map(({ icon: Icon, label, value }) => (
-        <div key={label} className="card p-3.5">
-          <div className="flex items-center gap-1.5 text-text-quaternary">
-            <Icon size={12} />
-            <span className="text-[12px]">{label}</span>
-          </div>
-          <div className="mt-1.5 text-[14px] font-semibold">{value}</div>
+    <div className="grid grid-cols-2 gap-3">
+      {items.map(({ label, value, bg }) => (
+        <div key={label} className={`rounded-2xl ${bg} p-4`}>
+          <p className="text-[12px] font-medium text-text-tertiary">{label}</p>
+          <div className="mt-1.5 text-[15px] font-bold text-text-primary">{value}</div>
         </div>
       ))}
     </div>

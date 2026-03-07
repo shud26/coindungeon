@@ -83,17 +83,17 @@ export default function RootLayout({
         className={`${geistMono.variable}`}
         style={{ fontFamily: "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif" }}
       >
-        <main className="mx-auto min-h-screen max-w-[520px] px-5 pb-24 pt-14">
+        <main className="mx-auto min-h-screen max-w-[520px] px-5 pb-28 pt-12">
           {children}
         </main>
-        <footer className="mx-auto max-w-[520px] px-5 pb-24 pt-2">
-          <div className="border-t border-border pt-5">
+        <footer className="mx-auto max-w-[520px] px-5 pb-28 pt-2">
+          <div className="border-t border-gray-100 pt-6">
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-text-quaternary">
-              <a href="/glossary" className="transition-colors hover:text-text-tertiary">용어사전</a>
-              <a href="/playbook" className="transition-colors hover:text-text-tertiary">플레이북</a>
-              <a href="/about" className="transition-colors hover:text-text-tertiary">소개</a>
-              <a href="/contact" className="transition-colors hover:text-text-tertiary">문의</a>
-              <a href="/privacy" className="transition-colors hover:text-text-tertiary">개인정보</a>
+              <a href="/glossary" className="transition-colors hover:text-text-secondary">용어사전</a>
+              <a href="/playbook" className="transition-colors hover:text-text-secondary">플레이북</a>
+              <a href="/about" className="transition-colors hover:text-text-secondary">소개</a>
+              <a href="/contact" className="transition-colors hover:text-text-secondary">문의</a>
+              <a href="/privacy" className="transition-colors hover:text-text-secondary">개인정보</a>
             </div>
             <p className="mt-4 text-center text-[12px] text-text-quaternary">
               &copy; 2026 코인던전 &middot; 교육 목적이며 투자 조언이 아닙니다

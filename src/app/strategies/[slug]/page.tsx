@@ -63,38 +63,39 @@ export default async function StrategyDetailPage({ params }: { params: Promise<{
         }}
       />
 
-      {/* 뒤로가기 */}
-      <Link href="/strategies" className="inline-flex items-center gap-1.5 text-sm text-text-quaternary transition-colors hover:text-text-tertiary">
-        <ArrowLeft size={15} /> 전략
+      {/* Back */}
+      <Link href="/strategies" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-text-quaternary transition-colors hover:text-text-secondary">
+        <ArrowLeft size={15} /> 전략 목록
       </Link>
 
-      {/* 헤더 */}
-      <div className="mt-5">
-        <span className="text-[13px] font-medium text-accent">{strategy.category}</span>
-        <h1 className="mt-2 text-[24px] font-bold leading-tight">{strategy.title}</h1>
-        <p className="mt-2 text-[14px] text-text-tertiary">{strategy.subtitle}</p>
+      {/* Header */}
+      <div className="mt-6">
+        <span className="rounded-lg bg-indigo-50 px-2.5 py-1 text-[12px] font-semibold text-indigo-600">{strategy.category}</span>
+        <h1 className="mt-3 text-[26px] font-extrabold leading-tight tracking-tight">{strategy.title}</h1>
+        <p className="mt-2 text-[15px] text-text-secondary leading-relaxed">{strategy.subtitle}</p>
       </div>
 
-      {/* 레시피 헤더 */}
+      {/* Recipe Header */}
       <div className="mt-6">
         <RecipeHeader strategy={strategy} />
       </div>
 
-      {/* 스텝 */}
-      <div className="mt-8 flex flex-col gap-4">
+      {/* Steps */}
+      <div className="mt-10 flex flex-col gap-4">
+        <h2 className="section-label">실행 단계</h2>
         {strategy.steps.map((step, i) => (
           <div key={i} className="card p-5">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent-dim text-[12px] font-bold text-accent">
+            <div className="flex items-center gap-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-[12px] font-bold text-white">
                 {i + 1}
               </span>
-              <h2 className="text-[15px] font-bold">{step.title}</h2>
+              <h3 className="text-[15px] font-bold">{step.title}</h3>
             </div>
-            <div className="mt-3 space-y-3">
+            <div className="mt-4 space-y-3">
               {step.content.split('\n\n').map((para, j) => (
                 <p
                   key={j}
-                  className="text-[15px] leading-relaxed text-text-secondary"
+                  className="text-[14px] leading-[1.8] text-text-secondary"
                   dangerouslySetInnerHTML={{
                     __html: para
                       .replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-primary font-semibold">$1</strong>')
@@ -109,43 +110,43 @@ export default async function StrategyDetailPage({ params }: { params: Promise<{
         ))}
       </div>
 
-      {/* 리스크 */}
+      {/* Risks */}
       <div className="mt-6">
         <RiskList risks={strategy.risks} />
       </div>
 
-      {/* 완료 버튼 */}
+      {/* Complete Button */}
       <div className="mt-6">
         <StrategyCompleteButton slug={strategy.slug} xp={strategy.xp} />
       </div>
 
-      {/* 연관 도구 */}
+      {/* Related Tools */}
       {relatedTools.length > 0 && (
-        <div className="mt-8">
+        <div className="mt-10">
           <div className="flex items-center gap-2">
-            <Wrench size={15} className="text-accent" />
-            <h3 className="text-sm font-semibold">관련 도구</h3>
+            <Wrench size={16} className="text-indigo-500" />
+            <h3 className="text-[14px] font-bold">관련 도구</h3>
           </div>
           <div className="mt-3 flex flex-col gap-2">
             {relatedTools.map((tool) => (
-              <Link key={tool!.slug} href={`/tools/${tool!.slug}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.995]">
-                <span className="text-[14px] font-medium">{tool!.title}</span>
+              <Link key={tool!.slug} href={`/tools/${tool!.slug}`} className="card flex items-center gap-3 p-4">
+                <span className="text-[14px] font-semibold">{tool!.title}</span>
               </Link>
             ))}
           </div>
         </div>
       )}
 
-      {/* 연관 용어 */}
+      {/* Related Terms */}
       {relatedTerms.length > 0 && (
-        <div className="mt-6">
+        <div className="mt-8">
           <div className="flex items-center gap-2">
-            <BookOpen size={15} className="text-accent" />
-            <h3 className="text-sm font-semibold">연관 용어</h3>
+            <BookOpen size={16} className="text-indigo-500" />
+            <h3 className="text-[14px] font-bold">관련 용어</h3>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {relatedTerms.map((rt) => (
-              <Link key={rt!.slug} href={`/glossary/${rt!.slug}`} className="rounded-full bg-bg-elevated px-3.5 py-1.5 text-sm text-text-secondary transition-colors hover:bg-bg-subtle hover:text-text-primary">
+              <Link key={rt!.slug} href={`/glossary/${rt!.slug}`} className="rounded-xl bg-gray-100 px-3.5 py-2 text-[13px] font-medium text-text-secondary transition-colors hover:bg-gray-200">
                 {rt!.titleKo}
               </Link>
             ))}

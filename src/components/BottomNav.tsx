@@ -19,26 +19,29 @@ export default function BottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-50"
       style={{
-        background: 'rgba(255,255,255,0.85)',
+        background: 'rgba(255,255,255,0.92)',
         backdropFilter: 'saturate(180%) blur(20px)',
         WebkitBackdropFilter: 'saturate(180%) blur(20px)',
-        borderTop: '1px solid rgba(0,0,0,0.06)',
+        borderTop: '1px solid rgba(0,0,0,0.05)',
       }}
     >
-      <div className="mx-auto flex max-w-[520px] items-center justify-around" style={{ height: 52, paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <div className="mx-auto flex max-w-[520px] items-center justify-around" style={{ height: 56, paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {items.map(({ href, label, Icon }) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
           return (
             <Link
               key={href}
               href={href}
-              className={`relative flex flex-col items-center gap-0.5 transition-colors ${
-                active ? 'text-accent' : 'text-text-quaternary'
+              className={`relative flex flex-col items-center gap-1 transition-colors ${
+                active ? 'text-indigo-500' : 'text-gray-400'
               }`}
-              style={{ minWidth: 52 }}
+              style={{ minWidth: 56 }}
             >
-              <Icon size={19} strokeWidth={active ? 1.8 : 1.4} />
-              <span style={{ fontSize: 10, fontWeight: active ? 600 : 400, letterSpacing: '0.02em' }}>{label}</span>
+              <Icon size={20} strokeWidth={active ? 2 : 1.5} />
+              <span style={{ fontSize: 10, fontWeight: active ? 700 : 500, letterSpacing: '0.02em' }}>{label}</span>
+              {active && (
+                <span className="absolute -top-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-indigo-500" />
+              )}
             </Link>
           );
         })}

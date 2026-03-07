@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeftRight, Gift, Crosshair, Eye } from 'lucide-react';
+import { ArrowLeftRight, Gift, Crosshair, Eye, Activity } from 'lucide-react';
 import DifficultyStars from './DifficultyStars';
 import type { Strategy } from '@/data/strategies';
 
@@ -8,6 +8,7 @@ const iconMap: Record<string, typeof ArrowLeftRight> = {
   Gift,
   Crosshair,
   Eye,
+  Activity,
 };
 
 const categoryColor: Record<string, string> = {

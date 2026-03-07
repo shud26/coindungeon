@@ -19,10 +19,10 @@ export default function BottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-50"
       style={{
-        background: 'rgba(9,9,11,0.85)',
+        background: 'rgba(255,255,255,0.85)',
         backdropFilter: 'saturate(180%) blur(20px)',
         WebkitBackdropFilter: 'saturate(180%) blur(20px)',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        borderTop: '1px solid rgba(0,0,0,0.06)',
       }}
     >
       <div className="mx-auto flex max-w-[520px] items-center justify-around" style={{ height: 52, paddingBottom: 'env(safe-area-inset-bottom)' }}>
@@ -33,12 +33,12 @@ export default function BottomNav() {
               key={href}
               href={href}
               className={`relative flex flex-col items-center gap-0.5 transition-colors ${
-                active ? 'text-text-primary' : 'text-text-quaternary'
+                active ? 'text-accent' : 'text-text-quaternary'
               }`}
               style={{ minWidth: 52 }}
             >
               <Icon size={19} strokeWidth={active ? 1.8 : 1.4} />
-              <span style={{ fontSize: 10, fontWeight: active ? 500 : 400, letterSpacing: '0.02em' }}>{label}</span>
+              <span style={{ fontSize: 10, fontWeight: active ? 600 : 400, letterSpacing: '0.02em' }}>{label}</span>
             </Link>
           );
         })}

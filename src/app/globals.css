@@ -1,30 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --bg-base: #09090B;
-  --bg-surface: #131316;
-  --bg-elevated: #1A1A1E;
-  --bg-subtle: #222226;
-  --bg-hover: rgba(255,255,255,0.03);
+  --bg-base: #FFFFFF;
+  --bg-surface: #F8F9FA;
+  --bg-elevated: #F1F3F5;
+  --bg-subtle: #E9ECEF;
+  --bg-hover: rgba(0,0,0,0.02);
 
-  --text-primary: #EDEDEF;
-  --text-secondary: #9898A0;
-  --text-tertiary: #636370;
-  --text-quaternary: #45454D;
+  --text-primary: #1A1A2E;
+  --text-secondary: #495057;
+  --text-tertiary: #868E96;
+  --text-quaternary: #ADB5BD;
 
-  --border: rgba(255,255,255,0.06);
-  --border-hover: rgba(255,255,255,0.10);
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.12);
 
-  --accent: #8B7CFF;
-  --accent-hover: #A599FF;
-  --accent-dim: rgba(139,124,255,0.08);
+  --accent: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-dim: rgba(79,70,229,0.06);
 
-  --success: #34D399;
-  --success-dim: rgba(52,211,153,0.08);
-  --danger: #F87171;
-  --danger-dim: rgba(248,113,113,0.08);
-  --warning: #FBBF24;
-  --warning-dim: rgba(251,191,36,0.08);
+  --success: #059669;
+  --success-dim: rgba(5,150,105,0.06);
+  --danger: #DC2626;
+  --danger-dim: rgba(220,38,38,0.06);
+  --warning: #D97706;
+  --warning-dim: rgba(217,119,6,0.06);
 }
 
 @theme inline {
@@ -69,29 +69,30 @@ body {
 
 .card {
   background: var(--bg-surface);
-  border-radius: 16px;
+  border-radius: 14px;
   box-shadow: 0 0 0 1px var(--border);
 }
 
 .card-elevated {
-  background: var(--bg-surface);
-  border-radius: 16px;
-  box-shadow: 0 0 0 1px var(--border), 0 4px 24px rgba(0,0,0,0.35);
+  background: var(--bg-base);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--border), 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .card-accent {
-  background: var(--bg-surface);
-  border-radius: 16px;
-  box-shadow: 0 0 0 1px rgba(139,124,255,0.15), 0 4px 24px rgba(0,0,0,0.25);
+  background: var(--bg-base);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(79,70,229,0.2), 0 2px 12px rgba(79,70,229,0.06);
 }
 
 /* ========== Section Label ========== */
 
 .section-label {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-tertiary);
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 /* ========== Animations ========== */

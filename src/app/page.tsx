@@ -29,8 +29,9 @@ export default function HomePage() {
     <motion.div initial="initial" animate="animate" variants={staggerContainer}>
       {/* Hero */}
       <motion.div variants={staggerItem}>
-        <h1 className="text-[28px] font-bold tracking-tight leading-tight">코인던전</h1>
-        <p className="mt-1.5 text-[15px] text-text-secondary">실전 크립토 수익화 전략</p>
+        <p className="text-[13px] font-semibold text-accent tracking-wide">COINDUNGEON</p>
+        <h1 className="mt-1 text-[26px] font-bold tracking-tight leading-tight">실전 크립토 전략</h1>
+        <p className="mt-2 text-[15px] text-text-secondary">검증된 수익 전략을 배우고 바로 실행하세요</p>
       </motion.div>
 
       {/* Level Card */}

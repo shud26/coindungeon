@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
-import { quests } from '@/data/quests';
+import { strategies } from '@/data/strategies';
 import { glossaryTerms } from '@/data/glossary';
-import { guides } from '@/data/guides';
+import { playbooks } from '@/data/playbooks';
+import { calculatorTools } from '@/data/tools';
 
 const BASE_URL = 'https://coindungeon.vercel.app';
 
@@ -14,10 +15,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${BASE_URL}/dungeon`,
+      url: `${BASE_URL}/strategies`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/tools`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
     },
     {
       url: `${BASE_URL}/learn`,
@@ -32,34 +39,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/guide`,
+      url: `${BASE_URL}/playbook`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/play`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/daily`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/mini`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/mini/updown`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
     },
     {
       url: `${BASE_URL}/profile`,
@@ -87,11 +70,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const questPages: MetadataRoute.Sitemap = quests.map((quest) => ({
-    url: `${BASE_URL}/quest/${quest.id}`,
+  const strategyPages: MetadataRoute.Sitemap = strategies.map((s) => ({
+    url: `${BASE_URL}/strategies/${s.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+  }));
+
+  const toolPages: MetadataRoute.Sitemap = calculatorTools.map((t) => ({
+    url: `${BASE_URL}/tools/${t.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
   }));
 
   const glossaryPages: MetadataRoute.Sitemap = glossaryTerms.map((term) => ({
@@ -101,12 +91,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const guidePages: MetadataRoute.Sitemap = guides.map((guide) => ({
-    url: `${BASE_URL}/guide/${guide.slug}`,
+  const playbookPages: MetadataRoute.Sitemap = playbooks.map((pb) => ({
+    url: `${BASE_URL}/playbook/${pb.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
 
-  return [...staticPages, ...questPages, ...glossaryPages, ...guidePages];
+  return [...staticPages, ...strategyPages, ...toolPages, ...glossaryPages, ...playbookPages];
 }

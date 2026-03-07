@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { BookOpen, Compass } from 'lucide-react';
 import { glossaryTerms } from '@/data/glossary';
-import { guides } from '@/data/guides';
+import { playbooks } from '@/data/playbooks';
 
 export default function LearnPage() {
   return (
@@ -30,16 +30,16 @@ export default function LearnPage() {
           </p>
         </Link>
 
-        {/* 가이드 */}
-        <Link href="/guide" className="card p-5 transition-all active:scale-[0.995]">
+        {/* 플레이북 */}
+        <Link href="/playbook" className="card p-5 transition-all active:scale-[0.995]">
           <div className="flex items-center gap-3.5">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success-dim">
               <Compass size={20} className="text-success" />
             </div>
             <div>
-              <p className="text-[15px] font-semibold">가이드</p>
+              <p className="text-[15px] font-semibold">플레이북</p>
               <p className="mt-0.5 text-[13px] text-text-tertiary">
-                {guides.length}개 실전 가이드
+                {playbooks.length}개 실전 가이드
               </p>
             </div>
           </div>

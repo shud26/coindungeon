@@ -5,15 +5,15 @@ const BASE_URL = 'https://coindungeon.vercel.app';
 
 export const metadata: Metadata = {
   title: '코인던전 소개',
-  description: '코인던전은 매일 한 층씩 깨며 크립토를 배우는 실전 퀘스트 플랫폼입니다.',
+  description: '코인던전은 실전 크립토 수익 전략을 배우고 실행하는 플랫폼입니다.',
   alternates: { canonical: `${BASE_URL}/about` },
 };
 
 const features = [
-  { title: '던전 시스템', desc: '1층부터 시작해서 한 층씩 올라가는 구조. 이전 퀘스트를 클리어해야 다음 층이 열려.' },
-  { title: 'XP & 레벨', desc: '퀘스트를 깨면 XP를 얻고, 레벨이 올라가. 크린이에서 던전 클리어까지 10단계.' },
-  { title: '스트릭', desc: '매일 접속하면 스트릭이 쌓여. 꾸준한 학습 습관을 만들어줘.' },
-  { title: '퀴즈', desc: '배운 내용을 퀴즈로 확인. 진짜 이해했는지 스스로 체크할 수 있어.' },
+  { title: '실전 전략', desc: '펀딩비 차익거래, 에어드랍 파밍 등 검증된 수익 전략을 단계별로 배워.' },
+  { title: '계산기', desc: '펀딩비 수익, 포지션 사이징 등 실전 도구로 바로 계산해봐.' },
+  { title: 'XP & 레벨', desc: '전략을 학습하면 XP를 얻고 레벨업. 관찰자에서 마스터까지.' },
+  { title: '플레이북', desc: '크립토 입문부터 보안, DeFi까지 실전 가이드.' },
 ];
 
 export default function AboutPage() {
@@ -25,14 +25,13 @@ export default function AboutPage() {
 
       {/* Mission */}
       <div className="mt-8 card-accent p-6">
-        <h2 className="text-lg font-bold">읽기만 하지 말고, 직접 해보자</h2>
+        <h2 className="text-lg font-bold">읽기만 하지 말고, 실행하자</h2>
         <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
-          코인 3년 했는데 메타마스크도 안 써본 사람. 디파이가 뭔지 설명은 들었는데 직접 해본 적 없는 사람.
-          코인던전은 그런 사람들을 위해 만들었어.
+          크립토로 수익을 내고 싶은데 어디서 시작할지 모르겠다면.
+          코인던전은 실전 검증된 전략을 단계별로 알려주고, 바로 실행할 수 있는 도구를 제공해.
         </p>
         <p className="mt-2 text-[15px] leading-relaxed text-text-secondary">
-          블로그 글 100개 읽는 것보다, 한 번 직접 해보는 게 낫다고 믿어.
-          그래서 코인던전은 &quot;읽기&quot;가 아니라 &quot;실행&quot;에 집중해.
+          유튜브 100개 보는 것보다, 전략 하나를 제대로 실행하는 게 낫다고 믿어.
         </p>
       </div>
 
@@ -55,10 +54,10 @@ export default function AboutPage() {
         <div className="card p-5">
           <ol className="space-y-3.5 text-sm text-text-secondary">
             {[
-              '퀘스트를 선택하고, 단계별 가이드를 따라가',
-              '각 단계를 완료하면 다음 단계로 넘어가',
-              '퀴즈로 배운 내용을 확인하고, XP를 획득해',
-              '레벨업하고, 다음 층의 퀘스트를 해금해',
+              '전략을 선택하고, 단계별 레시피를 따라가',
+              '각 단계의 개념과 실행 방법을 학습해',
+              '계산기로 예상 수익과 리스크를 확인해',
+              '학습 완료하고 XP를 획득해',
             ].map((text, i) => (
               <li key={i} className="flex gap-3.5">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent-dim text-sm font-bold text-accent">{i + 1}</span>
@@ -74,20 +73,20 @@ export default function AboutPage() {
         <p className="mb-3 section-label">Who Is This For</p>
         <div className="card p-5 text-sm text-text-secondary">
           <ul className="space-y-2">
-            <li>&#x2022; 코인이 뭔지 하나도 모르는 완전 초보</li>
-            <li>&#x2022; 업비트에서 코인만 사봤는데 지갑은 써본 적 없는 사람</li>
-            <li>&#x2022; DeFi, NFT, 에어드랍 같은 거 해보고 싶은데 어디서 시작할지 모르는 사람</li>
-            <li>&#x2022; 매일 조금씩 꾸준히 배우고 싶은 사람</li>
+            <li>&#x2022; 크립토로 수익을 내고 싶은데 방법을 모르는 사람</li>
+            <li>&#x2022; 차익거래, 에어드랍 파밍 등을 체계적으로 배우고 싶은 사람</li>
+            <li>&#x2022; 이론보다 실전 실행에 집중하고 싶은 사람</li>
+            <li>&#x2022; 리스크 관리를 제대로 배우고 싶은 사람</li>
           </ul>
         </div>
       </div>
 
       {/* CTA */}
       <Link
-        href="/dungeon"
+        href="/strategies"
         className="mt-8 flex items-center justify-center rounded-xl bg-accent py-3.5 text-sm font-semibold text-white"
       >
-        던전 입장하기
+        전략 둘러보기
       </Link>
 
       {/* Tech */}

@@ -1,38 +1,34 @@
 'use client';
 
 export interface UserProgress {
-  completedQuests: number[];
-  currentStep: Record<number, number>;
+  completedStrategies: string[];
+  currentStep: Record<string, number>;
   xp: number;
   level: number;
-  streak: number;
-  lastActiveDate: string;
-  quizScores: Record<number, number>;
+  toolsUsed: string[];
 }
 
-const STORAGE_KEY = 'coindungeon-progress';
+const STORAGE_KEY = 'coindungeon-v2-progress';
 
 const DEFAULT_PROGRESS: UserProgress = {
-  completedQuests: [],
+  completedStrategies: [],
   currentStep: {},
   xp: 0,
   level: 1,
-  streak: 0,
-  lastActiveDate: '',
-  quizScores: {},
+  toolsUsed: [],
 };
 
 export const LEVELS = [
-  { level: 1, requiredXp: 0, title: '크린이' },
-  { level: 2, requiredXp: 100, title: '초보 모험가' },
-  { level: 3, requiredXp: 300, title: '지갑 보유자' },
-  { level: 4, requiredXp: 600, title: '트레이더 견습생' },
-  { level: 5, requiredXp: 1000, title: '디파이 입문자' },
-  { level: 6, requiredXp: 1500, title: '온체인 탐험가' },
-  { level: 7, requiredXp: 2100, title: '크립토 전사' },
-  { level: 8, requiredXp: 2800, title: '블록체인 마스터' },
-  { level: 9, requiredXp: 3600, title: '디젠 전설' },
-  { level: 10, requiredXp: 4500, title: '던전 클리어' },
+  { level: 1, requiredXp: 0, title: '관찰자' },
+  { level: 2, requiredXp: 100, title: '리서처' },
+  { level: 3, requiredXp: 300, title: '실행자' },
+  { level: 4, requiredXp: 600, title: '트레이더' },
+  { level: 5, requiredXp: 1000, title: '전략가' },
+  { level: 6, requiredXp: 1500, title: '프로' },
+  { level: 7, requiredXp: 2100, title: '크립토 네이티브' },
+  { level: 8, requiredXp: 2800, title: '알파 헌터' },
+  { level: 9, requiredXp: 3600, title: '마켓 메이커' },
+  { level: 10, requiredXp: 4500, title: '마스터' },
 ];
 
 export function getLevel(xp: number): { level: number; title: string; currentXp: number; nextXp: number; progress: number } {
@@ -81,50 +77,25 @@ export function saveProgress(progress: UserProgress): void {
   }
 }
 
-export function updateStreak(progress: UserProgress): UserProgress {
-  const today = new Date().toISOString().split('T')[0];
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-  if (progress.lastActiveDate === today) {
-    return progress;
-  }
-
-  let newStreak = 1;
-  if (progress.lastActiveDate === yesterday) {
-    newStreak = progress.streak + 1;
-  }
-
-  return {
-    ...progress,
-    streak: newStreak,
-    lastActiveDate: today,
-  };
-}
-
-export function completeQuest(progress: UserProgress, questId: number, xpGain: number): UserProgress {
-  if (progress.completedQuests.includes(questId)) return progress;
+export function completeStrategy(progress: UserProgress, slug: string, xpGain: number): UserProgress {
+  if (progress.completedStrategies.includes(slug)) return progress;
 
   const newXp = progress.xp + xpGain;
   const levelInfo = getLevel(newXp);
 
-  const updated: UserProgress = {
+  return {
     ...progress,
-    completedQuests: [...progress.completedQuests, questId],
+    completedStrategies: [...progress.completedStrategies, slug],
     xp: newXp,
     level: levelInfo.level,
   };
-
-  return updateStreak(updated);
 }
 
-export function isQuestUnlocked(questId: number, completedQuests: number[]): boolean {
-  if (questId === 1) return true;
-  return completedQuests.includes(questId - 1);
-}
-
-export function getNextQuestId(completedQuests: number[]): number {
-  for (let i = 1; i <= 10; i++) {
-    if (!completedQuests.includes(i)) return i;
-  }
-  return 10;
+export function markToolUsed(progress: UserProgress, toolSlug: string): UserProgress {
+  if (progress.toolsUsed.includes(toolSlug)) return progress;
+  return {
+    ...progress,
+    toolsUsed: [...progress.toolsUsed, toolSlug],
+    xp: progress.xp + 20,
+  };
 }

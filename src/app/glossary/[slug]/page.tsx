@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen, Swords } from 'lucide-react';
+import { ArrowLeft, BookOpen, Target } from 'lucide-react';
 import { glossaryTerms, getTermBySlug } from '@/data/glossary';
-import { quests } from '@/data/quests';
+import { strategies } from '@/data/strategies';
 
 const BASE_URL = 'https://coindungeon.vercel.app';
 
@@ -42,7 +42,7 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
   if (!term) return <p className="py-20 text-center text-text-quaternary">용어를 찾을 수 없습니다.</p>;
 
   const relatedTerms = term.relatedTermSlugs.map((s) => getTermBySlug(s)).filter(Boolean);
-  const relatedQuests = term.relatedQuestIds.map((id) => quests.find((q) => q.id === id)).filter(Boolean);
+  const relatedStrategies = term.relatedStrategySlugs.map((s) => strategies.find((st) => st.slug === s)).filter(Boolean);
 
   return (
     <div>
@@ -112,18 +112,17 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
         </div>
       )}
 
-      {/* 연관 퀘스트 */}
-      {relatedQuests.length > 0 && (
+      {/* 연관 전략 */}
+      {relatedStrategies.length > 0 && (
         <div className="mt-6">
           <div className="flex items-center gap-2">
-            <Swords size={15} className="text-success" />
-            <h2 className="text-sm font-semibold">연관 퀘스트</h2>
+            <Target size={15} className="text-success" />
+            <h2 className="text-sm font-semibold">연관 전략</h2>
           </div>
           <div className="mt-3 flex flex-col gap-2">
-            {relatedQuests.map((q) => (
-              <Link key={q!.id} href={`/quest/${q!.id}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.995]">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-dim text-sm font-bold text-accent">{q!.floor}F</span>
-                <span className="text-sm">{q!.title}</span>
+            {relatedStrategies.map((s) => (
+              <Link key={s!.slug} href={`/strategies/${s!.slug}`} className="card flex items-center gap-3 p-4 transition-all active:scale-[0.995]">
+                <span className="text-sm font-medium">{s!.title}</span>
               </Link>
             ))}
           </div>

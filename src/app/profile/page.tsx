@@ -6,7 +6,7 @@ import LevelBadge from '@/components/LevelBadge';
 import ProgressBar from '@/components/ProgressBar';
 import { staggerContainer, staggerItem } from '@/components/Motion';
 import { loadProgress, getLevel, LEVELS } from '@/lib/progress';
-import { quests, getQuestById } from '@/data/quests';
+import { strategies, STRATEGY_CATEGORIES } from '@/data/strategies';
 import type { UserProgress } from '@/lib/progress';
 
 export default function ProfilePage() {
@@ -15,13 +15,13 @@ export default function ProfilePage() {
   if (!progress) return null;
 
   const level = getLevel(progress.xp);
-  const done = progress.completedQuests.length;
+  const done = progress.completedStrategies.length;
 
   const cats: Record<string, { done: number; total: number }> = {};
-  quests.forEach(q => {
-    if (!cats[q.category]) cats[q.category] = { done: 0, total: 0 };
-    cats[q.category].total++;
-    if (progress.completedQuests.includes(q.id)) cats[q.category].done++;
+  strategies.forEach(s => {
+    if (!cats[s.category]) cats[s.category] = { done: 0, total: 0 };
+    cats[s.category].total++;
+    if (progress.completedStrategies.includes(s.slug)) cats[s.category].done++;
   });
 
   return (
@@ -45,11 +45,10 @@ export default function ProfilePage() {
       </motion.div>
 
       {/* Stats */}
-      <motion.div variants={staggerItem} className="mt-4 grid grid-cols-3 gap-2">
+      <motion.div variants={staggerItem} className="mt-4 grid grid-cols-2 gap-2">
         {[
-          { label: '스트릭', val: `${progress.streak}일` },
-          { label: '클리어', val: `${done}/${quests.length}` },
-          { label: '퀴즈', val: `${Object.keys(progress.quizScores).length}` },
+          { label: '전략', val: `${done}/${strategies.length}` },
+          { label: '도구', val: `${progress.toolsUsed.length}` },
         ].map(s => (
           <div key={s.label} className="card p-4 text-center">
             <p className="text-[18px] font-bold">{s.val}</p>
@@ -62,15 +61,19 @@ export default function ProfilePage() {
       <motion.div variants={staggerItem} className="mt-10">
         <p className="section-label mb-3">카테고리</p>
         <div className="space-y-2">
-          {Object.entries(cats).map(([cat, s]) => (
-            <div key={cat} className="card flex items-center gap-3 p-4">
-              <span className="flex-1 text-[14px] font-medium">{cat}</span>
-              <span className="text-[12px] text-text-quaternary">{s.done}/{s.total}</span>
-              <div className="h-[3px] w-16 overflow-hidden rounded-full bg-bg-elevated">
-                <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${s.total > 0 ? (s.done / s.total) * 100 : 0}%` }} />
+          {STRATEGY_CATEGORIES.map((cat) => {
+            const s = cats[cat];
+            if (!s) return null;
+            return (
+              <div key={cat} className="card flex items-center gap-3 p-4">
+                <span className="flex-1 text-[14px] font-medium">{cat}</span>
+                <span className="text-[12px] text-text-quaternary">{s.done}/{s.total}</span>
+                <div className="h-[3px] w-16 overflow-hidden rounded-full bg-bg-elevated">
+                  <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${s.total > 0 ? (s.done / s.total) * 100 : 0}%` }} />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </motion.div>
 
@@ -98,25 +101,8 @@ export default function ProfilePage() {
         </div>
       </motion.div>
 
-      {/* Quiz scores */}
-      {Object.keys(progress.quizScores).length > 0 && (
-        <motion.div variants={staggerItem} className="mt-10">
-          <p className="section-label mb-3">퀴즈 점수</p>
-          {Object.entries(progress.quizScores).map(([qId, score]) => {
-            const q = getQuestById(parseInt(qId));
-            if (!q) return null;
-            return (
-              <div key={qId} className="flex items-center gap-3 py-2.5 text-[14px]">
-                <span className="flex-1 text-text-secondary">{q.title}</span>
-                <span className={`text-[12px] font-semibold ${score >= 80 ? 'text-success' : score >= 50 ? 'text-warning' : 'text-danger'}`}>{score}</span>
-              </div>
-            );
-          })}
-        </motion.div>
-      )}
-
       <button
-        onClick={() => { if (confirm('모든 진행도를 초기화할까요?')) { localStorage.removeItem('coindungeon-progress'); window.location.reload(); } }}
+        onClick={() => { if (confirm('모든 진행도를 초기화할까요?')) { localStorage.removeItem('coindungeon-v2-progress'); window.location.reload(); } }}
         className="mt-12 w-full text-center text-[13px] text-text-quaternary transition-colors hover:text-danger"
       >
         진행도 초기화

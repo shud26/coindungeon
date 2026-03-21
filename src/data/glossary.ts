@@ -1824,6 +1824,853 @@ DEX에서 큰 금액을 스왑할 때 불리한 가격에 체결될 수 있어 (
     relatedTermSlugs: ['defi', 'gas-fee', 'smart-contract'],
     relatedStrategySlugs: ['smart-money-tracking'],
   },
+
+  // ===== 추가 용어 35개 =====
+
+  // --- 트레이딩 ---
+  {
+    slug: 'rsi',
+    titleKo: 'RSI',
+    titleEn: 'Relative Strength Index',
+    shortDef: '가격의 과매수/과매도 상태를 0-100으로 나타내는 기술적 지표.',
+    explanation: `RSI(상대강도지수)는 14일간 가격 변동의 상승폭과 하락폭을 비교해 0-100 사이 값으로 나타내는 지표야.
+
+**해석:**
+- RSI 70 이상: 과매수 → 가격 조정 가능성
+- RSI 30 이하: 과매도 → 반등 가능성
+- RSI 50 근처: 중립
+
+**실전 활용:**
+- 단독으로 사용하지 말고 다른 지표와 함께 확인
+- 강한 추세에서는 과매수 상태가 오래 지속될 수 있음
+- 다이버전스(가격과 RSI 방향이 다를 때)가 강력한 신호`,
+    category: '트레이딩',
+    relatedTermSlugs: ['volume', 'long-short'],
+    relatedStrategySlugs: ['liquidation-hunting'],
+  },
+  {
+    slug: 'macd',
+    titleKo: 'MACD',
+    titleEn: 'Moving Average Convergence Divergence',
+    shortDef: '이동평균선의 수렴과 발산으로 추세 전환을 포착하는 지표.',
+    explanation: `MACD는 두 이동평균선(12일, 26일)의 차이를 이용해 추세의 방향과 강도를 측정하는 지표야.
+
+**구성 요소:**
+- MACD 선: 12일 EMA - 26일 EMA
+- 시그널 선: MACD의 9일 EMA
+- 히스토그램: MACD - 시그널 (막대 그래프)
+
+**매매 신호:**
+- MACD가 시그널 위로 교차 → 매수 신호
+- MACD가 시그널 아래로 교차 → 매도 신호
+- 0선 위 = 상승 추세, 0선 아래 = 하락 추세
+
+RSI와 함께 가장 많이 사용되는 기술적 지표야.`,
+    category: '트레이딩',
+    relatedTermSlugs: ['rsi', 'volume'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'support-resistance',
+    titleKo: '지지/저항선',
+    titleEn: 'Support / Resistance',
+    shortDef: '가격이 반복적으로 반등하거나 막히는 가격대.',
+    explanation: `**지지선(Support)**: 가격이 떨어지다가 반등하는 "바닥" 가격대. 매수세가 강한 구간.
+
+**저항선(Resistance)**: 가격이 올라가다가 막히는 "천장" 가격대. 매도세가 강한 구간.
+
+**활용법:**
+- 지지선 근처에서 매수, 저항선 근처에서 매도
+- 지지선이 깨지면 → 다음 지지선까지 하락 가능
+- 저항선을 돌파하면 → 강한 상승 신호 (저항이 지지로 전환)
+
+**찾는 방법:**
+- 과거에 가격이 여러 번 반등/반락한 가격대
+- 심리적 가격대 (BTC $100K, ETH $3K 등)
+- 피보나치 되돌림 레벨`,
+    category: '트레이딩',
+    relatedTermSlugs: ['stop-loss', 'long-short', 'liquidation'],
+    relatedStrategySlugs: ['liquidation-hunting'],
+  },
+  {
+    slug: 'candlestick',
+    titleKo: '캔들차트',
+    titleEn: 'Candlestick Chart',
+    shortDef: '시가, 고가, 저가, 종가를 양초 모양으로 표시하는 가격 차트.',
+    explanation: `캔들차트는 일정 기간의 가격 움직임을 한 눈에 보여주는 차트야.
+
+**캔들 구성:**
+- 양봉(초록/흰색): 종가 > 시가 (가격 상승)
+- 음봉(빨강/검정): 종가 < 시가 (가격 하락)
+- 몸통: 시가~종가 범위
+- 꼬리(심지): 고가~저가 범위
+
+**주요 패턴:**
+- 도지(Doji): 몸통이 거의 없음 → 추세 전환 가능
+- 망치(Hammer): 긴 아래꼬리 → 바닥 반전 신호
+- 장악형(Engulfing): 이전 캔들을 감싸는 큰 캔들 → 추세 전환
+
+TradingView에서 무료로 캔들차트를 볼 수 있어.`,
+    category: '트레이딩',
+    relatedTermSlugs: ['support-resistance', 'volume'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'atr',
+    titleKo: 'ATR',
+    titleEn: 'Average True Range',
+    shortDef: '일정 기간 동안의 평균 가격 변동폭을 측정하는 변동성 지표.',
+    explanation: `ATR은 가격이 평균적으로 얼마나 움직이는지를 보여주는 지표야. 방향(오르는지 내리는지)은 알려주지 않고 "폭"만 측정해.
+
+**활용:**
+- ATR이 높으면 = 변동성이 큼 → 큰 움직임 예상
+- ATR이 낮으면 = 변동성이 작음 → 횡보/폭발 전 고요
+- 손절 설정: ATR × 1.5~2배를 손절 거리로 사용
+
+**트레이딩 활용:**
+- 포지션 사이징: ATR이 큰 코인은 작게 진입
+- 변동성 돌파: ATR을 넘는 큰 움직임 = 추세 시작 신호
+- MM 봇: ATR로 스프레드 폭 결정`,
+    category: '트레이딩',
+    relatedTermSlugs: ['volume', 'leverage', 'stop-loss'],
+    relatedStrategySlugs: ['risk-reward-management'],
+  },
+  {
+    slug: 'perpetual',
+    titleKo: '무기한 선물',
+    titleEn: 'Perpetual Futures',
+    shortDef: '만기 없이 무기한으로 보유할 수 있는 선물 계약.',
+    explanation: `무기한 선물(Perp)은 크립토에서 가장 인기 있는 파생상품이야. 전통 선물과 달리 만기일이 없어서 원하는 만큼 포지션을 유지할 수 있어.
+
+**핵심:**
+- 레버리지 트레이딩 가능 (1-100x)
+- 롱(매수)/숏(매도) 양방향 가능
+- 펀딩비로 현물 가격과 연동
+
+**펀딩비 메커니즘:**
+- Perp 가격 > 현물 가격 → 롱이 숏에 펀딩비 지급
+- Perp 가격 < 현물 가격 → 숏이 롱에 펀딩비 지급
+- 이 메커니즘이 차익거래의 기반이 됨
+
+**대표 거래소:** Binance, Bybit, Hyperliquid, dYdX`,
+    category: '트레이딩',
+    relatedTermSlugs: ['funding-rate', 'leverage', 'liquidation', 'long-short'],
+    relatedStrategySlugs: ['funding-rate-arbitrage'],
+  },
+  {
+    slug: 'spread',
+    titleKo: '스프레드',
+    titleEn: 'Spread',
+    shortDef: '매수 호가와 매도 호가의 차이, 또는 두 자산 가격 간의 차이.',
+    explanation: `스프레드는 여러 의미로 쓰여:
+
+**1. 호가 스프레드 (Bid-Ask Spread)**
+- 매수 호가(Bid)와 매도 호가(Ask)의 차이
+- 스프레드가 좁을수록 유동성이 좋음
+- 즉시 체결(시장가) 시 이 스프레드만큼 손해
+
+**2. 거래소 간 스프레드**
+- 같은 코인의 A거래소 가격과 B거래소 가격 차이
+- 이 차이가 차익거래의 기회
+
+**3. 펀딩비 스프레드**
+- 두 거래소의 펀딩비 차이
+- 차익거래 봇이 모니터링하는 핵심 데이터
+
+**트레이더에게:** 스프레드가 넓은 코인은 거래 비용이 높으니 유동성 좋은 코인을 선택해.`,
+    category: '트레이딩',
+    relatedTermSlugs: ['order-book', 'slippage', 'funding-rate'],
+    relatedStrategySlugs: ['funding-rate-arbitrage'],
+  },
+  {
+    slug: 'take-profit',
+    titleKo: '익절',
+    titleEn: 'Take Profit',
+    shortDef: '목표 가격에 도달했을 때 이익을 확정하고 포지션을 닫는 주문.',
+    explanation: `익절(Take Profit, TP)은 수익이 나는 상태에서 포지션을 청산하는 전략이야.
+
+**익절 방법:**
+1. **고정 비율**: 진입가 대비 5%, 10% 등 미리 설정
+2. **R:R 기반**: 리스크의 2-3배 도달 시 익절
+3. **트레일링 스탑**: 가격이 올라가면 손절도 같이 올림
+4. **분할 익절**: 1/3씩 나눠서 단계별 청산
+
+**실수 피하기:**
+- "조금만 더" 하다가 수익 날리기 (가장 흔한 실수)
+- 욕심 부리지 말고 계획대로 실행
+- 익절 후 가격이 더 올라도 후회하지 말기
+
+**격언:** "아무도 이익실현으로 파산하지 않는다."`,
+    category: '트레이딩',
+    relatedTermSlugs: ['stop-loss', 'long-short', 'leverage'],
+    relatedStrategySlugs: ['risk-reward-management'],
+  },
+  {
+    slug: 'portfolio',
+    titleKo: '포트폴리오',
+    titleEn: 'Portfolio',
+    shortDef: '보유한 여러 자산의 조합과 비중 구성.',
+    explanation: `포트폴리오는 투자한 자산들의 전체 조합이야.
+
+**좋은 포트폴리오의 원칙:**
+- **분산**: 한 코인에 올인하지 않기
+- **비율 관리**: 대형(BTC/ETH) 50%+, 중형 30%, 소형 20% 이하
+- **리밸런싱**: 정기적으로 비율 조정
+
+**크립토 포트폴리오 예시:**
+- 보수적: BTC 60% / ETH 25% / USDC 15%
+- 균형: BTC 40% / ETH 25% / SOL 15% / 알트 10% / USDC 10%
+- 공격적: BTC 30% / ETH 20% / 알트 40% / USDC 10%
+
+**추적 도구:**
+CoinGecko, Delta, CoinStats 앱으로 포트폴리오 실시간 추적 가능.`,
+    category: '트레이딩',
+    relatedTermSlugs: ['bitcoin', 'ethereum', 'dca'],
+    relatedStrategySlugs: ['portfolio-rebalancing'],
+  },
+
+  // --- 디파이 ---
+  {
+    slug: 'amm',
+    titleKo: 'AMM',
+    titleEn: 'Automated Market Maker',
+    shortDef: '주문서 없이 수학적 공식으로 가격을 결정하는 자동화된 거래 시스템.',
+    explanation: `AMM은 DEX에서 사용하는 거래 방식이야. 전통 거래소의 주문서(Order Book) 대신 수학 공식으로 가격을 자동 결정해.
+
+**작동 원리 (x × y = k):**
+- 풀에 ETH와 USDC가 있음
+- 누군가 ETH를 사면 → 풀에서 ETH가 줄고 USDC가 늘어남
+- ETH가 줄수록 가격 상승 (자동 조절)
+
+**대표 AMM:**
+- Uniswap V3: Concentrated Liquidity (특정 가격대에 집중)
+- Curve: 스테이블코인 특화 (낮은 슬리피지)
+- Balancer: 다양한 비율의 풀 지원
+
+**유동성 제공자(LP)의 수익:**
+스왑 수수료의 일부를 LP 제공자가 나눠 가짐. 하지만 비영구적 손실(IL) 리스크가 있어.`,
+    category: '디파이',
+    relatedTermSlugs: ['dex', 'liquidity-pool', 'impermanent-loss', 'slippage'],
+    relatedStrategySlugs: ['defi-yield-farming'],
+  },
+  {
+    slug: 'tvl-explained',
+    titleKo: 'TVL 심화',
+    titleEn: 'Total Value Locked (Advanced)',
+    shortDef: 'DeFi 프로토콜에 예치된 총 자산 가치와 그 의미.',
+    explanation: `TVL(Total Value Locked)은 DeFi 프로토콜의 "규모"를 나타내는 핵심 지표야.
+
+**TVL이 높으면:**
+- 많은 사람이 신뢰하고 자금을 맡김
+- 유동성이 풍부 → 슬리피지 낮음
+- 일반적으로 더 안전 (해킹 시 복구 가능성)
+
+**TVL 볼 때 주의할 점:**
+- 토큰 가격 하락으로 TVL이 줄 수 있음 (실제 이탈 아닐 수 있음)
+- 인센티브 종료 시 TVL 급감 가능 (용병 유동성)
+- TVL 대비 시가총액이 너무 높으면 과대평가
+
+**확인 도구:** DefiLlama(defillama.com)가 가장 정확하고 포괄적이야.`,
+    category: '디파이',
+    relatedTermSlugs: ['tvl', 'defi', 'liquidity-pool'],
+    relatedStrategySlugs: ['onchain-data-analysis'],
+  },
+  {
+    slug: 'wrapped-token',
+    titleKo: '래핑 토큰',
+    titleEn: 'Wrapped Token',
+    shortDef: '다른 블록체인에서 사용하기 위해 래핑(감싸기)된 토큰.',
+    explanation: `래핑 토큰은 원래 체인의 토큰을 다른 체인에서 사용할 수 있도록 만든 토큰이야.
+
+**대표 예시:**
+- **WBTC**: 비트코인을 이더리움에서 사용 (1 WBTC = 1 BTC)
+- **WETH**: ETH를 ERC-20 규격으로 변환
+- **wSOL**: SOL을 SPL 토큰으로 변환
+
+**작동 원리:**
+1. 원본 토큰을 커스터디안(관리자)에게 맡김
+2. 같은 양의 래핑 토큰 발행
+3. 다른 체인의 DeFi에서 사용
+4. 해제(unwrap) 시 원본 돌려받음
+
+**리스크:** 커스터디안이 해킹되거나 악의적이면 래핑 토큰의 가치가 사라질 수 있어.`,
+    category: '디파이',
+    relatedTermSlugs: ['bridge', 'defi', 'token'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'governance-token',
+    titleKo: '거버넌스 토큰',
+    titleEn: 'Governance Token',
+    shortDef: '프로토콜의 의사결정에 투표권을 부여하는 토큰.',
+    explanation: `거버넌스 토큰은 DeFi 프로토콜의 "주주권"과 비슷해. 보유하면 프로토콜의 중요 결정에 투표할 수 있어.
+
+**투표 사항 예시:**
+- 수수료율 변경
+- 새로운 풀/마켓 추가
+- 재무부 자금 사용
+- 프로토콜 업그레이드
+
+**대표 거버넌스 토큰:**
+- UNI (Uniswap)
+- AAVE (Aave)
+- COMP (Compound)
+- CRV (Curve)
+
+**참여 방법:**
+1. 거버넌스 토큰 구매
+2. 프로젝트 거버넌스 포럼 확인 (Snapshot, Tally)
+3. 제안에 투표 (가스비 필요한 경우도 있음)
+
+**에어드랍과의 관계:** 많은 프로토콜이 에어드랍으로 거버넌스 토큰을 배포해.`,
+    category: '디파이',
+    relatedTermSlugs: ['dao', 'defi', 'airdrop', 'token'],
+    relatedStrategySlugs: ['airdrop-farming'],
+  },
+  {
+    slug: 'vault',
+    titleKo: '볼트',
+    titleEn: 'Vault',
+    shortDef: '자산을 예치하면 자동으로 수익 전략을 실행하는 스마트 컨트랙트.',
+    explanation: `볼트(Vault)는 "자동 이자 농사 기계"야. 자산을 넣으면 수확(harvest), 재투자(compound)를 자동으로 해줘.
+
+**작동 과정:**
+1. USDC 같은 토큰을 볼트에 예치
+2. 볼트가 자동으로 최적 전략 실행 (렌딩, LP, 스테이킹 등)
+3. 보상 토큰 수확 → 원본에 재투자 (복리 효과)
+4. 출금 시 원금 + 수익 회수
+
+**대표 프로토콜:**
+- Yearn Finance: 자동 수익 최적화
+- Beefy Finance: 멀티체인 자동 복리
+- Sommelier: 능동적 운용 볼트
+
+**장점:** 가스비 절약 + 자동 복리 + 전문 전략
+**단점:** 스마트 컨트랙트 리스크 + 수수료(성과보수)`,
+    category: '디파이',
+    relatedTermSlugs: ['smart-contract', 'yield-farming', 'defi'],
+    relatedStrategySlugs: ['defi-yield-farming', 'stablecoin-yield'],
+  },
+  {
+    slug: 'liquid-staking',
+    titleKo: '리퀴드 스테이킹',
+    titleEn: 'Liquid Staking',
+    shortDef: '토큰을 스테이킹하면서 유동성도 유지할 수 있는 파생 스테이킹.',
+    explanation: `일반 스테이킹은 토큰을 잠그면 다른 곳에서 쓸 수 없어. 리퀴드 스테이킹은 이 문제를 해결해.
+
+**작동 원리:**
+1. ETH를 리퀴드 스테이킹 프로토콜에 예치
+2. 대신 파생 토큰(stETH, rETH 등)을 받음
+3. 파생 토큰으로 DeFi 활동 가능 (LP, 담보 등)
+4. 스테이킹 보상도 계속 쌓임
+
+**대표 프로토콜:**
+- Lido (stETH): 가장 큰 리퀴드 스테이킹
+- Rocket Pool (rETH): 탈중앙화 비중 높음
+- Jito (jitoSOL): 솔라나 리퀴드 스테이킹
+
+**장점:** 스테이킹 수익 + DeFi 수익 동시에
+**리스크:** 디페깅(stETH ≠ ETH), 스마트 컨트랙트 리스크`,
+    category: '디파이',
+    relatedTermSlugs: ['staking', 'restaking', 'defi', 'ethereum'],
+    relatedStrategySlugs: ['defi-yield-farming'],
+  },
+
+  // --- 온체인 ---
+  {
+    slug: 'mempool',
+    titleKo: '멤풀',
+    titleEn: 'Mempool',
+    shortDef: '블록에 포함되기 전 대기 중인 트랜잭션들의 대기실.',
+    explanation: `멤풀(Memory Pool)은 블록체인에 기록되기 전 "대기 중"인 트랜잭션들이 모여있는 공간이야.
+
+**흐름:**
+1. 지갑에서 트랜잭션 전송
+2. 멤풀에 들어감 (대기 상태)
+3. 마이너/밸리데이터가 선택
+4. 블록에 포함 → 확정
+
+**왜 중요한가:**
+- 가스비가 높을수록 빨리 선택됨
+- MEV 봇이 멤풀을 감시 → 프론트러닝, 샌드위치 공격
+- 네트워크 혼잡 시 멤풀이 커짐 → 대기 시간 증가
+
+**멤풀 모니터링 도구:**
+- Etherscan Pending Txs
+- Blocknative Mempool Explorer
+- Flashbots Protect (MEV 보호)`,
+    category: '온체인',
+    relatedTermSlugs: ['gas-fee', 'mev', 'tx-hash'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'erc20',
+    titleKo: 'ERC-20',
+    titleEn: 'ERC-20 Token Standard',
+    shortDef: '이더리움에서 대체 가능한 토큰을 만들기 위한 표준 규격.',
+    explanation: `ERC-20은 이더리움에서 토큰을 만드는 "규칙"이야. 이 규칙을 따르면 어떤 지갑이든 거래소든 호환돼.
+
+**ERC-20이 정하는 것:**
+- transfer(): 토큰 전송
+- approve(): 다른 컨트랙트가 내 토큰 사용 허용
+- balanceOf(): 잔액 조회
+- totalSupply(): 총 발행량
+
+**관련 표준:**
+- ERC-721: NFT (대체 불가능 토큰)
+- ERC-1155: 멀티 토큰 (NFT + 일반 토큰)
+- ERC-4626: 볼트 표준 (수익 자동화)
+
+**실전:** USDC, USDT, UNI 등 대부분의 이더리움 토큰이 ERC-20이야.`,
+    category: '온체인',
+    relatedTermSlugs: ['token', 'smart-contract', 'ethereum', 'nft'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'node',
+    titleKo: '노드',
+    titleEn: 'Node',
+    shortDef: '블록체인 네트워크에 참여하는 컴퓨터.',
+    explanation: `노드는 블록체인 네트워크를 구성하는 개별 컴퓨터야. 노드가 많을수록 네트워크가 안전하고 탈중앙화돼.
+
+**노드 유형:**
+- **풀 노드**: 전체 블록체인 데이터를 저장 (가장 안전)
+- **라이트 노드**: 헤더만 저장 (빠르지만 제한적)
+- **밸리데이터 노드**: 트랜잭션을 검증하고 블록 생성 (PoS)
+- **아카이브 노드**: 모든 과거 상태까지 저장 (분석용)
+
+**RPC 노드:**
+개발자/트레이더가 블록체인에 데이터를 요청할 때 사용.
+- Infura, Alchemy: 무료 RPC 제공
+- 봇 운영 시 안정적인 RPC가 필수
+
+**에어드랍:** 일부 프로젝트는 노드 운영자에게 에어드랍을 줘.`,
+    category: '온체인',
+    relatedTermSlugs: ['blockchain', 'consensus', 'staking'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'rollup',
+    titleKo: '롤업',
+    titleEn: 'Rollup',
+    shortDef: '트랜잭션을 묶어서 처리한 후 메인넷에 기록하는 L2 확장 기술.',
+    explanation: `롤업은 이더리움의 속도와 비용 문제를 해결하는 Layer 2 기술이야.
+
+**작동 원리:**
+1. 수백~수천 개의 트랜잭션을 L2에서 실행
+2. 결과를 압축해서 이더리움 메인넷에 기록
+3. 보안은 이더리움이 보장, 속도와 비용은 L2가 해결
+
+**두 가지 종류:**
+- **Optimistic Rollup**: 기본적으로 신뢰, 이의 제기 시 검증
+  - Arbitrum, Optimism, Base
+- **ZK Rollup**: 수학적 증명으로 즉시 검증
+  - zkSync, Starknet, Scroll
+
+**사용자 입장:**
+- 가스비 10-100배 저렴
+- 속도 빠름 (1-2초)
+- 메인넷과 동일한 보안
+
+대부분의 DeFi 활동이 L2 롤업으로 이동하는 추세야.`,
+    category: '온체인',
+    relatedTermSlugs: ['layer2', 'ethereum', 'gas-fee', 'bridge'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'address-poisoning',
+    titleKo: '주소 오염 공격',
+    titleEn: 'Address Poisoning',
+    shortDef: '비슷한 지갑 주소로 트랜잭션을 보내 잘못된 주소로 송금을 유도하는 사기.',
+    explanation: `주소 오염(Address Poisoning)은 교묘한 사기 수법이야.
+
+**공격 방법:**
+1. 공격자가 너의 지갑 주소와 앞뒤 몇 글자가 같은 주소를 생성
+2. 너에게 0원짜리 트랜잭션을 보냄
+3. 너의 거래 내역에 이 가짜 주소가 기록됨
+4. 나중에 너가 "최근 주소"에서 복사해서 보내면 → 공격자에게 송금
+
+**예시:**
+- 내 주소: 0xAbC...789
+- 공격자 주소: 0xAbC...789 (가운데만 다름)
+- 거래 내역에서 보면 거의 같아 보임
+
+**방어법:**
+- 주소를 거래 내역에서 복사하지 말기
+- 항상 주소록/컨택에서 복사
+- 전체 주소를 꼼꼼히 확인
+- 소액 테스트 전송 후 본 전송`,
+    category: '보안',
+    relatedTermSlugs: ['phishing', 'private-key', 'wallet'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'social-engineering',
+    titleKo: '소셜 엔지니어링',
+    titleEn: 'Social Engineering',
+    shortDef: '기술이 아닌 심리적 조작으로 개인 정보나 자산을 탈취하는 공격.',
+    explanation: `소셜 엔지니어링은 해킹이 아니라 "사람을 해킹"하는 거야.
+
+**크립토에서 흔한 수법:**
+1. **가짜 고객지원**: "지갑 동기화 필요합니다" → 시드 문구 요구
+2. **에어드랍 사기**: "무료 토큰 클레임" → 악성 컨트랙트 승인 유도
+3. **로맨스 스캠**: 신뢰 쌓은 후 투자 플랫폼(가짜)으로 유도
+4. **인플루언서 사칭**: 유명인 사칭 계정으로 DM → 피싱 링크
+
+**방어 원칙:**
+- 절대로 시드 문구/개인키를 누구에게도 공유하지 마
+- "너무 좋은 기회"는 99% 사기
+- 공식 채널 외 DM은 무시
+- 급하게 결정을 요구하면 무조건 의심
+- 2FA(이중 인증) 필수 설정`,
+    category: '보안',
+    relatedTermSlugs: ['phishing', 'seed-phrase', 'private-key'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'hardware-wallet',
+    titleKo: '하드웨어 지갑',
+    titleEn: 'Hardware Wallet',
+    shortDef: '개인키를 오프라인으로 보관하는 물리적 보안 장치.',
+    explanation: `하드웨어 지갑은 개인키를 인터넷에서 완전히 분리해 보관하는 USB 같은 장치야.
+
+**왜 필요한가:**
+- 소프트웨어 지갑(MetaMask 등): 개인키가 브라우저에 저장 → 해킹 위험
+- 하드웨어 지갑: 개인키가 장치 안에만 존재 → 인터넷 해킹 불가
+
+**작동 방식:**
+1. 트랜잭션 생성 → 하드웨어 지갑으로 전송
+2. 장치 화면에서 내용 확인
+3. 물리 버튼으로 서명
+4. 서명된 트랜잭션만 네트워크로 전송
+
+**대표 제품:**
+- Ledger Nano X/S Plus: 가장 인기
+- Trezor Model T/One: 오픈소스
+- GridPlus Lattice1: 대형 화면
+
+**주의:** 항상 공식 사이트에서 구매. 중고/비공식 구매 시 변조 위험.`,
+    category: '보안',
+    relatedTermSlugs: ['wallet', 'private-key', 'seed-phrase'],
+    relatedStrategySlugs: [],
+  },
+
+  // --- 기초 ---
+  {
+    slug: 'bull-bear',
+    titleKo: '불마켓 / 베어마켓',
+    titleEn: 'Bull Market / Bear Market',
+    shortDef: '가격이 지속적으로 상승(불) 또는 하락(베어)하는 시장 상태.',
+    explanation: `**불마켓(Bull Market) = 상승장**
+- 가격이 전반적으로 오르는 시기
+- 투자 심리 낙관적, 거래량 증가
+- FOMO(놓칠까봐 두려움)가 강해짐
+- "누구나 천재" — 뭘 사도 오르는 것 같은 시기
+
+**베어마켓(Bear Market) = 하락장**
+- 가격이 전반적으로 내리는 시기
+- 투자 심리 비관적, 거래량 감소
+- FUD(불확실/의심/공포)가 퍼짐
+- "진짜 프로젝트만 살아남는" 시기
+
+**크립토 사이클:**
+- 불마켓: 보통 1-2년
+- 베어마켓: 보통 1-2년
+- 비트코인 반감기(4년) 이후 불마켓 시작 경향
+
+**전략:** 베어마켓에서 공부하고 축적, 불마켓에서 수확.`,
+    category: '기초',
+    relatedTermSlugs: ['fomo', 'halving', 'bitcoin', 'dca'],
+    relatedStrategySlugs: ['portfolio-rebalancing'],
+  },
+  {
+    slug: 'kyc',
+    titleKo: 'KYC',
+    titleEn: 'Know Your Customer',
+    shortDef: '거래소가 사용자의 신원을 확인하는 절차.',
+    explanation: `KYC는 거래소가 "너 누구야?"를 확인하는 과정이야. 자금세탁 방지(AML)를 위해 대부분의 중앙화 거래소에서 필수.
+
+**KYC 레벨:**
+1. **기본**: 이메일 + 전화번호 → 소액 거래 가능
+2. **중급**: 신분증 사진 + 셀카 → 일반 거래
+3. **고급**: 주소 증빙 + 자금 출처 → 대규모 거래
+
+**KYC가 필요 없는 곳:**
+- DEX (Uniswap, Raydium 등): 지갑만 연결
+- Hyperliquid: 지갑 기반, KYC 없음
+- 일부 CEX 소액 거래 (제한적)
+
+**주의:** 한국 거래소(업비트, 빗썸)는 실명계좌 연동 필수.
+해외 거래소도 한국 거주자에게 KYC를 요구하는 추세.`,
+    category: '기초',
+    relatedTermSlugs: ['wallet', 'dex'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'depin',
+    titleKo: 'DePIN',
+    titleEn: 'Decentralized Physical Infrastructure Network',
+    shortDef: '블록체인으로 물리적 인프라를 탈중앙화하는 프로젝트.',
+    explanation: `DePIN은 실제 물리적 인프라(네트워크, 저장소, 에너지 등)를 블록체인으로 운영하는 분야야.
+
+**대표 프로젝트:**
+- **Helium (HNT)**: 탈중앙 무선 네트워크 (IoT, 5G)
+- **Filecoin (FIL)**: 탈중앙 파일 저장소
+- **Render (RNDR)**: 탈중앙 GPU 렌더링
+- **Hivemapper**: 탈중앙 지도 데이터
+- **io.net**: 탈중앙 GPU 컴퓨팅 (AI용)
+
+**참여 방법:**
+1. 장비 구매/연결 (핫스팟, GPU, 저장소 등)
+2. 네트워크에 기여 (데이터 제공, 처리 등)
+3. 토큰 보상 수령
+
+**AI + DePIN:** GPU 수요 폭발로 탈중앙 GPU 네트워크가 주목받는 중.`,
+    category: '기초',
+    relatedTermSlugs: ['blockchain', 'token', 'mining'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'rwa',
+    titleKo: 'RWA',
+    titleEn: 'Real World Assets',
+    shortDef: '부동산, 채권 등 실물 자산을 토큰화하여 블록체인에서 거래.',
+    explanation: `RWA(실물자산 토큰화)는 현실 세계의 자산을 블록체인 토큰으로 만드는 거야.
+
+**토큰화 가능한 자산:**
+- 미국 국채 (T-Bills) → Ondo USDY, Mountain USDM
+- 부동산 → RealT
+- 금 → Paxos PAXG
+- 사모펀드 → Hamilton Lane (Securitize)
+
+**왜 중요한가:**
+1. 24시간 거래 가능 (주말/공휴일 없음)
+2. 소액 투자 가능 (빌딩 한 채가 아니라 $100 단위)
+3. 글로벌 접근 (한국에서 미국 국채 직접 투자)
+4. 투명성 (온체인으로 확인 가능)
+
+**현재 규모:** RWA TVL $10B+ (2025 기준), BlackRock BUIDL 펀드가 대표적.
+크립토와 전통 금융을 잇는 가장 큰 트렌드 중 하나야.`,
+    category: '기초',
+    relatedTermSlugs: ['token', 'stablecoin', 'defi'],
+    relatedStrategySlugs: ['stablecoin-yield'],
+  },
+
+  // --- NFT ---
+  {
+    slug: 'soulbound',
+    titleKo: '소울바운드 토큰',
+    titleEn: 'Soulbound Token (SBT)',
+    shortDef: '양도/판매가 불가능한, 개인의 신원이나 업적을 증명하는 토큰.',
+    explanation: `소울바운드 토큰(SBT)은 "영혼에 묶인 토큰"이야. 한번 받으면 다른 사람에게 보내거나 팔 수 없어.
+
+**용도:**
+- **학위/자격증**: 온체인 졸업증명서
+- **업적/뱃지**: 프로토콜 기여 증명 (POAP 확장)
+- **신원 인증**: KYC 없이 온체인 신원 증명
+- **커뮤니티 멤버십**: OG 멤버 증명
+
+**일반 NFT와 차이:**
+- NFT: 사고 팔 수 있음 → 투기 가능
+- SBT: 양도 불가 → 순수한 증명 용도
+
+**크립토에서의 활용:**
+- 에어드랍 시빌 방지 (SBT로 진짜 사용자 확인)
+- 거버넌스 투표 가중치 (기여도 증명)
+- 온체인 이력서`,
+    category: 'NFT',
+    relatedTermSlugs: ['nft', 'mint', 'metadata'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'poap',
+    titleKo: 'POAP',
+    titleEn: 'Proof of Attendance Protocol',
+    shortDef: '이벤트 참석을 증명하는 NFT 뱃지.',
+    explanation: `POAP(Proof of Attendance Protocol)는 "거기 있었다"를 증명하는 NFT 뱃지야.
+
+**어떻게 받나:**
+- 컨퍼런스/밋업 참석
+- 온라인 이벤트 참여
+- 프로토콜 초기 사용자
+- 특정 온체인 활동 완료
+
+**왜 모으나:**
+1. 커뮤니티 소속감 + 이력 증명
+2. 에어드랍 기준에 포함되기도 함
+3. 프로토콜이 POAP 보유자에게 혜택 제공
+4. 수집하는 재미 (온체인 스탬프 북)
+
+**발급 방법:**
+- poap.xyz에서 이벤트 생성
+- QR 코드/링크로 배포
+- Gnosis Chain(xDai)에서 가스비 무료로 발행`,
+    category: 'NFT',
+    relatedTermSlugs: ['nft', 'mint', 'soulbound'],
+    relatedStrategySlugs: ['airdrop-farming'],
+  },
+
+  // --- 추가 트레이딩/디파이/온체인 ---
+  {
+    slug: 'paper-trading',
+    titleKo: '페이퍼 트레이딩',
+    titleEn: 'Paper Trading',
+    shortDef: '실제 돈 없이 가상 자금으로 거래를 연습하는 시뮬레이션.',
+    explanation: `페이퍼 트레이딩은 진짜 돈을 걸지 않고 가상 자금으로 매매를 연습하는 거야.
+
+**장점:**
+- 리스크 0으로 전략 테스트
+- 거래소 사용법 익히기
+- 자신의 매매 패턴 파악
+- 감정 없이 기록 쌓기
+
+**방법:**
+1. **거래소 테스트넷**: Binance, Bybit 테스트넷 제공
+2. **TradingView**: 차트에서 가상 매매 연습
+3. **스프레드시트**: 직접 기록하며 추적
+4. **봇 페이퍼 모드**: 자동화 봇을 테스트 모드로 실행
+
+**주의:** 실전과 차이가 있어:
+- 슬리피지/수수료 경험 못함
+- 심리적 압박이 없음 (실전에서 감정이 큰 영향)
+- 최소 100번은 연습한 후 소액으로 실전 전환`,
+    category: '트레이딩',
+    relatedTermSlugs: ['long-short', 'leverage', 'stop-loss'],
+    relatedStrategySlugs: ['risk-reward-management'],
+  },
+  {
+    slug: 'dollar-cost-averaging',
+    titleKo: '적립식 투자',
+    titleEn: 'Dollar Cost Averaging (DCA)',
+    shortDef: '정해진 금액을 정기적으로 투자해 평균 매입 단가를 낮추는 전략.',
+    explanation: `DCA는 가장 간단하고 효과적인 투자 전략이야. 매주/매월 같은 금액을 같은 자산에 투자해.
+
+**예시:**
+- 매주 월요일 $100씩 BTC 구매
+- 가격이 비쌀 때 → 적게 삼
+- 가격이 쌀 때 → 많이 삼
+- 결과: 평균 매입 단가가 자연스럽게 낮아짐
+
+**왜 효과적인가:**
+- 타이밍을 맞출 필요 없음
+- 감정 배제 (기계적 실행)
+- 장기적으로 일시불 투자와 비슷한 수익
+- 변동성이 큰 크립토에 특히 적합
+
+**설정 방법:**
+- 업비트/빗썸: 자동 매수 기능 제공
+- Binance: Recurring Buy 기능
+- 직접: 매주 같은 요일에 수동 구매`,
+    category: '트레이딩',
+    relatedTermSlugs: ['dca', 'bitcoin', 'portfolio'],
+    relatedStrategySlugs: ['portfolio-rebalancing'],
+  },
+  {
+    slug: 'cross-chain',
+    titleKo: '크로스체인',
+    titleEn: 'Cross-Chain',
+    shortDef: '서로 다른 블록체인 간에 자산이나 데이터를 이동시키는 기술.',
+    explanation: `크로스체인은 서로 다른 블록체인을 연결하는 기술이야.
+
+**왜 필요한가:**
+- 이더리움의 USDC를 솔라나에서 쓰고 싶을 때
+- Arbitrum의 ETH를 Base로 옮기고 싶을 때
+- 각 체인의 DeFi 기회를 활용하고 싶을 때
+
+**방법:**
+1. **브릿지**: 자산을 잠그고 다른 체인에서 발행 (Wormhole, LayerZero)
+2. **크로스체인 DEX**: 한 번에 체인 간 스왑 (Squid, LI.FI)
+3. **CEX 경유**: 거래소에 입금 → 다른 체인으로 출금 (가장 안전)
+
+**리스크:**
+- 브릿지 해킹 사례 많음 (Wormhole $320M, Ronin $625M)
+- 수수료 + 시간 소요
+- 소액은 CEX 경유가 오히려 안전하고 저렴할 수 있음`,
+    category: '온체인',
+    relatedTermSlugs: ['bridge', 'layer2', 'blockchain'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'account-abstraction',
+    titleKo: '계정 추상화',
+    titleEn: 'Account Abstraction',
+    shortDef: 'EOA 대신 스마트 컨트랙트를 지갑으로 사용해 UX를 개선하는 기술.',
+    explanation: `계정 추상화(AA)는 지갑 사용을 더 쉽고 안전하게 만드는 기술이야.
+
+**기존 문제:**
+- 시드 문구 잃어버리면 끝
+- 모든 트랜잭션에 가스비 필요
+- 실수로 잘못 보내면 복구 불가
+
+**AA가 해결하는 것:**
+1. **소셜 리커버리**: 시드 문구 대신 이메일/친구 승인으로 지갑 복구
+2. **가스비 대납**: dApp이 가스비를 대신 내줌
+3. **배치 트랜잭션**: 여러 작업을 한 번에 (승인+스왑 한 클릭)
+4. **지출 한도**: 일일 최대 전송 금액 설정
+5. **세션 키**: 게임 등에서 매번 서명 안 해도 됨
+
+**대표 구현:**
+- ERC-4337 (이더리움 표준)
+- Safe (구 Gnosis Safe)
+- Argent 지갑`,
+    category: '온체인',
+    relatedTermSlugs: ['smart-contract', 'wallet', 'gas-fee', 'erc20'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'inscription',
+    titleKo: '인스크립션',
+    titleEn: 'Inscription',
+    shortDef: '블록체인 트랜잭션에 데이터를 직접 새겨넣는 기술.',
+    explanation: `인스크립션은 블록체인의 트랜잭션 데이터에 텍스트, 이미지 등을 직접 기록하는 방식이야.
+
+**비트코인 Ordinals:**
+- 2023년 등장, 비트코인에 NFT를 만드는 방법
+- 각 사토시(BTC 최소 단위)에 데이터를 새겨넣음
+- BRC-20: 비트코인 위의 토큰 표준
+
+**다른 체인의 인스크립션:**
+- 이더리움: Ethscriptions
+- 솔라나: SPL-20
+- 각 체인에서 인스크립션 열풍이 일어남
+
+**특징:**
+- 온체인에 100% 기록 (IPFS 불필요)
+- 데이터 불변성 보장
+- 네트워크 혼잡 + 가스비 급등 유발
+
+**현재:** 초기 열풍은 식었지만, 비트코인 NFT 시장으로 자리잡는 중.`,
+    category: 'NFT',
+    relatedTermSlugs: ['nft', 'bitcoin', 'mint', 'gas-fee'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'ai-agent',
+    titleKo: 'AI 에이전트',
+    titleEn: 'AI Agent',
+    shortDef: '블록체인에서 자율적으로 작업을 수행하는 AI 기반 소프트웨어.',
+    explanation: `AI 에이전트는 AI가 스스로 블록체인 트랜잭션을 실행하는 자율 소프트웨어야.
+
+**크립토 AI 에이전트가 하는 일:**
+- 자동 트레이딩 (시장 분석 → 매매)
+- 소셜 미디어 운영 (트위터 포스팅)
+- DeFi 전략 자동 실행 (이자 농사, 리밸런싱)
+- 온체인 데이터 분석 + 인사이트 제공
+
+**대표 프로젝트:**
+- **Virtuals Protocol**: AI 에이전트 런치패드 (Base)
+- **ai16z/ElizaOS**: 오픈소스 AI 에이전트 프레임워크
+- **Autonolas**: 멀티 에이전트 시스템
+- **AIXBT**: AI 크립토 분석 에이전트
+
+**투자 관점:**
+- AI + 크립토 교차점으로 2025-2026 핫 트렌드
+- 에이전트 토큰은 변동성이 매우 큼
+- 실제 유틸리티가 있는 프로젝트와 밈을 구분해야 해`,
+    category: '기초',
+    relatedTermSlugs: ['smart-contract', 'defi', 'blockchain'],
+    relatedStrategySlugs: ['smart-money-tracking'],
+  },
 ];
 
 export function getTermBySlug(slug: string): GlossaryTerm | undefined {

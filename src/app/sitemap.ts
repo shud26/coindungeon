@@ -3,6 +3,7 @@ import { strategies } from '@/data/strategies';
 import { glossaryTerms } from '@/data/glossary';
 import { playbooks } from '@/data/playbooks';
 import { calculatorTools } from '@/data/tools';
+import { stages } from '@/data/stages';
 
 const BASE_URL = 'https://coindungeon.vercel.app';
 
@@ -98,5 +99,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...strategyPages, ...toolPages, ...glossaryPages, ...playbookPages];
+  const stagePages: MetadataRoute.Sitemap = stages.map((s) => ({
+    url: `${BASE_URL}/stage/${s.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }));
+
+  return [...staticPages, ...stagePages, ...strategyPages, ...toolPages, ...glossaryPages, ...playbookPages];
 }

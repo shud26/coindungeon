@@ -9,9 +9,9 @@ const difficultyLabel: Record<string, string> = {
 };
 
 const difficultyStyle: Record<string, string> = {
-  beginner: 'bg-emerald-50 text-emerald-600',
-  intermediate: 'bg-amber-50 text-amber-600',
-  advanced: 'bg-red-50 text-red-600',
+  beginner: 'bg-emerald-500/10 text-emerald-400',
+  intermediate: 'bg-amber-500/10 text-amber-400',
+  advanced: 'bg-red-500/10 text-red-400',
 };
 
 const emojiMap: Record<string, string> = {
@@ -26,7 +26,7 @@ export default function PlaybookCard({ playbook }: { playbook: Playbook }) {
   return (
     <Link href={`/playbook/${playbook.slug}`} className="block card p-5 group">
       <div className="flex items-start gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 text-[22px]">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-[22px]">
           {emoji}
         </div>
         <div className="min-w-0 flex-1">

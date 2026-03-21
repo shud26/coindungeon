@@ -21,7 +21,7 @@ export default function ToolsPage() {
           return (
             <Link key={tool.slug} href={`/tools/${tool.slug}`} className="card p-5 group">
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 text-[22px]">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-dim text-[22px]">
                   {emoji}
                 </div>
                 <div className="flex-1">

@@ -12,8 +12,8 @@ export default function LevelBadge({ level, size = 'md' }: { level: number; size
         height: s,
         fontSize: fs,
         borderRadius: r,
-        background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
-        boxShadow: '0 4px 12px rgba(99,102,241,0.3)',
+        background: 'linear-gradient(135deg, #8B7CFF, #A78BFA)',
+        boxShadow: '0 4px 12px rgba(139,124,255,0.3)',
       }}
     >
       {level}

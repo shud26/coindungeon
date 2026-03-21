@@ -14,7 +14,7 @@ export default function LearnPage() {
       <div className="mt-8 flex flex-col gap-3">
         <Link href="/glossary" className="card p-5 group">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 text-[22px]">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-dim text-[22px]">
               📚
             </div>
             <div className="flex-1">
@@ -32,7 +32,7 @@ export default function LearnPage() {
 
         <Link href="/playbook" className="card p-5 group">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 text-[22px]">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-[22px]">
               🗺️
             </div>
             <div className="flex-1">

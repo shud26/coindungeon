@@ -3,10 +3,10 @@ import type { Strategy } from '@/data/strategies';
 
 export default function RecipeHeader({ strategy }: { strategy: Strategy }) {
   const items = [
-    { label: '난이도', value: <DifficultyStars difficulty={strategy.difficulty} />, bg: 'bg-amber-50' },
-    { label: '예상 수익', value: strategy.expectedReturn, bg: 'bg-emerald-50' },
-    { label: '필요 자본', value: strategy.requiredCapital, bg: 'bg-indigo-50' },
-    { label: '소요 시간', value: strategy.timeRequired, bg: 'bg-purple-50' },
+    { label: '난이도', value: <DifficultyStars difficulty={strategy.difficulty} />, bg: 'bg-amber-500/10' },
+    { label: '예상 수익', value: strategy.expectedReturn, bg: 'bg-emerald-500/10' },
+    { label: '필요 자본', value: strategy.requiredCapital, bg: 'bg-indigo-500/10' },
+    { label: '소요 시간', value: strategy.timeRequired, bg: 'bg-purple-500/10' },
   ];
 
   return (

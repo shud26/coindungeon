@@ -87,7 +87,7 @@ export default function RootLayout({
           {children}
         </main>
         <footer className="mx-auto max-w-[520px] px-5 pb-28 pt-2">
-          <div className="border-t border-gray-100 pt-6">
+          <div className="border-t border-white/[0.06] pt-6">
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-text-quaternary">
               <a href="/glossary" className="transition-colors hover:text-text-secondary">용어사전</a>
               <a href="/playbook" className="transition-colors hover:text-text-secondary">플레이북</a>

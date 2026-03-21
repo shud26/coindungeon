@@ -1,35 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --bg-base: #FAFBFC;
-  --bg-surface: #FFFFFF;
-  --bg-elevated: #FFFFFF;
-  --bg-subtle: #F0F2F5;
-  --bg-hover: rgba(0,0,0,0.02);
+  --bg-base: #09090B;
+  --bg-surface: #111113;
+  --bg-elevated: #18181B;
+  --bg-subtle: #1E1E22;
+  --bg-hover: rgba(255,255,255,0.03);
 
-  --text-primary: #111827;
-  --text-secondary: #374151;
-  --text-tertiary: #6B7280;
-  --text-quaternary: #9CA3AF;
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-tertiary: #71717A;
+  --text-quaternary: #52525B;
 
-  --border: rgba(0,0,0,0.06);
-  --border-hover: rgba(0,0,0,0.10);
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
 
-  --accent: #6366F1;
-  --accent-hover: #4F46E5;
-  --accent-dim: rgba(99,102,241,0.08);
-  --accent-light: rgba(99,102,241,0.12);
+  --accent: #8B7CFF;
+  --accent-hover: #7C6CFF;
+  --accent-dim: rgba(139,124,255,0.10);
+  --accent-light: rgba(139,124,255,0.15);
 
-  --success: #10B981;
-  --success-dim: rgba(16,185,129,0.08);
-  --danger: #EF4444;
-  --danger-dim: rgba(239,68,68,0.08);
-  --warning: #F59E0B;
-  --warning-dim: rgba(245,158,11,0.08);
+  --success: #34D399;
+  --success-dim: rgba(52,211,153,0.10);
+  --danger: #F87171;
+  --danger-dim: rgba(248,113,113,0.10);
+  --warning: #FBBF24;
+  --warning-dim: rgba(251,191,36,0.10);
 
-  --gradient-accent: linear-gradient(135deg, #6366F1, #8B5CF6);
-  --gradient-warm: linear-gradient(135deg, #F59E0B, #EF4444);
-  --gradient-cool: linear-gradient(135deg, #06B6D4, #6366F1);
+  --gradient-accent: linear-gradient(135deg, #8B7CFF, #A78BFA);
+  --gradient-warm: linear-gradient(135deg, #FBBF24, #F87171);
+  --gradient-cool: linear-gradient(135deg, #22D3EE, #8B7CFF);
 }
 
 @theme inline {
@@ -82,21 +82,21 @@ body {
 
 .card:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
 .card-elevated {
   background: var(--bg-elevated);
   border-radius: 20px;
   border: 1px solid var(--border);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
 }
 
 .card-accent {
   background: var(--bg-surface);
   border-radius: 16px;
-  border: 1px solid rgba(99,102,241,0.2);
-  box-shadow: 0 4px 16px rgba(99,102,241,0.06);
+  border: 1px solid rgba(139,124,255,0.2);
+  box-shadow: 0 4px 16px rgba(139,124,255,0.08);
 }
 
 /* ========== Section Label ========== */

@@ -39,20 +39,20 @@ export default function ProfilePage() {
         <p className="mt-1 text-[13px] text-text-quaternary">Level {level.level}</p>
         <ProgressBar progress={level.progress} className="mt-5" />
         <div className="mt-2 flex justify-between text-[12px] text-text-quaternary">
-          <span className="font-semibold text-indigo-500">{progress.xp} XP</span>
+          <span className="font-semibold text-accent">{progress.xp} XP</span>
           <span>다음 레벨까지 {level.nextXp - progress.xp} XP</span>
         </div>
       </motion.div>
 
       {/* Stats */}
       <motion.div variants={staggerItem} className="mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 p-5 text-center">
-          <p className="text-[22px] font-extrabold text-indigo-600">{done}<span className="text-indigo-300">/{strategies.length}</span></p>
-          <p className="mt-1 text-[12px] font-medium text-indigo-400">전략 완료</p>
+        <div className="rounded-2xl bg-accent-dim p-5 text-center">
+          <p className="text-[22px] font-extrabold text-accent">{done}<span className="text-accent/40">/{strategies.length}</span></p>
+          <p className="mt-1 text-[12px] font-medium text-text-tertiary">전략 완료</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center">
-          <p className="text-[22px] font-extrabold text-emerald-600">{progress.toolsUsed.length}</p>
-          <p className="mt-1 text-[12px] font-medium text-emerald-400">도구 사용</p>
+        <div className="rounded-2xl bg-emerald-500/10 p-5 text-center">
+          <p className="text-[22px] font-extrabold text-emerald-400">{progress.toolsUsed.length}</p>
+          <p className="mt-1 text-[12px] font-medium text-text-tertiary">도구 사용</p>
         </div>
       </motion.div>
 
@@ -68,8 +68,8 @@ export default function ProfilePage() {
               <div key={cat} className="card flex items-center gap-3 p-4">
                 <span className="flex-1 text-[14px] font-semibold">{cat}</span>
                 <span className="text-[12px] font-medium text-text-quaternary">{s.done}/{s.total}</span>
-                <div className="h-2 w-20 overflow-hidden rounded-full bg-gray-100">
-                  <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #6366F1, #8B5CF6)' }} />
+                <div className="h-2 w-20 overflow-hidden rounded-full bg-bg-subtle">
+                  <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #8B7CFF, #A78BFA)' }} />
                 </div>
               </div>
             );
@@ -85,21 +85,21 @@ export default function ProfilePage() {
             const cur = lv.level === level.level;
             const got = progress.xp >= lv.requiredXp;
             return (
-              <div key={lv.level} className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition-colors ${cur ? 'bg-indigo-50' : ''}`}>
+              <div key={lv.level} className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition-colors ${cur ? 'bg-accent-dim' : ''}`}>
                 <span
                   className="flex h-8 w-8 items-center justify-center rounded-xl text-[12px] font-bold text-white"
                   style={{
                     background: got
-                      ? 'linear-gradient(135deg, #10B981, #059669)'
+                      ? 'linear-gradient(135deg, #34D399, #10B981)'
                       : cur
-                      ? 'linear-gradient(135deg, #6366F1, #8B5CF6)'
-                      : '#E5E7EB',
-                    color: got || cur ? '#fff' : '#9CA3AF',
+                      ? 'linear-gradient(135deg, #8B7CFF, #A78BFA)'
+                      : '#27272A',
+                    color: got || cur ? '#fff' : '#52525B',
                   }}
                 >
                   {got ? '✓' : lv.level}
                 </span>
-                <span className={`flex-1 text-[14px] ${cur ? 'font-bold text-indigo-600' : got ? 'font-medium' : 'text-text-quaternary'}`}>
+                <span className={`flex-1 text-[14px] ${cur ? 'font-bold text-accent' : got ? 'font-medium' : 'text-text-quaternary'}`}>
                   {lv.title}
                 </span>
                 <span className="text-[12px] text-text-quaternary">{lv.requiredXp} XP</span>

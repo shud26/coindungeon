@@ -13,7 +13,7 @@ export default function StrategiesPage() {
         {STRATEGY_CATEGORIES.map((cat) => {
           const count = strategies.filter((s) => s.category === cat).length;
           return (
-            <span key={cat} className="rounded-lg bg-gray-100 px-3 py-1.5 text-[12px] font-semibold text-text-tertiary">
+            <span key={cat} className="rounded-lg bg-bg-subtle px-3 py-1.5 text-[12px] font-semibold text-text-tertiary">
               {cat} {count}
             </span>
           );

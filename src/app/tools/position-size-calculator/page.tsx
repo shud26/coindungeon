@@ -15,7 +15,7 @@ export default function PositionSizeCalculatorPage() {
   const margin = positionSize / leverage;
   const capitalUsagePct = (margin / capital) * 100;
 
-  const inputClass = "mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-[15px] font-medium outline-none transition-colors focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100";
+  const inputClass = "mt-2 w-full rounded-xl border border-white/[0.06] bg-bg-surface px-4 py-3 text-[15px] font-medium outline-none transition-colors focus:border-[#8B7CFF]/50 focus:ring-2 focus:ring-[#8B7CFF]/20";
 
   return (
     <div>
@@ -53,24 +53,24 @@ export default function PositionSizeCalculatorPage() {
       </div>
 
       {/* Results */}
-      <div className="mt-6 rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 p-5">
-        <h2 className="text-[15px] font-bold text-indigo-700">적정 포지션</h2>
+      <div className="mt-6 rounded-2xl bg-accent-dim p-5">
+        <h2 className="text-[15px] font-bold text-accent">적정 포지션</h2>
         <div className="mt-4 space-y-3">
           <div className="flex justify-between text-[14px]">
-            <span className="text-indigo-500/70">최대 손실 금액</span>
-            <span className="font-bold text-red-500">${riskAmount.toFixed(2)}</span>
+            <span className="text-text-tertiary">최대 손실 금액</span>
+            <span className="font-bold text-red-400">${riskAmount.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-[14px]">
-            <span className="text-indigo-500/70">적정 포지션 크기</span>
-            <span className="font-extrabold text-indigo-600">${positionSize.toFixed(2)}</span>
+            <span className="text-text-tertiary">적정 포지션 크기</span>
+            <span className="font-extrabold text-accent">${positionSize.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-[14px]">
-            <span className="text-indigo-500/70">필요 마진</span>
+            <span className="text-text-tertiary">필요 마진</span>
             <span className="font-bold">${margin.toFixed(2)}</span>
           </div>
-          <div className="border-t border-indigo-200/50 pt-3 flex justify-between text-[14px]">
-            <span className="font-bold text-indigo-700">자본 사용률</span>
-            <span className={`font-extrabold ${capitalUsagePct > 50 ? 'text-red-500' : capitalUsagePct > 30 ? 'text-amber-500' : 'text-emerald-600'}`}>
+          <div className="border-t border-white/[0.06] pt-3 flex justify-between text-[14px]">
+            <span className="font-bold text-accent">자본 사용률</span>
+            <span className={`font-extrabold ${capitalUsagePct > 50 ? 'text-red-400' : capitalUsagePct > 30 ? 'text-amber-400' : 'text-emerald-400'}`}>
               {capitalUsagePct.toFixed(1)}%
             </span>
           </div>
@@ -78,7 +78,7 @@ export default function PositionSizeCalculatorPage() {
       </div>
 
       {capitalUsagePct > 50 && (
-        <div className="mt-4 rounded-2xl bg-amber-50 p-4 text-[13px] font-medium text-amber-700">
+        <div className="mt-4 rounded-2xl bg-amber-500/10 p-4 text-[13px] font-medium text-amber-400">
           자본 사용률이 50%를 초과합니다. 레버리지를 낮추거나 리스크를 줄이는 것을 권장합니다.
         </div>
       )}

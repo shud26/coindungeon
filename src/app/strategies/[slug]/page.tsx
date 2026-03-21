@@ -70,7 +70,7 @@ export default async function StrategyDetailPage({ params }: { params: Promise<{
 
       {/* Header */}
       <div className="mt-6">
-        <span className="rounded-lg bg-indigo-50 px-2.5 py-1 text-[12px] font-semibold text-indigo-600">{strategy.category}</span>
+        <span className="rounded-lg bg-accent-dim px-2.5 py-1 text-[12px] font-semibold text-accent">{strategy.category}</span>
         <h1 className="mt-3 text-[26px] font-extrabold leading-tight tracking-tight">{strategy.title}</h1>
         <p className="mt-2 text-[15px] text-text-secondary leading-relaxed">{strategy.subtitle}</p>
       </div>
@@ -86,7 +86,7 @@ export default async function StrategyDetailPage({ params }: { params: Promise<{
         {strategy.steps.map((step, i) => (
           <div key={i} className="card p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-[12px] font-bold text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-[12px] font-bold text-white" style={{ background: 'linear-gradient(135deg, #8B7CFF, #A78BFA)' }}>
                 {i + 1}
               </span>
               <h3 className="text-[15px] font-bold">{step.title}</h3>
@@ -124,7 +124,7 @@ export default async function StrategyDetailPage({ params }: { params: Promise<{
       {relatedTools.length > 0 && (
         <div className="mt-10">
           <div className="flex items-center gap-2">
-            <Wrench size={16} className="text-indigo-500" />
+            <Wrench size={16} className="text-accent" />
             <h3 className="text-[14px] font-bold">관련 도구</h3>
           </div>
           <div className="mt-3 flex flex-col gap-2">
@@ -141,12 +141,12 @@ export default async function StrategyDetailPage({ params }: { params: Promise<{
       {relatedTerms.length > 0 && (
         <div className="mt-8">
           <div className="flex items-center gap-2">
-            <BookOpen size={16} className="text-indigo-500" />
+            <BookOpen size={16} className="text-accent" />
             <h3 className="text-[14px] font-bold">관련 용어</h3>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {relatedTerms.map((rt) => (
-              <Link key={rt!.slug} href={`/glossary/${rt!.slug}`} className="rounded-xl bg-gray-100 px-3.5 py-2 text-[13px] font-medium text-text-secondary transition-colors hover:bg-gray-200">
+              <Link key={rt!.slug} href={`/glossary/${rt!.slug}`} className="rounded-xl bg-bg-subtle px-3.5 py-2 text-[13px] font-medium text-text-secondary transition-colors hover:bg-bg-hover">
                 {rt!.titleKo}
               </Link>
             ))}

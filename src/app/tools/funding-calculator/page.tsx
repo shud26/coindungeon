@@ -16,7 +16,7 @@ export default function FundingCalculatorPage() {
   const netPct = (netReturn / capital) * 100;
   const annualized = netPct * (365 * 24 / holdHours);
 
-  const inputClass = "mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-[15px] font-medium outline-none transition-colors focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100";
+  const inputClass = "mt-2 w-full rounded-xl border border-white/[0.06] bg-bg-surface px-4 py-3 text-[15px] font-medium outline-none transition-colors focus:border-[#8B7CFF]/50 focus:ring-2 focus:ring-[#8B7CFF]/20";
 
   return (
     <div>
@@ -52,26 +52,26 @@ export default function FundingCalculatorPage() {
       </div>
 
       {/* Results */}
-      <div className="mt-6 rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 p-5">
-        <h2 className="text-[15px] font-bold text-indigo-700">예상 결과</h2>
+      <div className="mt-6 rounded-2xl bg-accent-dim p-5">
+        <h2 className="text-[15px] font-bold text-accent">예상 결과</h2>
         <div className="mt-4 space-y-3">
           <div className="flex justify-between text-[14px]">
-            <span className="text-indigo-500/70">총 펀딩비 수익</span>
+            <span className="text-text-tertiary">총 펀딩비 수익</span>
             <span className="font-bold">${grossReturn.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-[14px]">
-            <span className="text-indigo-500/70">수수료</span>
-            <span className="font-bold text-red-500">-${fees.toFixed(2)}</span>
+            <span className="text-text-tertiary">수수료</span>
+            <span className="font-bold text-red-400">-${fees.toFixed(2)}</span>
           </div>
-          <div className="border-t border-indigo-200/50 pt-3 flex justify-between text-[15px]">
-            <span className="font-bold text-indigo-700">순 수익</span>
-            <span className={`font-extrabold ${netReturn >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+          <div className="border-t border-white/[0.06] pt-3 flex justify-between text-[15px]">
+            <span className="font-bold text-accent">순 수익</span>
+            <span className={`font-extrabold ${netReturn >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
               ${netReturn.toFixed(2)} ({netPct.toFixed(3)}%)
             </span>
           </div>
           <div className="flex justify-between text-[14px]">
-            <span className="text-indigo-500/70">연환산 수익률</span>
-            <span className={`font-bold ${annualized >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+            <span className="text-text-tertiary">연환산 수익률</span>
+            <span className={`font-bold ${annualized >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
               {annualized.toFixed(1)}%
             </span>
           </div>

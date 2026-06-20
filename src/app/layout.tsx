@@ -13,15 +13,15 @@ const BASE_URL = 'https://coindungeon.vercel.app';
 
 export const metadata: Metadata = {
   title: {
-    default: '코인던전 | 실전 크립토 수익화',
+    default: '코인던전 | 크립토를 가장 쉽게 배우는 곳',
     template: '%s | 코인던전',
   },
-  description: '펀딩비 차익거래, 에어드랍 파밍, 청산 사냥 등 실전 크립토 수익 전략. 계산기와 단계별 가이드로 바로 실행.',
-  keywords: ['크립토', '암호화폐', '비트코인', '펀딩비', '차익거래', 'DeFi', '에어드랍', '트레이딩 전략', '코인 수익', '코인던전'],
+  description: '코인 세금, 디파이, 에어드랍, 용어사전까지 — 어려운 크립토를 초보 눈높이로 쉽게 풀어주는 한국어 크립토 교육 사이트.',
+  keywords: ['크립토', '암호화폐', '비트코인', '코인 세금', '가상자산 과세', '디파이', '에어드랍', '스테이킹', '크립토 용어', '크립토 입문', '코인던전'],
   metadataBase: new URL(BASE_URL),
   openGraph: {
-    title: '코인던전 | 실전 크립토 수익화',
-    description: '펀딩비 차익거래, 에어드랍 파밍, 청산 사냥 등 실전 크립토 수익 전략.',
+    title: '코인던전 | 크립토를 가장 쉽게 배우는 곳',
+    description: '코인 세금·디파이·에어드랍을 초보 눈높이로 쉽게. 한국어 크립토 교육 사이트.',
     url: BASE_URL,
     siteName: '코인던전',
     locale: 'ko_KR',
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '코인던전 | 실전 크립토 수익화',
-    description: '실전 크립토 수익 전략과 도구. 바로 실행 가능한 가이드.',
+    title: '코인던전 | 크립토를 가장 쉽게 배우는 곳',
+    description: '어려운 크립토를 초보 눈높이로 쉽게 풀어주는 교육 사이트.',
   },
   robots: {
     index: true,

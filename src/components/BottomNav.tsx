@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Swords, Target, BookOpen, User } from 'lucide-react';
+import { Home, Newspaper, BookOpen, Target, Calculator } from 'lucide-react';
 
 const items = [
   { href: '/', label: '홈', Icon: Home },
+  { href: '/blog', label: '가이드', Icon: Newspaper },
+  { href: '/glossary', label: '용어', Icon: BookOpen },
   { href: '/strategies', label: '전략', Icon: Target },
-  { href: '/stage', label: '던전', Icon: Swords },
-  { href: '/learn', label: '학습', Icon: BookOpen },
-  { href: '/profile', label: '프로필', Icon: User },
+  { href: '/tools', label: '계산기', Icon: Calculator },
 ];
 
 export default function BottomNav() {

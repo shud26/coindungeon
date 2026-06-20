@@ -3,7 +3,7 @@ import { strategies } from '@/data/strategies';
 import { glossaryTerms } from '@/data/glossary';
 import { playbooks } from '@/data/playbooks';
 import { calculatorTools } from '@/data/tools';
-import { stages } from '@/data/stages';
+import { blogPosts } from '@/data/blog';
 
 const BASE_URL = 'https://coindungeon.vercel.app';
 
@@ -28,28 +28,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/learn`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
       url: `${BASE_URL}/glossary`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
+      url: `${BASE_URL}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
       url: `${BASE_URL}/playbook`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/profile`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.5,
     },
     {
       url: `${BASE_URL}/about`,
@@ -99,12 +93,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const stagePages: MetadataRoute.Sitemap = stages.map((s) => ({
-    url: `${BASE_URL}/stage/${s.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map((p) => ({
+    url: `${BASE_URL}/blog/${p.slug}`,
+    lastModified: new Date(p.updatedAt),
+    changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));
 
-  return [...staticPages, ...stagePages, ...strategyPages, ...toolPages, ...glossaryPages, ...playbookPages];
+  return [...staticPages, ...blogPages, ...strategyPages, ...toolPages, ...glossaryPages, ...playbookPages];
 }

@@ -36,9 +36,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  verification: {
-    google: 'GOOGLE_VERIFICATION_CODE',
-  },
   alternates: {
     canonical: BASE_URL,
   },

@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, BookOpen } from 'lucide-react';
-import { blogPosts, getPostBySlug } from '@/data/blog';
+import { getPublishedPosts, getPostBySlug } from '@/data/blog';
 import { getTermBySlug } from '@/data/glossary';
 
 const BASE_URL = 'https://coindungeon.vercel.app';
 
+// 발행된 글만 생성, 예약(미래) 글 URL 직접 접근은 404
+export const dynamicParams = false;
+
 export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+  return getPublishedPosts().map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

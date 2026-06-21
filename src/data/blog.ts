@@ -289,6 +289,24 @@ OECD의 **가상자산 자동정보교환체계(CARF)** 가 가동되면 국가 
   },
 ];
 
+// 한국시간(KST) 기준 오늘 날짜 (YYYY-MM-DD)
+function todayKST(): string {
+  return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+// 발행된 글만 (publishedAt이 오늘 이전) — 최신순. 미래 날짜 = 예약(숨김)
+export function getPublishedPosts(): BlogPost[] {
+  const today = todayKST();
+  return blogPosts
+    .filter((p) => p.publishedAt <= today)
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
+// 발행된 글인지 (미래 예약글이면 false)
+export function isPublished(post: BlogPost): boolean {
+  return post.publishedAt <= todayKST();
+}
+
 export function getPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
 }

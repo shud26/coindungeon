@@ -3,7 +3,7 @@ import { strategies } from '@/data/strategies';
 import { glossaryTerms } from '@/data/glossary';
 import { playbooks } from '@/data/playbooks';
 import { calculatorTools } from '@/data/tools';
-import { blogPosts } from '@/data/blog';
+import { getPublishedPosts } from '@/data/blog';
 
 const BASE_URL = 'https://coindungeon.vercel.app';
 
@@ -93,7 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const blogPages: MetadataRoute.Sitemap = blogPosts.map((p) => ({
+  const blogPages: MetadataRoute.Sitemap = getPublishedPosts().map((p) => ({
     url: `${BASE_URL}/blog/${p.slug}`,
     lastModified: new Date(p.updatedAt),
     changeFrequency: 'monthly' as const,

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { blogPosts } from '@/data/blog';
+import { getPublishedPosts } from '@/data/blog';
 
 const categoryColors: Record<string, string> = {
   '세금/규제': 'text-warning',
@@ -10,7 +10,7 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function BlogPage() {
-  const posts = [...blogPosts].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  const posts = getPublishedPosts();
 
   return (
     <div>

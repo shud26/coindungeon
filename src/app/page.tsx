@@ -7,7 +7,7 @@ import { staggerContainer, staggerItem } from '@/components/Motion';
 import { strategies } from '@/data/strategies';
 import { calculatorTools } from '@/data/tools';
 import { glossaryTerms } from '@/data/glossary';
-import { blogPosts } from '@/data/blog';
+import { getPublishedPosts } from '@/data/blog';
 
 const categories = [
   {
@@ -17,7 +17,7 @@ const categories = [
     Icon: Newspaper,
     iconColor: 'text-accent',
     iconBg: 'bg-accent-dim',
-    count: () => `${blogPosts.length}개`,
+    count: () => `${getPublishedPosts().length}개`,
   },
   {
     href: '/glossary',
@@ -57,9 +57,7 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function HomePage() {
-  const latestPosts = [...blogPosts]
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-    .slice(0, 3);
+  const latestPosts = getPublishedPosts().slice(0, 3);
 
   return (
     <motion.div initial="initial" animate="animate" variants={staggerContainer}>

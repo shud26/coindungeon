@@ -2671,6 +2671,83 @@ CoinGecko, Delta, CoinStats 앱으로 포트폴리오 실시간 추적 가능.`,
     relatedTermSlugs: ['smart-contract', 'defi', 'blockchain'],
     relatedStrategySlugs: ['smart-money-tracking'],
   },
+  {
+    slug: 'prediction-market',
+    titleKo: '예측 시장',
+    titleEn: 'Prediction Market',
+    shortDef: '미래 사건의 결과에 베팅하고, 맞히면 보상받는 온체인 시장.',
+    explanation: `예측 시장(Prediction Market)은 "이 사건이 일어날까?"에 돈을 거는 시장이야. 선거 결과, 스포츠 경기, 비트코인 가격, 심지어 날씨까지 — 미래에 일어날 일을 두고 사람들이 "예" 또는 "아니오"에 베팅해.
+
+**어떻게 작동해?**
+- 각 결과가 토큰(주식처럼)으로 거래돼. 가격은 0~1달러 사이.
+- 가격 = 시장이 보는 확률이야. "예" 토큰이 0.7달러면 시장은 70% 확률로 본다는 뜻.
+- 사건이 끝나면 맞은 쪽 토큰은 1달러, 틀린 쪽은 0달러가 돼.
+
+**왜 주목받아?**
+- **집단 지성**: 돈이 걸려서 여론조사보다 정확할 때가 많아. 2024 미국 대선에서 크게 화제가 됐어.
+- **온체인 투명성**: 스마트 컨트랙트가 자동 정산 → 조작·먹튀가 어려워.
+
+**대표 프로젝트:**
+- **Polymarket**: 가장 큰 예측 시장 (Polygon 기반)
+- **Augur**: 초기 탈중앙 예측 시장
+
+**주의할 점:**
+- 결과 판정을 누가 하느냐(오라클)가 핵심이야. 잘못된 판정 위험이 있어.
+- 일부 국가에선 도박으로 분류돼 규제 대상이야.`,
+    category: '디파이',
+    relatedTermSlugs: ['oracle', 'dao', 'defi'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'tge',
+    titleKo: 'TGE (토큰 생성 이벤트)',
+    titleEn: 'Token Generation Event (TGE)',
+    shortDef: '프로젝트가 토큰을 처음 발행해 세상에 공개하는 순간.',
+    explanation: `TGE(Token Generation Event)는 프로젝트의 토큰이 "태어나는" 순간이야. 그동안 토큰이 없던 프로젝트가 토큰을 처음 발행해서 사람들에게 나눠주거나 거래소에 상장하는 이벤트를 말해.
+
+**TGE 때 무슨 일이 일어나?**
+- 토큰이 스마트 컨트랙트로 생성(민팅)돼.
+- 에어드랍, 토큰 세일, 거래소 상장이 이 시점에 몰려.
+- 가격 변동성이 가장 큰 순간 중 하나야 (기대감 + 매물 폭탄).
+
+**왜 중요해?**
+- 에어드랍 파머한테는 **"보상 받는 날"**이야. 그동안 쌓은 포인트/XP가 토큰으로 바뀌어.
+- 초기 투자자·팀의 토큰이 풀리기 시작하는(베스팅) 기준점이기도 해.
+
+**조심할 점:**
+- TGE 직후 **덤핑**(에어드랍 받은 사람들이 바로 파는 것)으로 가격이 급락하는 경우가 많아.
+- "TGE 임박" 마케팅에 휩쓸려 고점에 사지 않도록 주의해.`,
+    category: '기초',
+    relatedTermSlugs: ['token', 'airdrop', 'mint'],
+    relatedStrategySlugs: [],
+  },
+  {
+    slug: 'tokenization',
+    titleKo: '토큰화',
+    titleEn: 'Tokenization',
+    shortDef: '현실 자산이나 권리를 블록체인 토큰으로 바꿔 거래 가능하게 만드는 것.',
+    explanation: `토큰화(Tokenization)는 부동산, 채권, 미술품, 금 같은 자산을 블록체인 위의 토큰으로 "포장"하는 거야. 토큰 1개가 실제 자산의 일부 소유권을 나타내게 돼.
+
+**예를 들면:**
+- 10억짜리 빌딩을 10만 개 토큰으로 쪼개면 → 토큰 1개 = 1만원어치 지분.
+- 누구나 소액으로 빌딩 일부를 사고팔 수 있어.
+
+**왜 좋아?**
+- **분할 소유**: 비싼 자산을 잘게 쪼개 소액 투자가 가능해져.
+- **24시간 거래**: 부동산도 주식처럼, 아니 그보다 빠르게 거래돼.
+- **투명성**: 소유권 이전이 블록체인에 기록돼.
+
+**대표 분야:**
+- **RWA(실물자산)**: 미국 국채·부동산 토큰화가 2025-2026 핫 트렌드야.
+- **스테이블코인**: 달러를 토큰화한 것도 넓게 보면 토큰화야.
+
+**주의할 점:**
+- 토큰이 실제 자산을 진짜 보증하는지(법적 권리)가 핵심이야. 발행사 신뢰가 중요해.
+- 규제가 아직 정비 중인 영역이야.`,
+    category: '디파이',
+    relatedTermSlugs: ['rwa', 'stablecoin', 'token'],
+    relatedStrategySlugs: [],
+  },
 ];
 
 export function getTermBySlug(slug: string): GlossaryTerm | undefined {

@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Newspaper, BookOpen, Target, Calculator } from 'lucide-react';
+import { Home, Newspaper, BookOpen, Target, Calculator, Swords } from 'lucide-react';
 
 const items = [
   { href: '/', label: '홈', Icon: Home },
+  { href: '/game', label: '게임', Icon: Swords, external: true },
   { href: '/blog', label: '가이드', Icon: Newspaper },
   { href: '/glossary', label: '용어', Icon: BookOpen },
   { href: '/strategies', label: '전략', Icon: Target },
@@ -26,8 +27,21 @@ export default function BottomNav() {
       }}
     >
       <div className="mx-auto flex max-w-[520px] items-center justify-around" style={{ height: 56, paddingBottom: 'env(safe-area-inset-bottom)' }}>
-        {items.map(({ href, label, Icon }) => {
+        {items.map(({ href, label, Icon, external }) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          if (external) {
+            return (
+              <a
+                key={href}
+                href={href}
+                className="relative flex flex-col items-center gap-1 text-zinc-500 transition-colors"
+                style={{ minWidth: 52 }}
+              >
+                <Icon size={20} strokeWidth={1.5} />
+                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.02em' }}>{label}</span>
+              </a>
+            );
+          }
           return (
             <Link
               key={href}

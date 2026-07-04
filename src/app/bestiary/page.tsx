@@ -99,7 +99,7 @@ export default function BestiaryPage() {
                 <p className="mono-label !text-[10px]">DEPTH {floor.depth}</p>
               </div>
               <p className="mt-1 text-[12px] text-text-tertiary">{floor.theme}</p>
-              <div className="mt-3 flex flex-col gap-2.5">
+              <div className="mt-3 grid gap-2.5 md:grid-cols-2">
                 {list.map((m) => (
                   <MonsterCard key={m.slug} monster={m} />
                 ))}

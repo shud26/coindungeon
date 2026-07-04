@@ -21,7 +21,7 @@ export default function StrategiesPage() {
         })}
       </div>
 
-      <div className="mt-6 flex flex-col gap-3">
+      <div className="mt-6 grid gap-3 md:grid-cols-2">
         {strategies.map((strategy) => (
           <StrategyCard key={strategy.slug} strategy={strategy} />
         ))}

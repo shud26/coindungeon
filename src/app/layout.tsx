@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
+import TopNav from "@/components/TopNav";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -80,10 +81,11 @@ export default function RootLayout({
         className={`${geistMono.variable}`}
         style={{ fontFamily: "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif" }}
       >
-        <main className="mx-auto min-h-screen max-w-[520px] px-5 pb-28 pt-12">
+        <TopNav />
+        <main className="mx-auto min-h-screen max-w-[520px] px-5 pb-28 pt-12 md:max-w-[880px] md:px-6 md:pb-16 md:pt-28">
           {children}
         </main>
-        <footer className="mx-auto max-w-[520px] px-5 pb-28 pt-2">
+        <footer className="mx-auto max-w-[520px] px-5 pb-28 pt-2 md:max-w-[880px] md:px-6 md:pb-12">
           <div className="border-t border-white/[0.06] pt-6">
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-text-quaternary">
               <a href="/glossary" className="transition-colors hover:text-text-secondary">용어사전</a>

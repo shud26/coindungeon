@@ -16,7 +16,7 @@ export default function ToolsPage() {
         <p className="mt-2 text-[15px] text-text-secondary">트레이딩에 필요한 계산기</p>
       </div>
 
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="mt-8 grid gap-3 md:grid-cols-2">
         {calculatorTools.map((tool) => {
           const emoji = emojiMap[tool.slug] ?? '🔧';
           return (

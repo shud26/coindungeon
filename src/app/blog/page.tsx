@@ -22,7 +22,7 @@ export default function BlogPage() {
         </p>
       </div>
 
-      <div className="mt-6 flex flex-col gap-3">
+      <div className="mt-6 grid gap-3 md:grid-cols-2">
         {posts.length > 0 ? (
           posts.map((post) => (
             <Link

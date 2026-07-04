@@ -36,19 +36,19 @@ export default function HomePage() {
         <p className="mono-label">
           <span className="text-accent">$</span> coindungeon <span className="cursor-blink" aria-hidden />
         </p>
-        <h1 className="mt-5 text-[30px] font-bold leading-[1.25] tracking-tight">
+        <h1 className="mt-5 text-[30px] font-bold leading-[1.25] tracking-tight md:text-[48px]">
           시장은 던전이다.
           <br />
           <span className="text-accent">살아서 나가라.</span>
         </h1>
-        <p className="mt-3.5 text-[14.5px] leading-relaxed text-text-secondary">
+        <p className="mt-3.5 text-[14.5px] leading-relaxed text-text-secondary md:text-[16px]">
           여기서 미리 청산당해 보고, 진짜 돈은 지키세요.
           <br />
           몬스터를 잡는 법 = 시장에서 살아남는 법.
         </p>
 
         {/* CTA */}
-        <div className="mt-6 flex gap-2.5">
+        <div className="mt-6 flex gap-2.5 md:max-w-[460px]">
           <a
             href="/game"
             className="glow-accent flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3.5 text-[14px] font-bold text-black transition-transform active:scale-[0.98]"
@@ -112,7 +112,7 @@ export default function HomePage() {
               전체보기
             </Link>
           </div>
-          <div className="mt-3 flex flex-col gap-2.5">
+          <div className="mt-3 grid gap-2.5 md:grid-cols-3">
             {latestPosts.map((post) => (
               <Link key={post.slug} href={`/blog/${post.slug}`} className="terminal-card block p-4 transition-all active:scale-[0.995]">
                 <span className={`text-[11px] font-medium ${categoryColors[post.category] ?? 'text-accent'}`}>

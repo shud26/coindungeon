@@ -59,7 +59,7 @@ export default function GlossaryPage() {
       </div>
 
       {/* 결과 */}
-      <div className="mt-5 flex flex-col gap-3">
+      <div className="mt-5 grid gap-3 md:grid-cols-2">
         {filtered.length > 0 ? (
           filtered.map((term) => <GlossaryCard key={term.slug} term={term} />)
         ) : (

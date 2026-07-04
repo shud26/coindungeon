@@ -21,7 +21,7 @@ export default function PnlCalculatorPage() {
     ? entryPrice * (1 - liquidationPct / 100)
     : entryPrice * (1 + liquidationPct / 100);
 
-  const inputClass = "mt-2 w-full rounded-xl border border-white/[0.06] bg-bg-surface px-4 py-3 text-[15px] font-medium outline-none transition-colors focus:border-[#8B7CFF]/50 focus:ring-2 focus:ring-[#8B7CFF]/20";
+  const inputClass = "mt-2 w-full rounded-xl border border-white/[0.06] bg-bg-surface px-4 py-3 text-[15px] font-medium outline-none transition-colors focus:border-[#3DDC97]/50 focus:ring-2 focus:ring-[#3DDC97]/20";
 
   return (
     <div>

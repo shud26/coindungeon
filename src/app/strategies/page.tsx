@@ -5,7 +5,8 @@ export default function StrategiesPage() {
   return (
     <div>
       <div>
-        <h1 className="text-[28px] font-extrabold tracking-tight">전략</h1>
+        <p className="mono-label">STRATEGIES // 전략</p>
+        <h1 className="mt-2 text-[28px] font-extrabold tracking-tight">전략</h1>
         <p className="mt-2 text-[15px] text-text-secondary">실전 검증된 크립토 수익 전략</p>
       </div>
 

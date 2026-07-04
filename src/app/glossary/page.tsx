@@ -24,7 +24,8 @@ export default function GlossaryPage() {
   return (
     <div>
       <div>
-        <h1 className="text-[28px] font-bold tracking-tight">용어사전</h1>
+        <p className="mono-label">GLOSSARY // 용어사전</p>
+        <h1 className="mt-2 text-[28px] font-bold tracking-tight">용어사전</h1>
         <p className="mt-1.5 text-[15px] text-text-secondary">크립토 핵심 용어 {glossaryTerms.length}개</p>
       </div>
 

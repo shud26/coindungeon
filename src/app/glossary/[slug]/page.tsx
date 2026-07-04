@@ -31,7 +31,7 @@ const categoryColors: Record<string, string> = {
   기초: 'text-accent',
   트레이딩: 'text-warning',
   디파이: 'text-success',
-  온체인: 'text-[#A78BFA]',
+  온체인: 'text-[#6FF0BC]',
   보안: 'text-danger',
   NFT: 'text-[#F472B6]',
 };

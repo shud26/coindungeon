@@ -11,7 +11,8 @@ export default function ToolsPage() {
   return (
     <div>
       <div>
-        <h1 className="text-[28px] font-extrabold tracking-tight">도구</h1>
+        <p className="mono-label">TOOLS // 도구</p>
+        <h1 className="mt-2 text-[28px] font-extrabold tracking-tight">도구</h1>
         <p className="mt-2 text-[15px] text-text-secondary">트레이딩에 필요한 계산기</p>
       </div>
 

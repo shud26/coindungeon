@@ -5,7 +5,7 @@ const categoryColors: Record<string, string> = {
   '세금/규제': 'text-warning',
   디파이: 'text-success',
   트렌드: 'text-accent',
-  입문: 'text-[#A78BFA]',
+  입문: 'text-[#6FF0BC]',
   보안: 'text-danger',
 };
 
@@ -15,7 +15,8 @@ export default function BlogPage() {
   return (
     <div>
       <div>
-        <h1 className="text-[28px] font-bold tracking-tight">크립토 가이드</h1>
+        <p className="mono-label">GUIDES // 가이드</p>
+        <h1 className="mt-2 text-[28px] font-bold tracking-tight">크립토 가이드</h1>
         <p className="mt-1.5 text-[15px] text-text-secondary">
           코인 세금·디파이·트렌드를 가장 쉽게 풀어드립니다
         </p>

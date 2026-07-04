@@ -86,7 +86,7 @@ export default async function StrategyDetailPage({ params }: { params: Promise<{
         {strategy.steps.map((step, i) => (
           <div key={i} className="card p-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-[12px] font-bold text-white" style={{ background: 'linear-gradient(135deg, #8B7CFF, #A78BFA)' }}>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-[12px] font-bold text-white" style={{ background: 'linear-gradient(135deg, #3DDC97, #6FF0BC)' }}>
                 {i + 1}
               </span>
               <h3 className="text-[15px] font-bold">{step.title}</h3>

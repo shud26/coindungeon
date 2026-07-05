@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   title: '몬스터 도감',
   description:
     '코인던전 몬스터 도감 — 슬리피지 슬라임부터 블랙스완까지. 크립토 개념이 곧 몬스터의 행동 규칙. 공략법을 안다는 건 개념을 이해했다는 것.',
+  alternates: { canonical: 'https://coindungeon.games/bestiary' },
+  openGraph: {
+    title: '몬스터 도감 | 코인던전',
+    description: '슬리피지 슬라임부터 블랙스완까지 — 크립토 개념이 곧 몬스터.',
+    url: 'https://coindungeon.games/bestiary',
+  },
 };
 
 const rankStyle: Record<Monster['rank'], string> = {

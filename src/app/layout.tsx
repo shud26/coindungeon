@@ -27,11 +27,13 @@ export const metadata: Metadata = {
     siteName: '코인던전',
     locale: 'ko_KR',
     type: 'website',
+    images: [{ url: `${BASE_URL}/api/og/brand`, width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: '코인던전 | 크립토를 가장 쉽게 배우는 곳',
     description: '어려운 크립토를 초보 눈높이로 쉽게 풀어주는 교육 사이트.',
+    images: [`${BASE_URL}/api/og/brand`],
   },
   robots: {
     index: true,

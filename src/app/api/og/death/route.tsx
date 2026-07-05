@@ -1,25 +1,8 @@
 import { ImageResponse } from 'next/og';
 import { parseDeathParams } from '@/lib/deathCard';
+import { loadKoFont } from '@/lib/ogFont';
 
 export const revalidate = 86400;
-
-// Google Fonts css2는 UA 없는 요청에 ttf URL을 반환 → satori가 그대로 사용 가능.
-// text= 파라미터로 실제 쓰는 글리프만 서브셋해서 용량 최소화.
-async function loadKoFont(text: string, weight: 400 | 700): Promise<ArrayBuffer | null> {
-  try {
-    const css = await (
-      await fetch(
-        `https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@${weight}&text=${encodeURIComponent(text)}`,
-        { next: { revalidate: 86400 } },
-      )
-    ).text();
-    const url = css.match(/src: url\((.+?)\) format\('(?:truetype|opentype|woff)'\)/)?.[1];
-    if (!url) return null;
-    return await (await fetch(url, { next: { revalidate: 86400 } })).arrayBuffer();
-  } catch {
-    return null;
-  }
-}
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);

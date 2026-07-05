@@ -4,7 +4,7 @@ import { parseDeathParams, deathQueryString } from '@/lib/deathCard';
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
-const BASE = 'https://coindungeon.vercel.app';
+const BASE = 'https://coindungeon.games';
 
 function ogUrl(sp: Record<string, string | string[] | undefined>): string {
   const p = parseDeathParams(sp);

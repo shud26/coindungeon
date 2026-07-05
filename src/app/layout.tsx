@@ -10,7 +10,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const BASE_URL = 'https://coindungeon.vercel.app';
+const BASE_URL = 'https://coindungeon.games';
 
 export const metadata: Metadata = {
   title: {

@@ -5,7 +5,7 @@ import { getPublishedPosts, getPostBySlug } from '@/data/blog';
 import { getTermBySlug } from '@/data/glossary';
 import ShareButtons from '@/components/ShareButtons';
 
-const BASE_URL = 'https://coindungeon.vercel.app';
+const BASE_URL = 'https://coindungeon.games';
 
 // 발행된 글만 생성, 예약(미래) 글 URL 직접 접근은 404
 export const dynamicParams = false;

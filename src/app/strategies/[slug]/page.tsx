@@ -8,7 +8,7 @@ import RecipeHeader from '@/components/RecipeHeader';
 import RiskList from '@/components/RiskList';
 import StrategyCompleteButton from './StrategyCompleteButton';
 
-const BASE_URL = 'https://coindungeon.vercel.app';
+const BASE_URL = 'https://coindungeon.games';
 
 export function generateStaticParams() {
   return strategies.map((s) => ({ slug: s.slug }));

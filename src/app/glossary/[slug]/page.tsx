@@ -4,7 +4,7 @@ import { ArrowLeft, BookOpen, Target } from 'lucide-react';
 import { glossaryTerms, getTermBySlug } from '@/data/glossary';
 import { strategies } from '@/data/strategies';
 
-const BASE_URL = 'https://coindungeon.vercel.app';
+const BASE_URL = 'https://coindungeon.games';
 
 export function generateStaticParams() {
   return glossaryTerms.map((t) => ({ slug: t.slug }));

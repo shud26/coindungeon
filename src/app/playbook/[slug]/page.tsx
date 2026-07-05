@@ -5,7 +5,7 @@ import { playbooks, getPlaybookBySlug } from '@/data/playbooks';
 import { getTermBySlug } from '@/data/glossary';
 import { strategies } from '@/data/strategies';
 
-const BASE_URL = 'https://coindungeon.vercel.app';
+const BASE_URL = 'https://coindungeon.games';
 
 export function generateStaticParams() {
   return playbooks.map((p) => ({ slug: p.slug }));

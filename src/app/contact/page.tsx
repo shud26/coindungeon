@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-const BASE_URL = 'https://coindungeon.vercel.app';
+const BASE_URL = 'https://coindungeon.games';
 
 export const metadata: Metadata = {
   title: '문의하기',

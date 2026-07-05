@@ -33,7 +33,7 @@ export async function GET(req: Request) {
   const lesson = p.clear ? '시장은 던전이다. 살아서 나가라.' : p.monster.lesson;
   const accent = p.clear ? '#FFD24A' : '#FF5C5C';
 
-  const allText = `${title}${headline}${stats}${lesson}$ coindungeon — liquidation reportcoindungeon.vercel.app/game나도 청산당하러 가기 →이 죽음이 남긴 것`;
+  const allText = `${title}${headline}${stats}${lesson}$ coindungeon — liquidation reportcoindungeon.games/game나도 청산당하러 가기 →이 죽음이 남긴 것`;
   const [bold, regular] = await Promise.all([loadKoFont(allText, 700), loadKoFont(allText, 400)]);
   const fonts = [
     ...(bold ? [{ name: 'NotoKR', data: bold, weight: 700 as const }] : []),
@@ -117,7 +117,7 @@ export async function GET(req: Request) {
             borderTop: '1px solid rgba(255,255,255,0.10)',
           }}
         >
-          <div style={{ display: 'flex', color: '#6C737B', fontSize: 24 }}>coindungeon.vercel.app/game</div>
+          <div style={{ display: 'flex', color: '#6C737B', fontSize: 24 }}>coindungeon.games/game</div>
           <div style={{ display: 'flex', color: '#3DDC97', fontSize: 26, fontWeight: 700 }}>
             나도 청산당하러 가기 →
           </div>

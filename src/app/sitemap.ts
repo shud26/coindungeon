@@ -5,7 +5,7 @@ import { playbooks } from '@/data/playbooks';
 import { calculatorTools } from '@/data/tools';
 import { getPublishedPosts } from '@/data/blog';
 
-const BASE_URL = 'https://coindungeon.vercel.app';
+const BASE_URL = 'https://coindungeon.games';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [

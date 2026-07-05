@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://coindungeon.vercel.app/sitemap.xml',
+    sitemap: 'https://coindungeon.games/sitemap.xml',
   };
 }

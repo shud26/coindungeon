@@ -15,6 +15,7 @@ export interface Monster {
   memeLine: string; // 인텐트 밈 대사
   glossarySlugs: string[]; // 용어사전 딥링크
   inGame: boolean; // 현재 게임에 구현됐는지
+  image?: string; // 일러스트 (없으면 이모지 폴백)
 }
 
 export interface Floor {
@@ -44,7 +45,8 @@ export const monsters: Monster[] = [
     lesson: '큰 주문일수록 슬리피지가 크다. 분할 체결이 유리하다.',
     memeLine: '"당신의 시장가 주문, 잘 먹겠습니다"',
     glossarySlugs: ['slippage', 'market-order', 'order-book'],
-    inGame: false,
+    inGame: true,
+    image: '/monsters/slime.png',
   },
   {
     slug: 'gas-goblin',
@@ -57,7 +59,7 @@ export const monsters: Monster[] = [
     lesson: '잔거래 남발 = 수수료 잠식. 한 턴에 굵은 한 방이 이득.',
     memeLine: '"가스비는 선불입니다, 고객님"',
     glossarySlugs: ['gas-fee', 'layer2'],
-    inGame: false,
+    inGame: true,
   },
   {
     slug: 'fud-ghost',
@@ -71,7 +73,7 @@ export const monsters: Monster[] = [
     lesson: 'FUD는 과장이다. 패닉에 팔지 마라. DYOR.',
     memeLine: '"소식통에 따르면… (아마도… 몰라요…)"',
     glossarySlugs: ['fomo', 'bull-bear'],
-    inGame: false,
+    inGame: true,
   },
   {
     slug: 'pump-imp',
@@ -85,7 +87,7 @@ export const monsters: Monster[] = [
     lesson: '고점 추격 금지. 펌프 초입에 잡거나, 덤프 한 방을 버티면 그 뒤가 기회.',
     memeLine: '"이번엔 진짜 다르다니까? 가즈아아아"',
     glossarySlugs: ['fomo', 'volume', 'market-cap'],
-    inGame: false,
+    inGame: true,
   },
   {
     slug: 'rug-mole',
@@ -99,7 +101,7 @@ export const monsters: Monster[] = [
     lesson: '너무 좋은 공짜 = 미끼. 선물에 취하지 말고 초반에 패라.',
     memeLine: '"APY 800% 무료 에어드랍이에요~ 믿으세요~"',
     glossarySlugs: ['rug-pull', 'phishing', 'airdrop'],
-    inGame: false,
+    inGame: true,
   },
   {
     slug: 'liquidation-wolf',
@@ -127,7 +129,7 @@ export const monsters: Monster[] = [
     lesson: '고래가 벽을 치면 정면돌파하지 말고 기다려라. 개미는 타이밍으로 이긴다.',
     memeLine: '"이 벽, 뚫을 수 있겠어?"',
     glossarySlugs: ['whale', 'order-book', 'volume'],
-    inGame: false,
+    inGame: true,
   },
   {
     slug: 'bear-market',
@@ -141,7 +143,7 @@ export const monsters: Monster[] = [
     lesson: '하락장은 이기는 게 아니라 살아남는 것. 출혈을 관리하고 버티면 사이클이 돈다.',
     memeLine: '"겨울은 길다… 네 잔고보다는 짧겠지만"',
     glossarySlugs: ['bull-bear', 'dca', 'stop-loss'],
-    inGame: false,
+    inGame: true,
   },
   {
     slug: 'black-swan',
@@ -155,7 +157,7 @@ export const monsters: Monster[] = [
     lesson: '최악의 시나리오는 확률이 낮아도 대비해야 한다. 헤지는 비용이 아니라 보험이다.',
     memeLine: '"설마가 사람 잡는 걸 보여줄게"',
     glossarySlugs: ['delta-neutral', 'stop-loss', 'perpetual'],
-    inGame: false,
+    inGame: true,
   },
 ];
 

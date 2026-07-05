@@ -4,12 +4,13 @@
 export interface DeathMonster {
   name: string;
   emoji: string;
+  image?: string; // 일러스트 절대경로 (OG 카드용)
   lesson: string; // 교육 한 줄
   slug: string; // 용어사전 딥링크
 }
 
 export const DEATH_MONSTERS: Record<string, DeathMonster> = {
-  slime: { name: '슬리피지 슬라임', emoji: '🫠', lesson: '큰 물량은 나눠서 체결하는 게 기본.', slug: 'slippage' },
+  slime: { name: '슬리피지 슬라임', emoji: '🫠', image: '/monsters/slime.png', lesson: '큰 물량은 나눠서 체결하는 게 기본.', slug: 'slippage' },
   gas: { name: '가스비 고블린', emoji: '⛽', lesson: '잦은 소액 거래는 수수료가 수익을 잠식한다.', slug: 'gas-fee' },
   fud: { name: 'FUD 유령', emoji: '👻', lesson: '패닉에 팔면 항상 바닥에서 팔게 된다. DYOR.', slug: 'fomo' },
   pump: { name: '펌핑 임프', emoji: '👺', lesson: '고점 추격이 개미 최대 사망 원인.', slug: 'fomo' },

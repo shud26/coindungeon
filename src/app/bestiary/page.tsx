@@ -31,18 +31,18 @@ function MonsterCard({ monster }: { monster: Monster }) {
   return (
     <details className="terminal-card group">
       <summary className="flex cursor-pointer list-none items-center gap-3 p-4 [&::-webkit-details-marker]:hidden">
-        <span className="text-[24px] leading-none">{monster.emoji}</span>
+        {monster.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={monster.image} alt={monster.name} width={44} height={44} className="shrink-0 rounded-lg" />
+        ) : (
+          <span className="text-[24px] leading-none">{monster.emoji}</span>
+        )}
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-2">
             <span className="text-[15px] font-bold">{monster.name}</span>
             <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${rankStyle[monster.rank]}`}>
               {monster.rank}
             </span>
-            {monster.inGame && (
-              <span className="mono-label rounded bg-danger-dim px-1.5 py-0.5 !text-[9px] !text-danger">
-                출몰 중
-              </span>
-            )}
           </span>
           <span className="mt-0.5 block truncate text-[12px] text-text-tertiary">{monster.concept}</span>
         </span>

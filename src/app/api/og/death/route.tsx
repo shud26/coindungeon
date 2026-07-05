@@ -56,9 +56,20 @@ export async function GET(req: Request) {
 
         {/* 본문 */}
         <div style={{ display: 'flex', flex: 1, alignItems: 'center', padding: '0 64px' }}>
-          <div style={{ display: 'flex', fontSize: 210, marginRight: 56 }}>
-            {p.clear ? '👑' : p.monster.emoji}
-          </div>
+          {!p.clear && p.monster.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={`https://coindungeon.games${p.monster.image}`}
+              width={280}
+              height={280}
+              style={{ marginRight: 56, borderRadius: 24 }}
+              alt=""
+            />
+          ) : (
+            <div style={{ display: 'flex', fontSize: 210, marginRight: 56 }}>
+              {p.clear ? '👑' : p.monster.emoji}
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
             <div style={{ display: 'flex', fontSize: 58, fontWeight: 700, color: accent }}>{title}</div>
             <div

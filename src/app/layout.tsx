@@ -81,7 +81,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistMono.variable}`}
-        style={{ fontFamily: "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif" }}
+        style={{ fontFamily: "'NeoDGM', 'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif" }}
       >
         <TopNav />
         <main className="mx-auto min-h-screen max-w-[520px] px-5 pb-28 pt-12 md:max-w-[880px] md:px-6 md:pb-16 md:pt-28">

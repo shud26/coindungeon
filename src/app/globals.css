@@ -65,7 +65,7 @@
 body {
   background: var(--bg-base);
   color: var(--text-primary);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.7;
   word-break: keep-all;
   overflow-wrap: break-word;
@@ -137,7 +137,7 @@ h1 {
 }
 
 .mono-num {
-  font-family: var(--font-mono);
+  font-family: 'NeoDGM', var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 

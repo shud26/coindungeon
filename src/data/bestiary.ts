@@ -159,6 +159,7 @@ export const monsters: Monster[] = [
     memeLine: '"설마가 사람 잡는 걸 보여줄게"',
     glossarySlugs: ['delta-neutral', 'stop-loss', 'perpetual'],
     inGame: true,
+    image: '/monsters/swan.png',
   },
 ];
 

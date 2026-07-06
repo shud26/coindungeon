@@ -17,7 +17,7 @@ export const DEATH_MONSTERS: Record<string, DeathMonster> = {
   rug: { name: '러그풀 두더지', emoji: '🕳️', lesson: 'APY가 비현실적이면 그게 러그다.', slug: 'rug-pull' },
   kraken: { name: '고래 크라켄', emoji: '🐙', lesson: '고래가 벽을 치면 정면돌파하지 마라.', slug: 'whale' },
   wolf: { name: '청산 늑대', emoji: '🐺', image: '/monsters/wolf.png', lesson: '레버리지는 쓰는 순간 청산가가 생긴다.', slug: 'liquidation' },
-  bear: { name: '베어마켓 곰', emoji: '🐻', lesson: '하락장은 이기는 게 아니라 살아남는 것.', slug: 'bull-bear' },
+  bear: { name: '베어마켓 곰', emoji: '🐻', image: '/monsters/bear.png', lesson: '하락장은 이기는 게 아니라 살아남는 것.', slug: 'bull-bear' },
   swan: { name: '블랙스완', emoji: '🦢', image: '/monsters/swan.png', lesson: '헤지 비용은 아까운 게 아니라 보험료다.', slug: 'delta-neutral' },
 };
 

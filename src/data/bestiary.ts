@@ -145,6 +145,7 @@ export const monsters: Monster[] = [
     memeLine: '"겨울은 길다… 네 잔고보다는 짧겠지만"',
     glossarySlugs: ['bull-bear', 'dca', 'stop-loss'],
     inGame: true,
+    image: '/monsters/bear.png',
   },
   {
     slug: 'black-swan',

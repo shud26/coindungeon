@@ -116,6 +116,7 @@ export const monsters: Monster[] = [
     memeLine: '"레버리지 포지션 냄새가 나는군… 킁킁"',
     glossarySlugs: ['liquidation', 'leverage', 'long-short'],
     inGame: true,
+    image: '/monsters/wolf.png',
   },
   {
     slug: 'whale-kraken',

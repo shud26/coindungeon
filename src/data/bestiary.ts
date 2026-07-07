@@ -131,6 +131,7 @@ export const monsters: Monster[] = [
     memeLine: '"이 벽, 뚫을 수 있겠어?"',
     glossarySlugs: ['whale', 'order-book', 'volume'],
     inGame: true,
+    image: '/monsters/kraken.png',
   },
   {
     slug: 'bear-market',

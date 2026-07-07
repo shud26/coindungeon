@@ -104,6 +104,9 @@ export default function RootLayout({
             <p className="mt-4 text-center text-[12px] text-text-quaternary">
               &copy; 2026 코인던전 &middot; 교육 목적이며 투자 조언이 아닙니다
             </p>
+            <p className="mono-num mt-1.5 text-center text-[11px] text-text-quaternary/70">
+              글꼴 Neo둥근모 (Dalgona, SIL OFL 1.1)
+            </p>
           </div>
         </footer>
         <BottomNav />

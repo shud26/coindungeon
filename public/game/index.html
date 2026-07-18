@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>코인던전 — 청산 서바이벌</title>
+<meta property="og:title" content="코인던전 — 청산 서바이벌">
+<meta property="og:description" content="레버리지를 고르면 실제 BTC 차트가 재생된다. 청산가에 닿으면 용암行. 당신은 몇 초나 버틸까?">
+<meta property="og:image" content="https://coindungeon.games/game/lq-title.png">
+<meta property="og:url" content="https://coindungeon.games/game/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="knight.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,7 +140,7 @@
     </div>
     <canvas id="cv" width="1312" height="640"></canvas>
     <button id="exitBtn">익절 탈출 · +0.0%</button>
-    <div id="exitHint">스페이스바로도 탈출할 수 있습니다 · 버틸수록 커지고, 욕심내면 용암입니다</div>
+    <div id="exitHint">버틸수록 커지고, 욕심내면 용암입니다 (PC는 스페이스바로 탈출)</div>
   </div>
 </div>
 
@@ -164,6 +170,37 @@
 <script src="data.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+
+// ── 8비트 사운드 (WebAudio 합성, 파일 없음) ──
+let AC;
+function ac() { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); return AC; }
+function tone(f0, f1, dur, type, vol, delay = 0) {
+  try {
+    const a = ac(), t = a.currentTime + delay;
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = type; o.frequency.setValueAtTime(f0, t);
+    if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(Math.max(f1, 1), t + dur);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t + dur);
+  } catch (e) {}
+}
+function noiseBurst(dur, vol) {
+  try {
+    const a = ac(), t = a.currentTime;
+    const buf = a.createBuffer(1, a.sampleRate * dur, a.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+    const src = a.createBufferSource(); src.buffer = buf;
+    const g = a.createGain(); g.gain.value = vol;
+    src.connect(g).connect(a.destination); src.start(t);
+  } catch (e) {}
+}
+const sfx = {
+  start() { tone(220, 440, 0.12, 'square', 0.10); tone(440, 880, 0.12, 'square', 0.08, 0.10); },
+  death() { noiseBurst(0.5, 0.22); tone(220, 35, 0.6, 'sawtooth', 0.18); },
+  escape() { [523, 659, 784, 1047].forEach((f, i) => tone(f, f, 0.14, 'square', 0.10, i * 0.09)); },
+  heart() { tone(70, 50, 0.09, 'sine', 0.22); },
+};
 let side = 1, lev = 10;
 const knight = new Image(); knight.src = 'knight.png';
 const caveBg = new Image(); caveBg.src = 'lq-cave.png';
@@ -192,7 +229,7 @@ function start() {
   $('escape').style.display = 'none';
   $('game').style.display = 'block';
   $('hudEntry').textContent = fmt(entry);
-  t0 = performance.now(); alive = true; deathAnim = 0;
+  t0 = performance.now(); alive = true; deathAnim = 0; sfx.start();
   timer = setInterval(tick, SPEED);
   draw();
 }
@@ -227,6 +264,7 @@ function tick() {
                       : hp > 25 ? 'linear-gradient(90deg,#d9a520,#ffd54a)'
                                 : 'linear-gradient(90deg,#c2331f,#ff8a70)';
   shake = hp < 25 ? (25 - hp) / 5 : 0;
+  if (hp < 35 && idx % Math.max(2, Math.round(hp / 5)) === 0) sfx.heart();
   const eb = $('exitBtn');
   if (roe >= 0) { eb.textContent = `익절 탈출 · +${roe.toFixed(1)}%`; eb.className = ''; }
   else { eb.textContent = `손절 탈출 · ${roe.toFixed(1)}%`; eb.className = 'loss'; }
@@ -235,7 +273,7 @@ function tick() {
 }
 
 function die() {
-  clearInterval(timer); alive = false;
+  clearInterval(timer); alive = false; sfx.death();
   let f = 0;
   const anim = setInterval(() => {
     deathAnim = ++f; draw(0);
@@ -255,7 +293,7 @@ function die() {
 }
 
 function escape() {
-  clearInterval(timer); alive = false;
+  clearInterval(timer); alive = false; sfx.escape();
   const price = CANDLES[idx][3];
   const roe = ((price - entry) / entry) * 100 * lev * side;
   const secs = ((performance.now() - t0)/1000).toFixed(1);
@@ -314,10 +352,15 @@ function shareCard() {
   x.font = '20px Galmuri9';
   x.fillText('코인던전 — 청산 서바이벌', 360, 890);
   x.fillText('coindungeon.games', 360, 922);
-  c.toBlob(b => {
+  c.toBlob(async b => {
+    const name = `코인던전-${dead?'청산':'생존'}-${r.lev}x.png`;
+    const file = new File([b], name, { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: '코인던전 — 청산 서바이벌', text: 'https://coindungeon.games/game' }); return; } catch (e) { if (e.name === 'AbortError') return; }
+    }
     const a = document.createElement('a');
     a.href = URL.createObjectURL(b);
-    a.download = `코인던전-${dead?'청산':'생존'}-${r.lev}x.png`;
+    a.download = name;
     a.click();
     URL.revokeObjectURL(a.href);
   });

@@ -171,6 +171,17 @@
 <script>
 const $ = id => document.getElementById(id);
 
+// ── 익명 카운터 (청산/탈출 시 1회, 텔레그램 장부) ──
+function track(t, roe, secs) {
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+  try {
+    fetch('https://liq-survival.vercel.app/api/event', {
+      method: 'POST', keepalive: true,
+      body: JSON.stringify({ t, lev, side, roe, secs }),
+    });
+  } catch (e) {}
+}
+
 // ── 8비트 사운드 (WebAudio 합성, 파일 없음) ──
 let AC;
 function ac() { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); return AC; }
@@ -274,6 +285,7 @@ function tick() {
 
 function die() {
   clearInterval(timer); alive = false; sfx.death();
+  track('death', -100, (performance.now() - t0) / 1000);
   let f = 0;
   const anim = setInterval(() => {
     deathAnim = ++f; draw(0);
@@ -296,6 +308,7 @@ function escape() {
   clearInterval(timer); alive = false; sfx.escape();
   const price = CANDLES[idx][3];
   const roe = ((price - entry) / entry) * 100 * lev * side;
+  track('escape', roe, (performance.now() - t0) / 1000);
   const secs = ((performance.now() - t0)/1000).toFixed(1);
   const chartH = (((idx - startIdx) * 5) / 60).toFixed(1);
   const er = $('escRoe');

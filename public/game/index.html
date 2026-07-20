@@ -335,6 +335,7 @@ function startFloor() {
   $('game').style.display = 'block';
   $('floorLabel').textContent = `B${floor}층 · ${lev}배 · 목표 +${targetOf(floor)}%`;
   $('hudGold').textContent = runGold.toLocaleString() + 'G';
+  $('hudSwitch').textContent = '0회';
   updateButtons(0);
   sfx.start();
   clearInterval(timer);
@@ -342,7 +343,7 @@ function startFloor() {
   draw();
 }
 $('startBtn').onclick = startRun;
-$('retryBtn').onclick = () => { $('death').style.display = 'none'; backToTitle(); };
+$('retryBtn').onclick = () => { startRun(); };
 $('escRetryBtn').onclick = () => { $('escape').style.display = 'none'; backToTitle(); };
 function backToTitle() {
   $('game').style.display = 'none';
@@ -375,11 +376,23 @@ $('switchBtn').onclick = doSwitch;
 document.addEventListener('keydown', e => {
   if (e.code === 'Space' && alive) { e.preventDefault(); doSwitch(); }
 });
+// 탭이 숨겨지면 일시정지 — 안 보는 사이 청산 방지
+let pausedAt = 0;
+document.addEventListener('visibilitychange', () => {
+  if (!alive) return;
+  if (document.hidden) { clearInterval(timer); pausedAt = performance.now(); }
+  else { t0run += performance.now() - pausedAt; timer = setInterval(tick, SPEED); }
+});
 $('descendBtn').onclick = () => { if (alive && runGold > 0) { stopPlay(); bank(); } };
 
 function stopPlay() { clearInterval(timer); alive = false; }
 
 function tick() {
+  if (idx >= CANDLES.length - 2) {   // 차트 데이터 끝 (한 층을 아주 오래 끌었을 때)
+    stopPlay();
+    if (runGold > 0) bank(); else backToTitle();
+    return;
+  }
   idx++;
   fundAcc += FUND_TICK;
   const c = CANDLES[idx];
@@ -426,7 +439,8 @@ $('bankBtn').onclick = () => { $('clear').style.display = 'none'; bank(); };
 function bank() {
   const secs = ((performance.now() - t0run) / 1000).toFixed(1);
   store.vault = store.vault + runGold;
-  if (floor > store.best && cleared) store.best = floor;
+  const reached = cleared ? floor : floor - 1;   // 층 중간 하산이어도 그 전까지 클리어한 층은 기록
+  if (reached > store.best) store.best = reached;
   track('escape', runGold, secs, floor);
   sfx.bank();
   $('escGold').textContent = '+' + runGold.toLocaleString() + 'G 입금';
